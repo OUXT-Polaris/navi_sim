@@ -44,6 +44,7 @@ extern "C" {
 #include <geometry_msgs/msg/transform_stamped.hpp>
 #include <geometry_msgs/msg/twist.hpp>
 #include <geometry_msgs/msg/pose.hpp>
+#include <geometry_msgs/msg/pose_stamped.hpp>
 #include <geometry_msgs/msg/pose_with_covariance_stamped.hpp>
 
 // Headers in STL
@@ -70,6 +71,7 @@ namespace navi_sim
       rclcpp::Subscription<geometry_msgs::msg::PoseWithCovarianceStamped>::SharedPtr initial_pose_sub_;
       void targetTwistCallback(const geometry_msgs::msg::Twist::SharedPtr data);
       rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr target_twist_sub_;
+      rclcpp::Publisher<geometry_msgs::msg::PoseStamped>::SharedPtr current_pose_pub_;
       std::mutex mtx_;
   };
 }
