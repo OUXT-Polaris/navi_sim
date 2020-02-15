@@ -12,7 +12,6 @@ def generate_launch_description():
             get_package_share_directory('navi_sim'),
             'config',
             'navi_sim.rviz')
-    use_sim_time = LaunchConfiguration('use_sim_time', default='false')
     description = LaunchDescription([
         Node(
             package='rviz2',
