@@ -8,7 +8,7 @@ namespace navi_sim
         broadcaster_(this)
     {
         using namespace std::chrono_literals;
-        update_position_timer_ = this->create_wall_timer(500ms, std::bind(&NaviSimComponent::updatePose, this));
+        update_position_timer_ = this->create_wall_timer(10ms, std::bind(&NaviSimComponent::updatePose, this));
         initial_pose_sub_ = this->create_subscription<geometry_msgs::msg::PoseWithCovarianceStamped>
             ("initialpose", 1, std::bind(&NaviSimComponent::initialPoseCallback, this, std::placeholders::_1));
         target_twist_sub_ = this->create_subscription<geometry_msgs::msg::Twist>
@@ -20,7 +20,18 @@ namespace navi_sim
         mtx_.lock();
         // Update Current Pose
         using namespace quaternion_operation;
-        convertEulerAngleToQuaternion(current_twist_.angular);
+        geometry_msgs::msg::Vector3 angular_trans_vec;
+        angular_trans_vec.z = current_twist_.angular.z * 0.01;
+        geometry_msgs::msg::Quaternion angular_trans_quat = convertEulerAngleToQuaternion(angular_trans_vec);
+        current_pose_.orientation = quaternion_operation::rotation(current_pose_.orientation,angular_trans_quat);
+        Eigen::Vector3d trans_vec;
+        trans_vec(0) = current_twist_.linear.x * 0.01;
+        trans_vec(1) = current_twist_.linear.y * 0.01;
+        Eigen::Matrix3d rotation_mat = quaternion_operation::getRotationMatrix(current_pose_.orientation);
+        trans_vec = rotation_mat*trans_vec;
+        current_pose_.position.x = trans_vec(0) + current_pose_.position.x;
+        current_pose_.position.y = trans_vec(1) + current_pose_.position.y;
+
         // Publish tf
         geometry_msgs::msg::TransformStamped transform_stamped;
         transform_stamped.header.stamp = ros_clock_.now();
