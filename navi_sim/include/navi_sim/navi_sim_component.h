@@ -50,6 +50,8 @@ extern "C" {
 #include <chrono>
 #include <mutex>
 
+#include <quaternion_operation/quaternion_operation.h>
+
 namespace navi_sim
 {
   class NaviSimComponent: public rclcpp::Node
@@ -63,7 +65,7 @@ namespace navi_sim
       rclcpp::TimerBase::SharedPtr update_position_timer_;
       geometry_msgs::msg::Twist current_twist_;
       geometry_msgs::msg::Pose current_pose_;
-      void updatePosition();
+      void updatePose();
       void initialPoseCallback(const geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr data);
       rclcpp::Subscription<geometry_msgs::msg::PoseWithCovarianceStamped>::SharedPtr initial_pose_sub_;
       void targetTwistCallback(const geometry_msgs::msg::Twist::SharedPtr data);

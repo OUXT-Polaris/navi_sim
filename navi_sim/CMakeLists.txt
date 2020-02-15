@@ -23,24 +23,28 @@ find_package(geometry_msgs REQUIRED)
 find_package(tf2 REQUIRED)
 find_package(tf2_ros REQUIRED)
 find_package(tf2_geometry_msgs REQUIRED)
+find_package(quaternion_operation REQUIRED)
+find_package(Eigen3 REQUIRED)
 
 include_directories(
   include
+  ${EIGEN3_INCLUDE_DIR}
 )
 
 add_library(navi_sim_component SHARED
   src/navi_sim_component.cpp
 )
 target_compile_definitions(navi_sim_component PRIVATE "NAVI_SIM_NAVI_SIM_COMPONENT_BUILDING_DLL")
+target_link_libraries(navi_sim_component ${quaternion_operation_LIBRARIES})
 ament_target_dependencies(navi_sim_component
-  rclcpp rclcpp_components tf2_ros tf2_geometry_msgs)
+  rclcpp rclcpp_components tf2_ros tf2_geometry_msgs quaternion_operation)
 
 add_executable(navi_sim_node
   src/navi_sim_node.cpp
 )
-target_link_libraries(navi_sim_node navi_sim_component)
+target_link_libraries(navi_sim_node navi_sim_component ${quaternion_operation_LIBRARIES})
 ament_target_dependencies(navi_sim_node 
-  rclcpp rclcpp_components tf2_ros tf2_geometry_msgs)
+  rclcpp rclcpp_components tf2_ros tf2_geometry_msgs quaternion_operation)
 
 rclcpp_components_register_nodes(navi_sim_component
   "navi_sim::NaviSimComponent")

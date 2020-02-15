@@ -8,16 +8,20 @@ namespace navi_sim
         broadcaster_(this)
     {
         using namespace std::chrono_literals;
-        update_position_timer_ = this->create_wall_timer(500ms, std::bind(&NaviSimComponent::updatePosition, this));
+        update_position_timer_ = this->create_wall_timer(500ms, std::bind(&NaviSimComponent::updatePose, this));
         initial_pose_sub_ = this->create_subscription<geometry_msgs::msg::PoseWithCovarianceStamped>
             ("initialpose", 1, std::bind(&NaviSimComponent::initialPoseCallback, this, std::placeholders::_1));
         target_twist_sub_ = this->create_subscription<geometry_msgs::msg::Twist>
             ("target_twist", 1, std::bind(&NaviSimComponent::targetTwistCallback, this, std::placeholders::_1));
     }
 
-    void NaviSimComponent::updatePosition()
+    void NaviSimComponent::updatePose()
     {
         mtx_.lock();
+        // Update Current Pose
+        using namespace quaternion_operation;
+        convertEulerAngleToQuaternion(current_twist_.angular);
+        // Publish tf
         geometry_msgs::msg::TransformStamped transform_stamped;
         transform_stamped.header.stamp = ros_clock_.now();
         transform_stamped.header.frame_id = "map";
