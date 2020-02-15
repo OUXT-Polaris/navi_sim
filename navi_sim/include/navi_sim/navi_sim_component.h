@@ -74,7 +74,4 @@ namespace navi_sim
   };
 }
 
-#include <rclcpp_components/register_node_macro.hpp>
-RCLCPP_COMPONENTS_REGISTER_NODE(navi_sim::NaviSimComponent)
-
 #endif  //NAVI_SIM_NAVI_SIM_COMPONENT_H_INCLUDED

@@ -60,3 +60,6 @@ namespace navi_sim
         mtx_.unlock();
     }
 }
+
+#include <rclcpp_components/register_node_macro.hpp>
+RCLCPP_COMPONENTS_REGISTER_NODE(navi_sim::NaviSimComponent)
