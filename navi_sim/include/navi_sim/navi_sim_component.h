@@ -61,7 +61,6 @@ namespace navi_sim
       NAVI_SIM_NAVI_SIM_COMPONENT_PUBLIC
       explicit NaviSimComponent(const rclcpp::NodeOptions & options);
     private:
-      rclcpp::Clock ros_clock_;
       tf2_ros::TransformBroadcaster broadcaster_;
       rclcpp::TimerBase::SharedPtr update_position_timer_;
       geometry_msgs::msg::Twist current_twist_;

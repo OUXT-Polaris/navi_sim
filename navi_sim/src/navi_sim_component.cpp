@@ -4,7 +4,6 @@ namespace navi_sim
 {
     NaviSimComponent::NaviSimComponent(const rclcpp::NodeOptions & options)
     : Node("navi_sim", options),
-        ros_clock_(RCL_ROS_TIME), 
         broadcaster_(this)
     {
         using namespace std::chrono_literals;
@@ -35,7 +34,7 @@ namespace navi_sim
 
         // Publish tf
         geometry_msgs::msg::TransformStamped transform_stamped;
-        transform_stamped.header.stamp = ros_clock_.now();
+        transform_stamped.header.stamp = get_clock()->now();
         transform_stamped.header.frame_id = "map";
         transform_stamped.child_frame_id = "base_link";
         transform_stamped.transform.translation.x = current_pose_.position.x;
