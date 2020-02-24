@@ -9,6 +9,7 @@ namespace navi_sim
         using namespace std::chrono_literals;
         update_position_timer_ = this->create_wall_timer(10ms, std::bind(&NaviSimComponent::updatePose, this));
         current_pose_pub_ = this->create_publisher<geometry_msgs::msg::PoseStamped>("current_pose",1);
+        current_twist_pub_ = this->create_publisher<geometry_msgs::msg::Twist>("current_twist",1);
         initial_pose_sub_ = this->create_subscription<geometry_msgs::msg::PoseWithCovarianceStamped>
             ("initialpose", 1, std::bind(&NaviSimComponent::initialPoseCallback, this, std::placeholders::_1));
         target_twist_sub_ = this->create_subscription<geometry_msgs::msg::Twist>
@@ -49,6 +50,7 @@ namespace navi_sim
         current_pose_msg.header.stamp = transform_stamped.header.stamp;
         current_pose_msg.header.frame_id = "map";
         current_pose_pub_->publish(current_pose_msg);
+        current_twist_pub_->publish(current_twist_);
         mtx_.unlock();
     }
 

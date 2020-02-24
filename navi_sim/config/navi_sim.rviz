@@ -9,7 +9,6 @@ Panels:
     Name: Displays
     Property Tree Widget:
       Expanded:
-        - /Global Options1
         - /Status1
       Splitter Ratio: 0.5
     Tree Height: 975
@@ -60,15 +59,28 @@ Visualization Manager:
       Value: true
     - Class: rviz_default_plugins/MarkerArray
       Enabled: true
-      Name: MarkerArray
+      Name: HermitePath
       Namespaces:
-        {}
+        center_line: true
+        polygon: true
       Topic:
         Depth: 5
         Durability Policy: Volatile
         History Policy: Keep Last
         Reliability Policy: Reliable
         Value: /hermite_path_planner_node/marker
+      Value: true
+    - Class: rviz_default_plugins/MarkerArray
+      Enabled: true
+      Name: PurePursuit
+      Namespaces:
+        circle: true
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /pure_pursuit_planner_node/marker
       Value: true
   Enabled: true
   Global Options:

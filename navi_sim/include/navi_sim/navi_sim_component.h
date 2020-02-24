@@ -71,6 +71,7 @@ namespace navi_sim
       void targetTwistCallback(const geometry_msgs::msg::Twist::SharedPtr data);
       rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr target_twist_sub_;
       rclcpp::Publisher<geometry_msgs::msg::PoseStamped>::SharedPtr current_pose_pub_;
+      rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr current_twist_pub_;
       std::mutex mtx_;
   };
 }
