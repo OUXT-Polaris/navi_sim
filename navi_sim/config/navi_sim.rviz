@@ -68,19 +68,32 @@ Visualization Manager:
         Durability Policy: Volatile
         History Policy: Keep Last
         Reliability Policy: Reliable
-        Value: /hermite_path_planner_node/marker
+        Value: /hermite_path_planner/marker
       Value: true
     - Class: rviz_default_plugins/MarkerArray
       Enabled: true
       Name: PurePursuit
       Namespaces:
         circle: true
+        target: true
       Topic:
         Depth: 5
         Durability Policy: Volatile
         History Policy: Keep Last
         Reliability Policy: Reliable
-        Value: /pure_pursuit_planner_node/marker
+        Value: /pure_pursuit_planner/marker
+      Value: true
+    - Class: rviz_default_plugins/MarkerArray
+      Enabled: true
+      Name: CurvePlanner
+      Namespaces:
+        {}
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /curve_planner/marker
       Value: true
   Enabled: true
   Global Options:
