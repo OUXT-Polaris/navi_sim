@@ -10,32 +10,12 @@ from launch.substitutions import LaunchConfiguration
 
 def generate_launch_description():
     navi_sim_launch_file_dir = os.path.join(get_package_share_directory('navi_sim'), 'launch')
-    planner_concatenator_param_file = LaunchConfiguration(
-        'planner_concatenator_param_dir',
-        default=os.path.join(
-            get_package_share_directory('velocity_planner'),
-            'config','planner_concatenator.yaml'))
-    curve_planner_param_file = LaunchConfiguration(
-        'curve_planner_param_file',
-        default=os.path.join(
-            get_package_share_directory('velocity_planner'),
-            'config','curve_planner.yaml'))
+    hermite_path_planner_bringup_launch_file_dir = os.path.join(get_package_share_directory('hermite_path_planner_bringup'), 'launch')
     return LaunchDescription([
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource([navi_sim_launch_file_dir, '/navi_sim.launch.py']),
         ),
-        DeclareLaunchArgument(
-            'planner_concatenator_param_file',
-            default_value=planner_concatenator_param_file,
-            description='planner concatenator paramters'),
-        DeclareLaunchArgument(
-            'curve_planner_param_file',
-            default_value=curve_planner_param_file,
-            description='curve planner parameters'
-        ),
-        Node(
-            package='hermite_path_planner_bringup',
-            node_executable='hermite_path_planner_bringup_node',
-            parameters=[planner_concatenator_param_file,curve_planner_param_file],
-            output='screen'),
+        IncludeLaunchDescription(
+            PythonLaunchDescriptionSource([hermite_path_planner_bringup_launch_file_dir, '/bringup.launch.py']),
+        )
     ])
