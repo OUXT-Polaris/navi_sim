@@ -20,6 +20,7 @@ find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclcpp_components REQUIRED)
 find_package(geometry_msgs REQUIRED)
+find_package(sensor_msgs REQUIRED)
 find_package(tf2 REQUIRED)
 find_package(tf2_ros REQUIRED)
 find_package(tf2_geometry_msgs REQUIRED)
@@ -37,14 +38,14 @@ add_library(navi_sim_component SHARED
 target_compile_definitions(navi_sim_component PRIVATE "NAVI_SIM_NAVI_SIM_COMPONENT_BUILDING_DLL")
 target_link_libraries(navi_sim_component ${quaternion_operation_LIBRARIES})
 ament_target_dependencies(navi_sim_component
-  rclcpp rclcpp_components tf2_ros tf2_geometry_msgs quaternion_operation)
+  rclcpp rclcpp_components tf2_ros tf2_geometry_msgs quaternion_operation sensor_msgs)
 
 add_executable(navi_sim_node
   src/navi_sim_node.cpp
 )
 target_link_libraries(navi_sim_node navi_sim_component ${quaternion_operation_LIBRARIES})
 ament_target_dependencies(navi_sim_node 
-  rclcpp rclcpp_components tf2_ros tf2_geometry_msgs quaternion_operation)
+  rclcpp rclcpp_components tf2_ros tf2_geometry_msgs quaternion_operation sensor_msgs)
 
 rclcpp_components_register_nodes(navi_sim_component
   "navi_sim::NaviSimComponent")

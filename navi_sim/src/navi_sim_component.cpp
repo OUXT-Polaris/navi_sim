@@ -10,10 +10,13 @@ namespace navi_sim
         update_position_timer_ = this->create_wall_timer(10ms, std::bind(&NaviSimComponent::updatePose, this));
         current_pose_pub_ = this->create_publisher<geometry_msgs::msg::PoseStamped>("current_pose",1);
         current_twist_pub_ = this->create_publisher<geometry_msgs::msg::Twist>("current_twist",1);
+        laser_pub_ = this->create_publisher<sensor_msgs::msg::LaserScan>("obstacle_scan",1);
         initial_pose_sub_ = this->create_subscription<geometry_msgs::msg::PoseWithCovarianceStamped>
             ("initialpose", 1, std::bind(&NaviSimComponent::initialPoseCallback, this, std::placeholders::_1));
         target_twist_sub_ = this->create_subscription<geometry_msgs::msg::Twist>
             ("target_twist", 1, std::bind(&NaviSimComponent::targetTwistCallback, this, std::placeholders::_1));
+        clicked_point_sub_ = this->create_subscription<geometry_msgs::msg::PointStamped>
+            ("clicked_point", 1, std::bind(&NaviSimComponent::clickedPointCallback, this, std::placeholders::_1));
     }
 
     void NaviSimComponent::updatePose()
@@ -67,6 +70,11 @@ namespace navi_sim
         current_pose_ = data->pose.pose;
         current_twist_ = geometry_msgs::msg::Twist();
         mtx_.unlock();
+    }
+
+    void NaviSimComponent::clickedPointCallback(const geometry_msgs::msg::PointStamped::SharedPtr data)
+    {
+
     }
 }
 

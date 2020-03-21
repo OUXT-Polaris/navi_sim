@@ -45,7 +45,9 @@ extern "C" {
 #include <geometry_msgs/msg/twist.hpp>
 #include <geometry_msgs/msg/pose.hpp>
 #include <geometry_msgs/msg/pose_stamped.hpp>
+#include <geometry_msgs/msg/point_stamped.hpp>
 #include <geometry_msgs/msg/pose_with_covariance_stamped.hpp>
+#include <sensor_msgs/msg/laser_scan.hpp>
 
 // Headers in STL
 #include <chrono>
@@ -66,12 +68,16 @@ namespace navi_sim
       geometry_msgs::msg::Twist current_twist_;
       geometry_msgs::msg::Pose current_pose_;
       void updatePose();
+      void clickedPointCallback(const geometry_msgs::msg::PointStamped::SharedPtr data);
       void initialPoseCallback(const geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr data);
       rclcpp::Subscription<geometry_msgs::msg::PoseWithCovarianceStamped>::SharedPtr initial_pose_sub_;
       void targetTwistCallback(const geometry_msgs::msg::Twist::SharedPtr data);
+      rclcpp::Subscription<geometry_msgs::msg::PointStamped>::SharedPtr clicked_point_sub_;
+      std::vector<geometry_msgs::msg::Point> obstacles_;
       rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr target_twist_sub_;
       rclcpp::Publisher<geometry_msgs::msg::PoseStamped>::SharedPtr current_pose_pub_;
       rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr current_twist_pub_;
+      rclcpp::Publisher<sensor_msgs::msg::LaserScan>::SharedPtr laser_pub_;
       std::mutex mtx_;
   };
 }
