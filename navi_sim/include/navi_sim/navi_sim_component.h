@@ -57,6 +57,10 @@ extern "C" {
 
 #include <quaternion_operation/quaternion_operation.h>
 
+
+// Headers in Boost
+#include <boost/optional.hpp>
+
 namespace navi_sim
 {
   class NaviSimComponent: public rclcpp::Node
@@ -84,11 +88,14 @@ namespace navi_sim
       tf2_ros::Buffer buffer_;
       tf2_ros::TransformListener listener_;
       geometry_msgs::msg::PointStamped TransformToMapFrame(geometry_msgs::msg::PointStamped point);
-      geometry_msgs::msg::PointStamped TransformToBaselinkFrame(geometry_msgs::msg::PointStamped point);
+      geometry_msgs::msg::PointStamped TransformToBaselinkFrame(geometry_msgs::msg::PointStamped point,bool from_message_timestamp=true);
       double obstacle_radius_;
+      double maximum_scan_range_;
+      double minimum_scan_range_;
       int num_scans_;
       void updateScan();
       rclcpp::TimerBase::SharedPtr update_scan_timer_;
+      boost::optional<double> getDistanceToObstacle(geometry_msgs::msg::PointStamped obstacle,double theta);
   };
 }
 

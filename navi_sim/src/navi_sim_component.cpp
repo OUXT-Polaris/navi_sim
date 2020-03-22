@@ -10,6 +10,8 @@ namespace navi_sim
     {
         using namespace std::chrono_literals;
         obstacle_radius_ = 1.0;
+        maximum_scan_range_ = 20.0;
+        minimum_scan_range_ = 0.3;
         num_scans_ = 360;
         update_position_timer_ = this->create_wall_timer(10ms, std::bind(&NaviSimComponent::updatePose, this));
         update_scan_timer_ = this->create_wall_timer(10ms, std::bind(&NaviSimComponent::updateScan, this));
@@ -34,23 +36,31 @@ namespace navi_sim
             std::chrono::seconds(point.header.stamp.sec) +
             std::chrono::nanoseconds(point.header.stamp.nanosec));
         geometry_msgs::msg::TransformStamped transform_stamped = 
-            buffer_.lookupTransform(point.header.frame_id, "map", 
+            buffer_.lookupTransform("map", point.header.frame_id,
                 time_point, tf2::durationFromSec(1.0));
         tf2::doTransform(point, point, transform_stamped);
         return point;
     }
 
-    geometry_msgs::msg::PointStamped NaviSimComponent::TransformToBaselinkFrame(geometry_msgs::msg::PointStamped point)
+    geometry_msgs::msg::PointStamped NaviSimComponent::TransformToBaselinkFrame(geometry_msgs::msg::PointStamped point,bool from_message_timestamp)
     {
         if(point.header.frame_id == "base_link")
         {
             return point;
         }
-        tf2::TimePoint time_point = tf2::TimePoint(
+        tf2::TimePoint time_point;
+        if(from_message_timestamp)
+        {
+            time_point = tf2::TimePoint(
             std::chrono::seconds(point.header.stamp.sec) +
             std::chrono::nanoseconds(point.header.stamp.nanosec));
+        }
+        else
+        {
+
+        }
         geometry_msgs::msg::TransformStamped transform_stamped = 
-            buffer_.lookupTransform(point.header.frame_id, "base_link", 
+            buffer_.lookupTransform("base_link", point.header.frame_id,
                 time_point, tf2::durationFromSec(1.0));
         tf2::doTransform(point, point, transform_stamped);
         return point;
@@ -117,24 +127,76 @@ namespace navi_sim
         mtx_.unlock();
     }
 
+    boost::optional<double> NaviSimComponent::getDistanceToObstacle(geometry_msgs::msg::PointStamped obstacle,double theta)
+    {
+        double x0 = obstacle.point.x;
+        double y0 = obstacle.point.y;
+        double a = std::pow(x0*std::cos(theta) + y0*std::sin(theta),2) - (x0*x0 + y0*y0 - obstacle_radius_*obstacle_radius_);
+        if(a<0.0)
+        {
+            return boost::none;
+        }
+        double l1 = x0*std::cos(theta) + y0*std::sin(theta) - std::sqrt(a);
+        double l2 = x0*std::cos(theta) + y0*std::sin(theta) + std::sqrt(a);
+        if(l1 > minimum_scan_range_ && maximum_scan_range_ > l1)
+        {
+            return l1;
+        }
+        if(l2 > minimum_scan_range_ && maximum_scan_range_ > l2)
+        {
+            return l2;
+        }
+        return boost::none;
+    }
+
     void NaviSimComponent::updateScan()
     {
         mtx_.lock();
+        std::vector<geometry_msgs::msg::PointStamped> obstacles;
+        auto stamp = get_clock()->now();
+
+        for(auto itr=obstacles_.begin(); itr!=obstacles_.end(); itr++)
+        {
+            geometry_msgs::msg::PointStamped obstacle;
+            obstacle.point = *itr;
+            obstacle.header.stamp = stamp;
+            obstacle.header.frame_id = "map";
+            obstacles.push_back(TransformToBaselinkFrame(obstacle,false));
+        }
         double angle_increment = M_PI * 2 / (double)num_scans_;
         sensor_msgs::msg::LaserScan scan;
         scan.header.frame_id = "base_link";
-        scan.header.stamp = get_clock()->now();
-        scan.angle_min = 0.0;
-        scan.angle_max = M_PI * 2;
+        scan.header.stamp = stamp;
+        scan.angle_min = 0;
+        scan.angle_max = 2*M_PI;
         scan.angle_increment = angle_increment;
         scan.time_increment = 0;
         scan.scan_time = 0.1;
-        scan.range_min = 0.4;
-        scan.range_max = 20.0;
+        scan.range_min = minimum_scan_range_;
+        scan.range_max = maximum_scan_range_;
         for(int i=0; i<num_scans_; i++)
         {
+            std::set<double> dists;
             double theta = angle_increment * i;
+            for(auto obstacle_itr = obstacles.begin(); obstacle_itr != obstacles.end(); obstacle_itr++)
+            {
+                auto dist = getDistanceToObstacle(*obstacle_itr,theta);
+                if(dist)
+                {
+                    dists.insert(dist.get());
+                }
+            }
+            if(dists.size() == 0)
+            {
+                scan.ranges.push_back(0.0);
+            }
+            else
+            {
+                double dist = *dists.begin();
+                scan.ranges.push_back(dist);
+            }
         }
+        laser_pub_->publish(scan);
         mtx_.unlock();
     }
 }
