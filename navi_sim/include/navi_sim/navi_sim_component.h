@@ -41,6 +41,8 @@ extern "C" {
 // Headers in ROS2
 #include <rclcpp/rclcpp.hpp>
 #include <tf2_ros/transform_broadcaster.h>
+#include <tf2_ros/transform_listener.h>
+#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 #include <geometry_msgs/msg/transform_stamped.hpp>
 #include <geometry_msgs/msg/twist.hpp>
 #include <geometry_msgs/msg/pose.hpp>
@@ -79,6 +81,14 @@ namespace navi_sim
       rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr current_twist_pub_;
       rclcpp::Publisher<sensor_msgs::msg::LaserScan>::SharedPtr laser_pub_;
       std::mutex mtx_;
+      tf2_ros::Buffer buffer_;
+      tf2_ros::TransformListener listener_;
+      geometry_msgs::msg::PointStamped TransformToMapFrame(geometry_msgs::msg::PointStamped point);
+      geometry_msgs::msg::PointStamped TransformToBaselinkFrame(geometry_msgs::msg::PointStamped point);
+      double obstacle_radius_;
+      int num_scans_;
+      void updateScan();
+      rclcpp::TimerBase::SharedPtr update_scan_timer_;
   };
 }
 

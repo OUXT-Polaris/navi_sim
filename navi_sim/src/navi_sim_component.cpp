@@ -4,10 +4,15 @@ namespace navi_sim
 {
     NaviSimComponent::NaviSimComponent(const rclcpp::NodeOptions & options)
     : Node("navi_sim", options),
-        broadcaster_(this)
+        broadcaster_(this),
+        buffer_(get_clock()),
+        listener_(buffer_)
     {
         using namespace std::chrono_literals;
+        obstacle_radius_ = 1.0;
+        num_scans_ = 360;
         update_position_timer_ = this->create_wall_timer(10ms, std::bind(&NaviSimComponent::updatePose, this));
+        update_scan_timer_ = this->create_wall_timer(10ms, std::bind(&NaviSimComponent::updateScan, this));
         current_pose_pub_ = this->create_publisher<geometry_msgs::msg::PoseStamped>("current_pose",1);
         current_twist_pub_ = this->create_publisher<geometry_msgs::msg::Twist>("current_twist",1);
         laser_pub_ = this->create_publisher<sensor_msgs::msg::LaserScan>("obstacle_scan",1);
@@ -17,6 +22,38 @@ namespace navi_sim
             ("target_twist", 1, std::bind(&NaviSimComponent::targetTwistCallback, this, std::placeholders::_1));
         clicked_point_sub_ = this->create_subscription<geometry_msgs::msg::PointStamped>
             ("clicked_point", 1, std::bind(&NaviSimComponent::clickedPointCallback, this, std::placeholders::_1));
+    }
+
+    geometry_msgs::msg::PointStamped NaviSimComponent::TransformToMapFrame(geometry_msgs::msg::PointStamped point)
+    {
+        if(point.header.frame_id == "map")
+        {
+            return point;
+        }
+        tf2::TimePoint time_point = tf2::TimePoint(
+            std::chrono::seconds(point.header.stamp.sec) +
+            std::chrono::nanoseconds(point.header.stamp.nanosec));
+        geometry_msgs::msg::TransformStamped transform_stamped = 
+            buffer_.lookupTransform(point.header.frame_id, "map", 
+                time_point, tf2::durationFromSec(1.0));
+        tf2::doTransform(point, point, transform_stamped);
+        return point;
+    }
+
+    geometry_msgs::msg::PointStamped NaviSimComponent::TransformToBaselinkFrame(geometry_msgs::msg::PointStamped point)
+    {
+        if(point.header.frame_id == "base_link")
+        {
+            return point;
+        }
+        tf2::TimePoint time_point = tf2::TimePoint(
+            std::chrono::seconds(point.header.stamp.sec) +
+            std::chrono::nanoseconds(point.header.stamp.nanosec));
+        geometry_msgs::msg::TransformStamped transform_stamped = 
+            buffer_.lookupTransform(point.header.frame_id, "base_link", 
+                time_point, tf2::durationFromSec(1.0));
+        tf2::doTransform(point, point, transform_stamped);
+        return point;
     }
 
     void NaviSimComponent::updatePose()
@@ -74,7 +111,31 @@ namespace navi_sim
 
     void NaviSimComponent::clickedPointCallback(const geometry_msgs::msg::PointStamped::SharedPtr data)
     {
+        mtx_.lock();
+        geometry_msgs::msg::PointStamped p = TransformToMapFrame(*data);
+        obstacles_.push_back(p.point);
+        mtx_.unlock();
+    }
 
+    void NaviSimComponent::updateScan()
+    {
+        mtx_.lock();
+        double angle_increment = M_PI * 2 / (double)num_scans_;
+        sensor_msgs::msg::LaserScan scan;
+        scan.header.frame_id = "base_link";
+        scan.header.stamp = get_clock()->now();
+        scan.angle_min = 0.0;
+        scan.angle_max = M_PI * 2;
+        scan.angle_increment = angle_increment;
+        scan.time_increment = 0;
+        scan.scan_time = 0.1;
+        scan.range_min = 0.4;
+        scan.range_max = 20.0;
+        for(int i=0; i<num_scans_; i++)
+        {
+            double theta = angle_increment * i;
+        }
+        mtx_.unlock();
     }
 }
 
