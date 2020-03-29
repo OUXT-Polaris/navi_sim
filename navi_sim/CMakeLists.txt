@@ -44,7 +44,7 @@ add_executable(navi_sim_node
   src/navi_sim_node.cpp
 )
 target_link_libraries(navi_sim_node navi_sim_component ${quaternion_operation_LIBRARIES})
-ament_target_dependencies(navi_sim_node 
+ament_target_dependencies(navi_sim_node
   rclcpp rclcpp_components tf2_ros tf2_geometry_msgs quaternion_operation sensor_msgs)
 
 rclcpp_components_register_nodes(navi_sim_component

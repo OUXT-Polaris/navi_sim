@@ -1,4 +1,4 @@
-#include <navi_sim/navi_sim_component.h>
+#include <navi_sim/navi_sim_component.hpp>
 
 namespace navi_sim
 {
