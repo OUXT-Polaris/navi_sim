@@ -57,7 +57,6 @@ extern "C" {
 
 #include <quaternion_operation/quaternion_operation.h>
 
-
 // Headers in Boost
 #include <boost/optional.hpp>
 

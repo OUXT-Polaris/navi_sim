@@ -55,10 +55,6 @@ namespace navi_sim
             std::chrono::seconds(point.header.stamp.sec) +
             std::chrono::nanoseconds(point.header.stamp.nanosec));
         }
-        else
-        {
-
-        }
         geometry_msgs::msg::TransformStamped transform_stamped = 
             buffer_.lookupTransform("base_link", point.header.frame_id,
                 time_point, tf2::durationFromSec(1.0));
