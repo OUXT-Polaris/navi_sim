@@ -22,47 +22,47 @@ extern "C" {
 // The below macros are taken from https://gcc.gnu.org/wiki/Visibility and from
 // demos/composition/include/composition/visibility_control.h at https://github.com/ros2/demos
 #if defined _WIN32 || defined __CYGWIN__
-  #ifdef __GNUC__
-    #define NAVI_SIM_NAVI_SIM_COMPONENT_EXPORT __attribute__ ((dllexport))
-    #define NAVI_SIM_NAVI_SIM_COMPONENT_IMPORT __attribute__ ((dllimport))
-  #else
-    #define NAVI_SIM_NAVI_SIM_COMPONENT_EXPORT __declspec(dllexport)
-    #define NAVI_SIM_NAVI_SIM_COMPONENT_IMPORT __declspec(dllimport)
-  #endif
-  #ifdef NAVI_SIM_NAVI_SIM_COMPONENT_BUILDING_DLL
-    #define NAVI_SIM_NAVI_SIM_COMPONENT_PUBLIC NAVI_SIM_NAVI_SIM_COMPONENT_EXPORT
-  #else
-    #define NAVI_SIM_NAVI_SIM_COMPONENT_PUBLIC NAVI_SIM_NAVI_SIM_COMPONENT_IMPORT
-  #endif
-  #define NAVI_SIM_NAVI_SIM_COMPONENT_PUBLIC_TYPE NAVI_SIM_NAVI_SIM_COMPONENT_PUBLIC
-  #define NAVI_SIM_NAVI_SIM_COMPONENT_LOCAL
+#ifdef __GNUC__
+#define NAVI_SIM_NAVI_SIM_COMPONENT_EXPORT __attribute__((dllexport))
+#define NAVI_SIM_NAVI_SIM_COMPONENT_IMPORT __attribute__((dllimport))
 #else
-  #define NAVI_SIM_NAVI_SIM_COMPONENT_EXPORT __attribute__ ((visibility("default")))
-  #define NAVI_SIM_NAVI_SIM_COMPONENT_IMPORT
-  #if __GNUC__ >= 4
-    #define NAVI_SIM_NAVI_SIM_COMPONENT_PUBLIC __attribute__ ((visibility("default")))
-    #define NAVI_SIM_NAVI_SIM_COMPONENT_LOCAL  __attribute__ ((visibility("hidden")))
-  #else
-    #define NAVI_SIM_NAVI_SIM_COMPONENT_PUBLIC
-    #define NAVI_SIM_NAVI_SIM_COMPONENT_LOCAL
-  #endif
-  #define NAVI_SIM_NAVI_SIM_COMPONENT_PUBLIC_TYPE
+#define NAVI_SIM_NAVI_SIM_COMPONENT_EXPORT __declspec(dllexport)
+#define NAVI_SIM_NAVI_SIM_COMPONENT_IMPORT __declspec(dllimport)
+#endif
+#ifdef NAVI_SIM_NAVI_SIM_COMPONENT_BUILDING_DLL
+#define NAVI_SIM_NAVI_SIM_COMPONENT_PUBLIC NAVI_SIM_NAVI_SIM_COMPONENT_EXPORT
+#else
+#define NAVI_SIM_NAVI_SIM_COMPONENT_PUBLIC NAVI_SIM_NAVI_SIM_COMPONENT_IMPORT
+#endif
+#define NAVI_SIM_NAVI_SIM_COMPONENT_PUBLIC_TYPE NAVI_SIM_NAVI_SIM_COMPONENT_PUBLIC
+#define NAVI_SIM_NAVI_SIM_COMPONENT_LOCAL
+#else
+#define NAVI_SIM_NAVI_SIM_COMPONENT_EXPORT __attribute__((visibility("default")))
+#define NAVI_SIM_NAVI_SIM_COMPONENT_IMPORT
+#if __GNUC__ >= 4
+#define NAVI_SIM_NAVI_SIM_COMPONENT_PUBLIC __attribute__((visibility("default")))
+#define NAVI_SIM_NAVI_SIM_COMPONENT_LOCAL __attribute__((visibility("hidden")))
+#else
+#define NAVI_SIM_NAVI_SIM_COMPONENT_PUBLIC
+#define NAVI_SIM_NAVI_SIM_COMPONENT_LOCAL
+#endif
+#define NAVI_SIM_NAVI_SIM_COMPONENT_PUBLIC_TYPE
 #endif
 #if __cplusplus
-} // extern "C"
+}  // extern "C"
 #endif
 
 // Headers in ROS2
-#include <rclcpp/rclcpp.hpp>
+#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 #include <tf2_ros/transform_broadcaster.h>
 #include <tf2_ros/transform_listener.h>
-#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
-#include <geometry_msgs/msg/transform_stamped.hpp>
-#include <geometry_msgs/msg/twist.hpp>
+#include <geometry_msgs/msg/point_stamped.hpp>
 #include <geometry_msgs/msg/pose.hpp>
 #include <geometry_msgs/msg/pose_stamped.hpp>
-#include <geometry_msgs/msg/point_stamped.hpp>
 #include <geometry_msgs/msg/pose_with_covariance_stamped.hpp>
+#include <geometry_msgs/msg/transform_stamped.hpp>
+#include <geometry_msgs/msg/twist.hpp>
+#include <rclcpp/rclcpp.hpp>
 #include <sensor_msgs/msg/laser_scan.hpp>
 
 // Headers in STL
@@ -103,8 +103,7 @@ private:
   tf2_ros::TransformListener listener_;
   geometry_msgs::msg::PointStamped TransformToMapFrame(geometry_msgs::msg::PointStamped point);
   geometry_msgs::msg::PointStamped TransformToBaselinkFrame(
-    geometry_msgs::msg::PointStamped point,
-    bool from_message_timestamp = true);
+    geometry_msgs::msg::PointStamped point, bool from_message_timestamp = true);
   double obstacle_radius_;
   double maximum_scan_range_;
   double minimum_scan_range_;
@@ -112,9 +111,8 @@ private:
   void updateScan();
   rclcpp::TimerBase::SharedPtr update_scan_timer_;
   boost::optional<double> getDistanceToObstacle(
-    geometry_msgs::msg::PointStamped obstacle,
-    double theta);
+    geometry_msgs::msg::PointStamped obstacle, double theta);
 };
-}
+}  // namespace navi_sim
 
 #endif  //NAVI_SIM_NAVI_SIM_COMPONENT_H_INCLUDED

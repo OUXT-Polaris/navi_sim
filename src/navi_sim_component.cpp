@@ -20,10 +20,7 @@
 namespace navi_sim
 {
 NaviSimComponent::NaviSimComponent(const rclcpp::NodeOptions & options)
-: Node("navi_sim", options),
-  broadcaster_(this),
-  buffer_(get_clock()),
-  listener_(buffer_)
+: Node("navi_sim", options), broadcaster_(this), buffer_(get_clock()), listener_(buffer_)
 {
   using namespace std::chrono_literals;
   obstacle_radius_ = 1.0;
@@ -40,12 +37,12 @@ NaviSimComponent::NaviSimComponent(const rclcpp::NodeOptions & options)
   initial_pose_sub_ = this->create_subscription<geometry_msgs::msg::PoseWithCovarianceStamped>(
     "initialpose", 1,
     std::bind(&NaviSimComponent::initialPoseCallback, this, std::placeholders::_1));
-  target_twist_sub_ = this->create_subscription<geometry_msgs::msg::Twist>("target_twist", 1, std::bind(
-        &NaviSimComponent::targetTwistCallback, this,
-        std::placeholders::_1));
-  clicked_point_sub_ = this->create_subscription<geometry_msgs::msg::PointStamped>("clicked_point",
-      1,
-      std::bind(&NaviSimComponent::clickedPointCallback, this, std::placeholders::_1));
+  target_twist_sub_ = this->create_subscription<geometry_msgs::msg::Twist>(
+    "target_twist", 1,
+    std::bind(&NaviSimComponent::targetTwistCallback, this, std::placeholders::_1));
+  clicked_point_sub_ = this->create_subscription<geometry_msgs::msg::PointStamped>(
+    "clicked_point", 1,
+    std::bind(&NaviSimComponent::clickedPointCallback, this, std::placeholders::_1));
 }
 
 geometry_msgs::msg::PointStamped NaviSimComponent::TransformToMapFrame(
@@ -58,8 +55,7 @@ geometry_msgs::msg::PointStamped NaviSimComponent::TransformToMapFrame(
     std::chrono::seconds(point.header.stamp.sec) +
     std::chrono::nanoseconds(point.header.stamp.nanosec));
   geometry_msgs::msg::TransformStamped transform_stamped =
-    buffer_.lookupTransform("map", point.header.frame_id,
-      time_point, tf2::durationFromSec(1.0));
+    buffer_.lookupTransform("map", point.header.frame_id, time_point, tf2::durationFromSec(1.0));
   tf2::doTransform(point, point, transform_stamped);
   return point;
 }
@@ -76,9 +72,8 @@ geometry_msgs::msg::PointStamped NaviSimComponent::TransformToBaselinkFrame(
       std::chrono::seconds(point.header.stamp.sec) +
       std::chrono::nanoseconds(point.header.stamp.nanosec));
   }
-  geometry_msgs::msg::TransformStamped transform_stamped =
-    buffer_.lookupTransform("base_link", point.header.frame_id,
-      time_point, tf2::durationFromSec(1.0));
+  geometry_msgs::msg::TransformStamped transform_stamped = buffer_.lookupTransform(
+    "base_link", point.header.frame_id, time_point, tf2::durationFromSec(1.0));
   tf2::doTransform(point, point, transform_stamped);
   return point;
 }
@@ -90,10 +85,10 @@ void NaviSimComponent::updatePose()
   using namespace quaternion_operation;
   geometry_msgs::msg::Vector3 angular_trans_vec;
   angular_trans_vec.z = current_twist_.angular.z * 0.01;
-  geometry_msgs::msg::Quaternion angular_trans_quat = convertEulerAngleToQuaternion(
-    angular_trans_vec);
-  current_pose_.orientation = quaternion_operation::rotation(current_pose_.orientation,
-      angular_trans_quat);
+  geometry_msgs::msg::Quaternion angular_trans_quat =
+    convertEulerAngleToQuaternion(angular_trans_vec);
+  current_pose_.orientation =
+    quaternion_operation::rotation(current_pose_.orientation, angular_trans_quat);
   Eigen::Vector3d trans_vec;
   trans_vec(0) = current_twist_.linear.x * 0.01;
   trans_vec(1) = current_twist_.linear.y * 0.01;
@@ -152,9 +147,8 @@ boost::optional<double> NaviSimComponent::getDistanceToObstacle(
 {
   double x0 = obstacle.point.x;
   double y0 = obstacle.point.y;
-  double a =
-    std::pow(x0 * std::cos(theta) + y0 * std::sin(theta),
-      2) - (x0 * x0 + y0 * y0 - obstacle_radius_ * obstacle_radius_);
+  double a = std::pow(x0 * std::cos(theta) + y0 * std::sin(theta), 2) -
+             (x0 * x0 + y0 * y0 - obstacle_radius_ * obstacle_radius_);
   if (a < 0.0) {
     return boost::none;
   }
@@ -212,6 +206,6 @@ void NaviSimComponent::updateScan()
   laser_pub_->publish(scan);
   mtx_.unlock();
 }
-} // namespace navi_sim
+}  // namespace navi_sim
 
 RCLCPP_COMPONENTS_REGISTER_NODE(navi_sim::NaviSimComponent)
