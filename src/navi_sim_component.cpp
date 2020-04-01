@@ -82,7 +82,6 @@ void NaviSimComponent::updatePose()
 {
   mtx_.lock();
   // Update Current Pose
-  using namespace quaternion_operation;
   geometry_msgs::msg::Vector3 angular_trans_vec;
   angular_trans_vec.z = current_twist_.angular.z * 0.01;
   geometry_msgs::msg::Quaternion angular_trans_quat =
@@ -176,7 +175,7 @@ void NaviSimComponent::updateScan()
     obstacle.header.frame_id = "map";
     obstacles.push_back(TransformToBaselinkFrame(obstacle, false));
   }
-  double angle_increment = M_PI * 2 / (double)num_scans_;
+  double angle_increment = M_PI * 2 / static_cast<double>(num_scans_);
   sensor_msgs::msg::LaserScan scan;
   scan.header.frame_id = "base_link";
   scan.header.stamp = stamp;

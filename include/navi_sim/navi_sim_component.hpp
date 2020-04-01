@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NAVI_SIM_NAVI_SIM_COMPONENT_H_INCLUDED
-#define NAVI_SIM_NAVI_SIM_COMPONENT_H_INCLUDED
+#ifndef NAVI_SIM__NAVI_SIM_COMPONENT_HPP_
+#define NAVI_SIM__NAVI_SIM_COMPONENT_HPP_
 
 #if __cplusplus
 extern "C" {
@@ -64,15 +64,15 @@ extern "C" {
 #include <geometry_msgs/msg/twist.hpp>
 #include <rclcpp/rclcpp.hpp>
 #include <sensor_msgs/msg/laser_scan.hpp>
-
-// Headers in STL
-#include <chrono>
-#include <mutex>
-
 #include <quaternion_operation/quaternion_operation.h>
 
 // Headers in Boost
 #include <boost/optional.hpp>
+
+// Headers in STL
+#include <chrono>
+#include <mutex>
+#include <vector>
 
 namespace navi_sim
 {
@@ -115,4 +115,4 @@ private:
 };
 }  // namespace navi_sim
 
-#endif  //NAVI_SIM_NAVI_SIM_COMPONENT_H_INCLUDED
+#endif  // NAVI_SIM__NAVI_SIM_COMPONENT_HPP_

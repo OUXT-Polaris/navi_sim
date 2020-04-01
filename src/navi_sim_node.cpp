@@ -15,8 +15,8 @@
 // Headers in this package
 #include <navi_sim/navi_sim_component.hpp>
 // Headers in RCLCPP
-#include <memory>
 #include <rclcpp/rclcpp.hpp>
+#include <memory>
 
 int main(int argc, char * argv[])
 {
