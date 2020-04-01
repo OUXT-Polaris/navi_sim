@@ -7,3 +7,7 @@ repositories:
     type: git
     url: https://github.com/OUXT-Polaris/hermite_path_planner.git
     version: master
+  color_names:
+    type: git
+    url: https://github.com/OUXT-Polaris/color_names.git
+    version: master
