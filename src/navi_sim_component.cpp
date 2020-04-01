@@ -147,7 +147,7 @@ boost::optional<double> NaviSimComponent::getDistanceToObstacle(
   double x0 = obstacle.point.x;
   double y0 = obstacle.point.y;
   double a = std::pow(x0 * std::cos(theta) + y0 * std::sin(theta), 2) -
-             (x0 * x0 + y0 * y0 - obstacle_radius_ * obstacle_radius_);
+    (x0 * x0 + y0 * y0 - obstacle_radius_ * obstacle_radius_);
   if (a < 0.0) {
     return boost::none;
   }
