@@ -85,7 +85,7 @@ void NaviSimComponent::updatePose()
   geometry_msgs::msg::Vector3 angular_trans_vec;
   angular_trans_vec.z = current_twist_.angular.z * 0.01;
   geometry_msgs::msg::Quaternion angular_trans_quat =
-    convertEulerAngleToQuaternion(angular_trans_vec);
+    quaternion_operation::convertEulerAngleToQuaternion(angular_trans_vec);
   current_pose_.orientation =
     quaternion_operation::rotation(current_pose_.orientation, angular_trans_quat);
   Eigen::Vector3d trans_vec;
