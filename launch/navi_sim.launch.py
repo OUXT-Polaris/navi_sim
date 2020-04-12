@@ -17,6 +17,8 @@ import os
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch_ros.actions import Node
+from launch.actions import IncludeLaunchDescription
+from launch.launch_description_sources import PythonLaunchDescriptionSource
 
 
 def generate_launch_description():
@@ -24,6 +26,8 @@ def generate_launch_description():
             get_package_share_directory('navi_sim'),
             'config',
             'navi_sim.rviz')
+    description_dir = os.path.join(
+            get_package_share_directory('wamv_description'), 'launch')
     description = LaunchDescription([
         Node(
             package='rviz2',
@@ -36,5 +40,8 @@ def generate_launch_description():
             node_executable='navi_sim_node',
             node_name='navi_sim_node',
             output='screen'),
+        IncludeLaunchDescription(
+            PythonLaunchDescriptionSource([description_dir, '/wamv_description.launch.py']),
+        ),
     ])
     return description

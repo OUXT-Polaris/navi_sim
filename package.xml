@@ -19,6 +19,7 @@
   <depend>eigen</depend>
   <depend>hermite_path_planner_bringup</depend>
   <depend>sensor_msgs</depend>
+  <depend>wamv_description</depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
