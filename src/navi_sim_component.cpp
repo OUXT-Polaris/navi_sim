@@ -16,6 +16,7 @@
 #include <rclcpp_components/register_node_macro.hpp>
 #include <set>
 #include <vector>
+#include <string>
 
 namespace navi_sim
 {
@@ -34,6 +35,7 @@ NaviSimComponent::NaviSimComponent(const rclcpp::NodeOptions & options)
   current_pose_pub_ = this->create_publisher<geometry_msgs::msg::PoseStamped>("current_pose", 1);
   current_twist_pub_ = this->create_publisher<geometry_msgs::msg::Twist>("current_twist", 1);
   laser_pub_ = this->create_publisher<sensor_msgs::msg::LaserScan>("obstacle_scan", 1);
+  joint_state_pub_ = this->create_publisher<sensor_msgs::msg::JointState>("joint_states", 1);
   initial_pose_sub_ = this->create_subscription<geometry_msgs::msg::PoseWithCovarianceStamped>(
     "initialpose", 1,
     std::bind(&NaviSimComponent::initialPoseCallback, this, std::placeholders::_1));
@@ -78,6 +80,22 @@ geometry_msgs::msg::PointStamped NaviSimComponent::TransformToBaselinkFrame(
   return point;
 }
 
+void NaviSimComponent::updateJointState()
+{
+  sensor_msgs::msg::JointState joint_state;
+  joint_state.header.stamp = get_clock()->now();
+  std::vector<std::string> joints =
+  {"left_chasis_engine_joint", "left_engine_propeller_joint", "right_chasis_engine_joint",
+    "right_engine_propeller_joint"};
+  for (auto itr = joints.begin(); itr != joints.end(); itr++) {
+    joint_state.name.push_back(*itr);
+    joint_state.position.push_back(0.0);
+    joint_state.velocity.push_back(0.0);
+    joint_state.effort.push_back(0.0);
+  }
+  joint_state_pub_->publish(joint_state);
+}
+
 void NaviSimComponent::updatePose()
 {
   mtx_.lock();
@@ -114,6 +132,8 @@ void NaviSimComponent::updatePose()
   current_pose_msg.header.frame_id = "map";
   current_pose_pub_->publish(current_pose_msg);
   current_twist_pub_->publish(current_twist_);
+
+  updateJointState();
   mtx_.unlock();
 }
 

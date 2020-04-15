@@ -64,6 +64,7 @@ extern "C" {
 #include <geometry_msgs/msg/twist.hpp>
 #include <rclcpp/rclcpp.hpp>
 #include <sensor_msgs/msg/laser_scan.hpp>
+#include <sensor_msgs/msg/joint_state.hpp>
 #include <quaternion_operation/quaternion_operation.h>
 
 // Headers in Boost
@@ -98,6 +99,7 @@ private:
   rclcpp::Publisher<geometry_msgs::msg::PoseStamped>::SharedPtr current_pose_pub_;
   rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr current_twist_pub_;
   rclcpp::Publisher<sensor_msgs::msg::LaserScan>::SharedPtr laser_pub_;
+  rclcpp::Publisher<sensor_msgs::msg::JointState>::SharedPtr joint_state_pub_;
   std::mutex mtx_;
   tf2_ros::Buffer buffer_;
   tf2_ros::TransformListener listener_;
@@ -109,6 +111,7 @@ private:
   double minimum_scan_range_;
   int num_scans_;
   void updateScan();
+  void updateJointState();
   rclcpp::TimerBase::SharedPtr update_scan_timer_;
   boost::optional<double> getDistanceToObstacle(
     geometry_msgs::msg::PointStamped obstacle, double theta);
