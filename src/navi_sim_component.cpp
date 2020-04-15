@@ -16,6 +16,7 @@
 #include <rclcpp_components/register_node_macro.hpp>
 #include <set>
 #include <vector>
+#include <string>
 
 namespace navi_sim
 {
