@@ -38,28 +38,19 @@ Visualization Manager:
       Reference Frame: map
       Value: true
     - Class: rviz_default_plugins/TF
-      Enabled: true
+      Enabled: false
       Frame Timeout: 15
       Frames:
         All Enabled: true
-        base_link:
-          Value: true
-        dummy_link:
-          Value: true
-        map:
-          Value: true
       Marker Scale: 5
       Name: TF
       Show Arrows: true
       Show Axes: true
       Show Names: false
       Tree:
-        map:
-          base_link:
-            dummy_link:
-              {}
+        {}
       Update Interval: 0
-      Value: true
+      Value: false
     - Class: rviz_default_plugins/MarkerArray
       Enabled: true
       Name: HermitePath
@@ -211,6 +202,11 @@ Visualization Manager:
           Alpha: 1
           Show Axes: false
           Show Trail: false
+        cpu_cases_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
         dummy_link:
           Alpha: 1
           Show Axes: false
@@ -264,7 +260,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz_default_plugins/ThirdPersonFollower
-      Distance: 51.65032958984375
+      Distance: 5.131353855133057
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -279,10 +275,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.7603980302810669
+      Pitch: 0.4803982973098755
       Target Frame: base_link
       Value: ThirdPersonFollower (rviz_default_plugins)
-      Yaw: 2.415400981903076
+      Yaw: 1.8653978109359741
     Saved: ~
 Window Geometry:
   Displays:
