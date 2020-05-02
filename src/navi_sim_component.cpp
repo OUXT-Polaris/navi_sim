@@ -24,7 +24,9 @@ NaviSimComponent::NaviSimComponent(const rclcpp::NodeOptions & options)
 : Node("navi_sim", options), broadcaster_(this), buffer_(get_clock()), listener_(buffer_)
 {
   using namespace std::chrono_literals;
-  obstacle_radius_ = 1.0;
+
+  
+  obstacle_radius_ = 0.3;
   maximum_scan_range_ = 20.0;
   minimum_scan_range_ = 0.3;
   num_scans_ = 360;

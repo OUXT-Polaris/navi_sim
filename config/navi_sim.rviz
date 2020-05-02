@@ -11,7 +11,7 @@ Panels:
       Expanded:
         - /Status1
       Splitter Ratio: 0.5
-    Tree Height: 975
+    Tree Height: 998
   - Class: rviz_common/Tool Properties
     Expanded: ~
     Name: Tool Properties
@@ -76,54 +76,6 @@ Visualization Manager:
         Value: /pure_pursuit_planner/marker
       Value: true
     - Class: rviz_default_plugins/MarkerArray
-      Enabled: false
-      Name: CurvePlanner
-      Namespaces:
-        {}
-      Topic:
-        Depth: 5
-        Durability Policy: Volatile
-        History Policy: Keep Last
-        Reliability Policy: Reliable
-        Value: /curve_planner/marker
-      Value: false
-    - Class: rviz_default_plugins/MarkerArray
-      Enabled: false
-      Name: StopPlanner
-      Namespaces:
-        {}
-      Topic:
-        Depth: 5
-        Durability Policy: Volatile
-        History Policy: Keep Last
-        Reliability Policy: Reliable
-        Value: /stop_planner/marker
-      Value: false
-    - Class: rviz_default_plugins/MarkerArray
-      Enabled: false
-      Name: ObstaclePlanner
-      Namespaces:
-        {}
-      Topic:
-        Depth: 5
-        Durability Policy: Volatile
-        History Policy: Keep Last
-        Reliability Policy: Reliable
-        Value: /obstacle_planner/marker
-      Value: false
-    - Class: rviz_default_plugins/MarkerArray
-      Enabled: false
-      Name: PlannerConcatenator
-      Namespaces:
-        {}
-      Topic:
-        Depth: 5
-        Durability Policy: Volatile
-        History Policy: Keep Last
-        Reliability Policy: Reliable
-        Value: /planner_concatenator/marker
-      Value: false
-    - Class: rviz_default_plugins/MarkerArray
       Enabled: true
       Name: VelocityPlanner
       Namespaces:
@@ -133,7 +85,7 @@ Visualization Manager:
         Durability Policy: Volatile
         History Policy: Keep Last
         Reliability Policy: Reliable
-        Value: /velocity_planner/marker
+        Value: /velocity_planner/velocity_planner/marker
       Value: true
     - Alpha: 1
       Autocompute Intensity Bounds: true
@@ -178,7 +130,7 @@ Visualization Manager:
         Durability Policy: Volatile
         History Policy: Keep Last
         Reliability Policy: Reliable
-        Value: /obstacle_planner/obstacle/marker
+        Value: /velocity_planner/obstacle_planner/obstacle/marker
       Value: true
     - Alpha: 1
       Class: rviz_default_plugins/RobotModel
@@ -208,6 +160,36 @@ Visualization Manager:
           Show Trail: false
           Value: true
         dummy_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        left_battery_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        left_engine_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        left_propeller_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        right_battery_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        right_engine_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        right_propeller_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -260,7 +242,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz_default_plugins/ThirdPersonFollower
-      Distance: 5.131353855133057
+      Distance: 14.229647636413574
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -275,20 +257,20 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.4803982973098755
+      Pitch: 0.5053982734680176
       Target Frame: base_link
       Value: ThirdPersonFollower (rviz_default_plugins)
-      Yaw: 1.8653978109359741
+      Yaw: 3.0353972911834717
     Saved: ~
 Window Geometry:
   Displays:
-    collapsed: false
+    collapsed: true
   Height: 1385
-  Hide Left Dock: false
+  Hide Left Dock: true
   Hide Right Dock: false
-  QMainWindow State: 000000ff00000000fd0000000200000000000002410000050ffc0200000002fb000000100044006900730070006c006100790073010000003d00000452000000c900fffffffb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000495000000b70000005c00ffffff00000001000001cb0000050ffc0200000001fb0000000a00560069006500770073010000003d0000050f000000a400ffffff000009150000050f00000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  QMainWindow State: 000000ff00000000fd0000000200000000000003ad0000050ffc0200000002fb000000100044006900730070006c006100790073000000003d00000469000000c900fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007300000004ac000000a00000005c00ffffff00000001000001cb0000050ffc0200000001fb0000000a00560069006500770073010000003d0000050f000000a400ffffff00000b5c0000050f00000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   Tool Properties:
-    collapsed: false
+    collapsed: true
   Views:
     collapsed: false
   Width: 3373
