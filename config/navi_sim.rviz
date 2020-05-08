@@ -10,8 +10,9 @@ Panels:
     Property Tree Widget:
       Expanded:
         - /Status1
+        - /VelocityPlanner1
       Splitter Ratio: 0.5
-    Tree Height: 998
+    Tree Height: 1016
   - Class: rviz_common/Tool Properties
     Expanded: ~
     Name: Tool Properties
@@ -55,7 +56,8 @@ Visualization Manager:
       Enabled: true
       Name: HermitePath
       Namespaces:
-        {}
+        center_line: true
+        polygon: true
       Topic:
         Depth: 5
         Durability Policy: Volatile
@@ -67,7 +69,9 @@ Visualization Manager:
       Enabled: true
       Name: PurePursuit
       Namespaces:
-        {}
+        circle: true
+        current: true
+        target: true
       Topic:
         Depth: 5
         Durability Policy: Volatile
@@ -79,13 +83,13 @@ Visualization Manager:
       Enabled: true
       Name: VelocityPlanner
       Namespaces:
-        {}
+        polygon: true
       Topic:
         Depth: 5
         Durability Policy: Volatile
         History Policy: Keep Last
         Reliability Policy: Reliable
-        Value: /velocity_planner/velocity_planner/marker
+        Value: /velocity_planner/velocity_planner/marker/polygon
       Value: true
     - Alpha: 1
       Autocompute Intensity Bounds: true
@@ -119,18 +123,6 @@ Visualization Manager:
         Value: /obstacle_scan
       Use Fixed Frame: true
       Use rainbow: true
-      Value: true
-    - Class: rviz_default_plugins/MarkerArray
-      Enabled: true
-      Name: Obstacle
-      Namespaces:
-        {}
-      Topic:
-        Depth: 5
-        Durability Policy: Volatile
-        History Policy: Keep Last
-        Reliability Policy: Reliable
-        Value: /velocity_planner/obstacle_planner/obstacle/marker
       Value: true
     - Alpha: 1
       Class: rviz_default_plugins/RobotModel
@@ -199,6 +191,49 @@ Visualization Manager:
       Update Interval: 0
       Value: true
       Visual Enabled: true
+    - Class: rviz_default_plugins/MarkerArray
+      Enabled: true
+      Name: AvoidPath
+      Namespaces:
+        {}
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /local_waypoint_server/marker/no_collision
+      Value: true
+    - Alpha: 1
+      Axes Length: 1
+      Axes Radius: 0.10000000149011612
+      Class: rviz_default_plugins/Pose
+      Color: 255; 25; 0
+      Enabled: true
+      Head Length: 0.30000001192092896
+      Head Radius: 0.10000000149011612
+      Name: LocalWaypoint
+      Shaft Length: 1
+      Shaft Radius: 0.05000000074505806
+      Shape: Arrow
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /local_waypoint_server/local_waypoint
+      Value: true
+    - Class: rviz_default_plugins/MarkerArray
+      Enabled: false
+      Name: ReferenceVelocity
+      Namespaces:
+        {}
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /velocity_planner/planner_concatenator/marker
+      Value: false
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -242,7 +277,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz_default_plugins/ThirdPersonFollower
-      Distance: 14.229647636413574
+      Distance: 42.699520111083984
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -257,10 +292,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.5053982734680176
+      Pitch: 0.23539820313453674
       Target Frame: base_link
       Value: ThirdPersonFollower (rviz_default_plugins)
-      Yaw: 3.0353972911834717
+      Yaw: 2.8403968811035156
     Saved: ~
 Window Geometry:
   Displays:
@@ -268,7 +303,7 @@ Window Geometry:
   Height: 1385
   Hide Left Dock: true
   Hide Right Dock: false
-  QMainWindow State: 000000ff00000000fd0000000200000000000003ad0000050ffc0200000002fb000000100044006900730070006c006100790073000000003d00000469000000c900fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007300000004ac000000a00000005c00ffffff00000001000001cb0000050ffc0200000001fb0000000a00560069006500770073010000003d0000050f000000a400ffffff00000b5c0000050f00000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  QMainWindow State: 000000ff00000000fd0000000200000000000003ad0000050ffc0200000002fb000000100044006900730070006c006100790073000000003d0000047b000000c900fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007300000004be0000008e0000005c00ffffff00000001000001cb0000050ffc0200000001fb0000000a00560069006500770073010000003d0000050f000000a400ffffff00000b5c0000050f00000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   Tool Properties:
     collapsed: true
   Views:
