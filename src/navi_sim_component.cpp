@@ -25,9 +25,8 @@ NaviSimComponent::NaviSimComponent(const rclcpp::NodeOptions & options)
 {
   using namespace std::chrono_literals;
 
-  
-  obstacle_radius_ = 0.3;
-  maximum_scan_range_ = 20.0;
+  obstacle_radius_ = 0.4955;
+  maximum_scan_range_ = 50.0;
   minimum_scan_range_ = 0.3;
   num_scans_ = 360;
   update_position_timer_ =
@@ -38,6 +37,7 @@ NaviSimComponent::NaviSimComponent(const rclcpp::NodeOptions & options)
   current_twist_pub_ = this->create_publisher<geometry_msgs::msg::Twist>("current_twist", 1);
   laser_pub_ = this->create_publisher<sensor_msgs::msg::LaserScan>("obstacle_scan", 1);
   joint_state_pub_ = this->create_publisher<sensor_msgs::msg::JointState>("joint_states", 1);
+  marker_pub_ = this->create_publisher<visualization_msgs::msg::MarkerArray>("~/marker", 1);
   initial_pose_sub_ = this->create_subscription<geometry_msgs::msg::PoseWithCovarianceStamped>(
     "initialpose", 1,
     std::bind(&NaviSimComponent::initialPoseCallback, this, std::placeholders::_1));
@@ -184,9 +184,49 @@ boost::optional<double> NaviSimComponent::getDistanceToObstacle(
   return boost::none;
 }
 
+visualization_msgs::msg::MarkerArray NaviSimComponent::generateDeleteMarker()
+{
+  visualization_msgs::msg::MarkerArray msg;
+  visualization_msgs::msg::Marker marker;
+  marker.action = marker.DELETEALL;
+  msg.markers.push_back(marker);
+  return msg;
+}
+
+visualization_msgs::msg::MarkerArray NaviSimComponent::generateMarker()
+{
+  visualization_msgs::msg::MarkerArray msg;
+  int i = 0;
+  auto stamp = get_clock()->now();
+  for (auto itr = obstacles_.begin(); itr != obstacles_.end(); itr++) {
+    visualization_msgs::msg::Marker marker;
+    marker.header.frame_id = "map";
+    marker.header.stamp = stamp;
+    marker.action = marker.ADD;
+    marker.type = marker.SPHERE;
+    marker.ns = "obstacle";
+    marker.id = i;
+    marker.pose.position = *itr;
+    marker.scale.x = obstacle_radius_ * 2.0;
+    marker.scale.y = obstacle_radius_ * 2.0;
+    marker.scale.z = obstacle_radius_ * 2.0;
+    marker.color.r = 0.0;
+    marker.color.g = 0.0;
+    marker.color.b = 0.0;
+    marker.color.a = 1.0;
+    msg.markers.push_back(marker);
+    i++;
+  }
+  return msg;
+}
+
 void NaviSimComponent::updateScan()
 {
   mtx_.lock();
+
+  marker_pub_->publish(generateDeleteMarker());
+  marker_pub_->publish(generateMarker());
+
   std::vector<geometry_msgs::msg::PointStamped> obstacles;
   auto stamp = get_clock()->now();
 

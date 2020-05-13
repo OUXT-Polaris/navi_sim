@@ -65,6 +65,7 @@ extern "C" {
 #include <rclcpp/rclcpp.hpp>
 #include <sensor_msgs/msg/laser_scan.hpp>
 #include <sensor_msgs/msg/joint_state.hpp>
+#include <visualization_msgs/msg/marker_array.hpp>
 #include <quaternion_operation/quaternion_operation.h>
 
 // Headers in Boost
@@ -88,6 +89,7 @@ private:
   rclcpp::TimerBase::SharedPtr update_position_timer_;
   geometry_msgs::msg::Twist current_twist_;
   geometry_msgs::msg::Pose current_pose_;
+  rclcpp::Publisher<visualization_msgs::msg::MarkerArray>::SharedPtr marker_pub_;
   void updatePose();
   void clickedPointCallback(const geometry_msgs::msg::PointStamped::SharedPtr data);
   void initialPoseCallback(const geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr data);
@@ -115,6 +117,8 @@ private:
   rclcpp::TimerBase::SharedPtr update_scan_timer_;
   boost::optional<double> getDistanceToObstacle(
     geometry_msgs::msg::PointStamped obstacle, double theta);
+  visualization_msgs::msg::MarkerArray generateDeleteMarker();
+  visualization_msgs::msg::MarkerArray generateMarker();
 };
 }  // namespace navi_sim
 
