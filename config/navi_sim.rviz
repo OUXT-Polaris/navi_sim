@@ -11,7 +11,7 @@ Panels:
       Expanded:
         - /Status1
       Splitter Ratio: 0.5
-    Tree Height: 975
+    Tree Height: 1031
   - Class: rviz_common/Tool Properties
     Expanded: ~
     Name: Tool Properties
@@ -55,7 +55,8 @@ Visualization Manager:
       Enabled: true
       Name: HermitePath
       Namespaces:
-        {}
+        center_line: true
+        polygon: true
       Topic:
         Depth: 5
         Durability Policy: Volatile
@@ -67,7 +68,10 @@ Visualization Manager:
       Enabled: true
       Name: PurePursuit
       Namespaces:
-        {}
+        circle: true
+        current: true
+        target: true
+        target_twist: true
       Topic:
         Depth: 5
         Durability Policy: Volatile
@@ -76,64 +80,16 @@ Visualization Manager:
         Value: /pure_pursuit_planner/marker
       Value: true
     - Class: rviz_default_plugins/MarkerArray
-      Enabled: false
-      Name: CurvePlanner
-      Namespaces:
-        {}
-      Topic:
-        Depth: 5
-        Durability Policy: Volatile
-        History Policy: Keep Last
-        Reliability Policy: Reliable
-        Value: /curve_planner/marker
-      Value: false
-    - Class: rviz_default_plugins/MarkerArray
-      Enabled: false
-      Name: StopPlanner
-      Namespaces:
-        {}
-      Topic:
-        Depth: 5
-        Durability Policy: Volatile
-        History Policy: Keep Last
-        Reliability Policy: Reliable
-        Value: /stop_planner/marker
-      Value: false
-    - Class: rviz_default_plugins/MarkerArray
-      Enabled: false
-      Name: ObstaclePlanner
-      Namespaces:
-        {}
-      Topic:
-        Depth: 5
-        Durability Policy: Volatile
-        History Policy: Keep Last
-        Reliability Policy: Reliable
-        Value: /obstacle_planner/marker
-      Value: false
-    - Class: rviz_default_plugins/MarkerArray
-      Enabled: false
-      Name: PlannerConcatenator
-      Namespaces:
-        {}
-      Topic:
-        Depth: 5
-        Durability Policy: Volatile
-        History Policy: Keep Last
-        Reliability Policy: Reliable
-        Value: /planner_concatenator/marker
-      Value: false
-    - Class: rviz_default_plugins/MarkerArray
       Enabled: true
       Name: VelocityPlanner
       Namespaces:
-        {}
+        polygon: true
       Topic:
         Depth: 5
         Durability Policy: Volatile
         History Policy: Keep Last
         Reliability Policy: Reliable
-        Value: /velocity_planner/marker
+        Value: /velocity_planner/velocity_planner/marker/polygon
       Value: true
     - Alpha: 1
       Autocompute Intensity Bounds: true
@@ -168,18 +124,6 @@ Visualization Manager:
       Use Fixed Frame: true
       Use rainbow: true
       Value: true
-    - Class: rviz_default_plugins/MarkerArray
-      Enabled: true
-      Name: Obstacle
-      Namespaces:
-        {}
-      Topic:
-        Depth: 5
-        Durability Policy: Volatile
-        History Policy: Keep Last
-        Reliability Policy: Reliable
-        Value: /obstacle_planner/obstacle/marker
-      Value: true
     - Alpha: 1
       Class: rviz_default_plugins/RobotModel
       Collision Enabled: false
@@ -212,11 +156,109 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
+        left_battery_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        left_engine_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        left_propeller_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        right_battery_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        right_engine_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        right_propeller_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
       Name: RobotModel
       TF Prefix: ""
       Update Interval: 0
       Value: true
       Visual Enabled: true
+    - Class: rviz_default_plugins/MarkerArray
+      Enabled: true
+      Name: AvoidPath
+      Namespaces:
+        center_line: true
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /local_waypoint_server/marker/no_collision
+      Value: true
+    - Alpha: 1
+      Axes Length: 1
+      Axes Radius: 0.10000000149011612
+      Class: rviz_default_plugins/Pose
+      Color: 255; 25; 0
+      Enabled: true
+      Head Length: 0.30000001192092896
+      Head Radius: 0.10000000149011612
+      Name: LocalWaypoint
+      Shaft Length: 1
+      Shaft Radius: 0.05000000074505806
+      Shape: Arrow
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /local_waypoint_server/local_waypoint
+      Value: true
+    - Class: rviz_default_plugins/MarkerArray
+      Enabled: true
+      Name: ReferenceVelocity
+      Namespaces:
+        reference_velocity: true
+        reference_velocity_text: true
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /velocity_planner/velocity_planner/marker
+      Value: true
+    - Class: rviz_default_plugins/MarkerArray
+      Enabled: true
+      Name: Obstacle
+      Namespaces:
+        polygon: true
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /velocity_planner/obstacle_planner/obstacle/marker
+      Value: true
+    - Class: rviz_default_plugins/MarkerArray
+      Enabled: true
+      Name: SimulatedObstacle
+      Namespaces:
+        obstacle: true
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /navi_sim_node/marker
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -260,7 +302,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz_default_plugins/ThirdPersonFollower
-      Distance: 5.131353855133057
+      Distance: 20.35828399658203
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -275,10 +317,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.4803982973098755
+      Pitch: 0.4453980624675751
       Target Frame: base_link
       Value: ThirdPersonFollower (rviz_default_plugins)
-      Yaw: 1.8653978109359741
+      Yaw: 2.5153968334198
     Saved: ~
 Window Geometry:
   Displays:
@@ -286,7 +328,7 @@ Window Geometry:
   Height: 1385
   Hide Left Dock: false
   Hide Right Dock: false
-  QMainWindow State: 000000ff00000000fd0000000200000000000002410000050ffc0200000002fb000000100044006900730070006c006100790073010000003d00000452000000c900fffffffb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000495000000b70000005c00ffffff00000001000001cb0000050ffc0200000001fb0000000a00560069006500770073010000003d0000050f000000a400ffffff000009150000050f00000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  QMainWindow State: 000000ff00000000fd0000000200000000000003ad0000050ffc0200000002fb000000100044006900730070006c006100790073010000003d0000048a000000c900fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007301000004cd0000007f0000005c00ffffff00000001000001cb0000050ffc0200000001fb0000000a00560069006500770073010000003d0000050f000000a400ffffff000007a90000050f00000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   Tool Properties:
     collapsed: false
   Views:
