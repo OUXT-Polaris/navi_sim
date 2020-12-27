@@ -31,14 +31,14 @@ def generate_launch_description():
     description = LaunchDescription([
         Node(
             package='rviz2',
-            node_executable='rviz2',
-            node_name='rviz2',
+            executable='rviz2',
+            name='rviz2',
             arguments=['-d', rviz_config_dir],
             output='screen'),
         Node(
             package='navi_sim',
-            node_executable='navi_sim_node',
-            node_name='navi_sim_node',
+            executable='navi_sim_node',
+            name='navi_sim_node',
             output='screen'),
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource([description_dir, '/wamv_description.launch.py']),
