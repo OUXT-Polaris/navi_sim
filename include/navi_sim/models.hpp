@@ -21,6 +21,7 @@
 #include <boost/filesystem.hpp>
 #include <boost/foreach.hpp>
 
+#include <vector>
 #include <unordered_map>
 
 namespace navi_sim
@@ -29,6 +30,7 @@ class Models
 {
 public:
   Models();
+  std::vector<std::string> getModelNames() const;
 
 private:
   std::unordered_map<std::string, std::string> dict_;

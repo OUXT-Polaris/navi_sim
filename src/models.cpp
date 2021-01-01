@@ -36,4 +36,13 @@ Models::Models()
     }
   }
 }
+
+std::vector<std::string> Models::getModelNames() const
+{
+  std::vector<std::string> ret;
+  for (const auto & model : dict_) {
+    ret.emplace_back(model.first);
+  }
+  return ret;
+}
 } // namespace navi_sim
