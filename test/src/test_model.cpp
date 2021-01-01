@@ -20,6 +20,7 @@ TEST(Model, loadModel)
 {
   navi_sim::Models models;
   models.getPath("dock_block_2x2");
+  EXPECT_NO_THROW(models.load("dock_block_2x2"));
 }
 
 int main(int argc, char ** argv)

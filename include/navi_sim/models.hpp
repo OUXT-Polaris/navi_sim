@@ -17,6 +17,8 @@
 
 #include <ament_index_cpp/get_package_share_directory.hpp>
 
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
 
 #include <boost/filesystem.hpp>
 #include <boost/foreach.hpp>
@@ -33,6 +35,7 @@ public:
   Models();
   std::vector<std::string> getModelNames() const;
   std::string getPath(std::string name) const;
+  void load(std::string name) const;
 
 private:
   std::unordered_map<std::string, std::string> dict_;
