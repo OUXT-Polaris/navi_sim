@@ -34,7 +34,8 @@ public:
   explicit Mesh(std::string path);
 
 private:
-  bool initFromScene(const aiScene * scene_ptr, const std::string & path);
+  void initFromScene(const aiScene * scene_ptr);
+  void initMesh(unsigned int index, const aiMesh * mesh_ptr);
   struct MeshEntry
   {
     MeshEntry();
