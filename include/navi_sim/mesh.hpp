@@ -1,4 +1,4 @@
-// Copyright (c) 2020 OUXT Polaris
+// Copyright (c) 2021 OUXT Polaris
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,33 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NAVI_SIM__MODELS_HPP_
-#define NAVI_SIM__MODELS_HPP_
+#ifndef NAVI_SIM__MESH_HPP_
+#define NAVI_SIM__MESH_HPP_
 
-#include <navi_sim/mesh.hpp>
-
-#include <ament_index_cpp/get_package_share_directory.hpp>
-
-#include <boost/filesystem.hpp>
-#include <boost/foreach.hpp>
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
 
 #include <string>
-#include <vector>
-#include <unordered_map>
 
 namespace navi_sim
 {
-class Models
+class Mesh
 {
 public:
-  Models();
-  std::vector<std::string> getModelNames() const;
-  std::string getPath(std::string name) const;
-  void load(std::string name) const;
-
-private:
-  std::unordered_map<std::string, std::string> dict_;
+  explicit Mesh(std::string path);
 };
 }  // namespace navi_sim
 
-#endif  // NAVI_SIM__MODELS_HPP_
+#endif  // NAVI_SIM__MESH_HPP_

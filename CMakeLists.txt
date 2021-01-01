@@ -32,6 +32,7 @@ include_directories(
 add_library(navi_sim_component SHARED
   src/navi_sim_component.cpp
   src/models.cpp
+  src/mesh.cpp
 )
 target_compile_definitions(navi_sim_component PRIVATE "NAVI_SIM_NAVI_SIM_COMPONENT_BUILDING_DLL")
 target_link_libraries(navi_sim_component ${quaternion_operation_LIBRARIES} ${Boost_LIBRARIES})

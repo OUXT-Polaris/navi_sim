@@ -14,8 +14,6 @@
 
 #include <navi_sim/models.hpp>
 
-#include <assimp/postprocess.h>
-
 #include <exception>
 #include <string>
 #include <vector>
@@ -45,11 +43,8 @@ Models::Models()
 
 void Models::load(std::string name) const
 {
-  Assimp::Importer Importer;
-  const aiScene * pScene = Importer.ReadFile(
-    getPath(name).c_str(),
-    aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs |
-    aiProcess_JoinIdenticalVertices);
+  const auto path = getPath(name).c_str();
+  navi_sim::Mesh mesh(path);
 }
 
 std::string Models::getPath(std::string name) const
