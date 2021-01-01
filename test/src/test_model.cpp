@@ -11,3 +11,19 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
+#include <gtest/gtest.h>
+
+#include <navi_sim/models.hpp>
+
+TEST(Model, loadModel)
+{
+  navi_sim::Models models;
+  models.getPath("dock_block_2x2");
+}
+
+int main(int argc, char ** argv)
+{
+  testing::InitGoogleTest(&argc, argv);
+  return RUN_ALL_TESTS();
+}

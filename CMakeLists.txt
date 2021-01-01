@@ -85,7 +85,7 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
   find_package(ament_cmake_gtest REQUIRED)
   ament_add_gtest(test_model test/src/test_model.cpp)
-  target_link_libraries(test_model navi_sim)
+  target_link_libraries(test_model navi_sim_component)
 endif()
 
 ament_auto_package()
