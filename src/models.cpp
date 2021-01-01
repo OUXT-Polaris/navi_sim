@@ -43,7 +43,7 @@ Models::Models()
 
 void Models::load(std::string name) const
 {
-  const auto path = getPath(name).c_str();
+  std::string path = getPath(name);
   navi_sim::Mesh mesh(path);
 }
 

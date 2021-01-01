@@ -1,4 +1,4 @@
-// Copyright (c) 2020 OUXT Polaris
+// Copyright (c) 2021 OUXT Polaris
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,19 +12,28 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <gtest/gtest.h>
+#ifndef NAVI_SIM__VERTEX_HPP_
+#define NAVI_SIM__VERTEX_HPP_
 
-#include <navi_sim/models.hpp>
+#include <array>
 
-TEST(Model, loadModel)
+struct Vertex
 {
-  navi_sim::Models models;
-  models.getPath("dock_block_2x2");
-  models.load("dock_block_2x2");
-}
+  std::array<float, 3> m_pos;
+  std::array<float, 2> m_tex;
+  std::array<float, 3> m_normal;
 
-int main(int argc, char ** argv)
-{
-  testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();
-}
+  Vertex() {}
+
+  Vertex(
+    const std::array<float, 3> & pos,
+    const std::array<float, 2> & tex,
+    const std::array<float, 3> & normal)
+  {
+    m_pos = pos;
+    m_tex = tex;
+    m_normal = normal;
+  }
+};
+
+#endif  // NAVI_SIM__VERTEX_HPP_

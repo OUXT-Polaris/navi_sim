@@ -15,11 +15,16 @@
 #ifndef NAVI_SIM__MESH_HPP_
 #define NAVI_SIM__MESH_HPP_
 
+#include <navi_sim/vertex.hpp>
+
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
 #include <string>
+#include <vector>
+
+#define INVALID_MATERIAL 0xFFFFFFFF
 
 namespace navi_sim
 {
@@ -27,6 +32,21 @@ class Mesh
 {
 public:
   explicit Mesh(std::string path);
+
+private:
+  bool initFromScene(const aiScene * scene_ptr, const std::string & path);
+  struct MeshEntry
+  {
+    MeshEntry();
+    void Init(
+      const std::vector<Vertex> & vertices,
+      const std::vector<unsigned int> & indices);
+    std::int32_t VB;
+    std::int32_t IB;
+    unsigned int num_indices;
+    unsigned int material_index;
+  };
+  std::vector<MeshEntry> entries_;
 };
 }  // namespace navi_sim
 

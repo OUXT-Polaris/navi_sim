@@ -16,19 +16,36 @@
 
 #include <stdexcept>
 #include <string>
-
+#include <iostream>
 
 namespace navi_sim
 {
 Mesh::Mesh(std::string path)
 {
+  std::cout << __FILE__ << "," << __LINE__ << std::endl;
+  std::cout << path << std::endl;
   Assimp::Importer Importer;
   const aiScene * pScene = Importer.ReadFile(
-    path.c_str(),
+    path,
     aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs |
     aiProcess_JoinIdenticalVertices);
   if (!pScene) {
     throw std::runtime_error(Importer.GetErrorString());
   }
+}
+
+bool Mesh::initFromScene(const aiScene * scene_ptr, const std::string & path)
+{
+  entries_.resize(scene_ptr->mNumMeshes);
+  for (unsigned int i = 0; i < entries_.size(); i++) {
+    const aiMesh * ai_mesh_ptr = scene_ptr->mMeshes[i];
+    // InitMesh(i, paiMesh);
+  }
+}
+
+Mesh::MeshEntry::MeshEntry()
+{
+  num_indices = 0;
+  material_index = INVALID_MATERIAL;
 }
 }  // namespace navi_sim
