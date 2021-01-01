@@ -52,6 +52,9 @@ extern "C" {
 }  // extern "C"
 #endif
 
+// Headers in this package
+#include <navi_sim/models.hpp>
+
 // Headers in ROS2
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 #include <tf2_ros/transform_broadcaster.h>
@@ -119,6 +122,7 @@ private:
     geometry_msgs::msg::PointStamped obstacle, double theta);
   visualization_msgs::msg::MarkerArray generateDeleteMarker();
   visualization_msgs::msg::MarkerArray generateMarker();
+  Models models_;
 };
 }  // namespace navi_sim
 

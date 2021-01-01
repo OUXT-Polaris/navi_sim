@@ -20,16 +20,21 @@ find_package(ament_cmake REQUIRED)
 find_package(ament_cmake_auto REQUIRED)
 ament_auto_find_build_dependencies()
 
+find_package(Boost COMPONENTS filesystem REQUIRED)
+link_directories(${Boost_LIBRARY_DIR})
+
 include_directories(
   include
   ${EIGEN3_INCLUDE_DIR}
+  ${Boost_INCLUDE_DIR}
 )
 
 add_library(navi_sim_component SHARED
   src/navi_sim_component.cpp
+  src/models.cpp
 )
 target_compile_definitions(navi_sim_component PRIVATE "NAVI_SIM_NAVI_SIM_COMPONENT_BUILDING_DLL")
-target_link_libraries(navi_sim_component ${quaternion_operation_LIBRARIES})
+target_link_libraries(navi_sim_component ${quaternion_operation_LIBRARIES} ${Boost_LIBRARIES})
 ament_target_dependencies(navi_sim_component
   rclcpp
   rclcpp_components
