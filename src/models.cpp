@@ -14,6 +14,10 @@
 
 #include <navi_sim/models.hpp>
 
+#include <exception>
+#include <string>
+#include <vector>
+
 namespace navi_sim
 {
 Models::Models()
@@ -37,6 +41,14 @@ Models::Models()
   }
 }
 
+std::string Models::getPath(std::string name) const
+{
+  if (dict_.count(name) == 0) {
+    throw std::runtime_error("model name does not match");
+  }
+  return dict_.at(name);
+}
+
 std::vector<std::string> Models::getModelNames() const
 {
   std::vector<std::string> ret;
@@ -45,4 +57,4 @@ std::vector<std::string> Models::getModelNames() const
   }
   return ret;
 }
-} // namespace navi_sim
+}  // namespace navi_sim

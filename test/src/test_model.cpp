@@ -11,32 +11,3 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
-#ifndef NAVI_SIM__MODELS_HPP_
-#define NAVI_SIM__MODELS_HPP_
-
-#include <ament_index_cpp/get_package_share_directory.hpp>
-
-
-#include <boost/filesystem.hpp>
-#include <boost/foreach.hpp>
-
-#include <string>
-#include <vector>
-#include <unordered_map>
-
-namespace navi_sim
-{
-class Models
-{
-public:
-  Models();
-  std::vector<std::string> getModelNames() const;
-  std::string getPath(std::string name) const;
-
-private:
-  std::unordered_map<std::string, std::string> dict_;
-};
-}  // namespace navi_sim
-
-#endif  // NAVI_SIM__MODELS_HPP_

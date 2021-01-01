@@ -83,6 +83,9 @@ install(DIRECTORY launch config models
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
   ament_lint_auto_find_test_dependencies()
+  find_package(ament_cmake_gtest REQUIRED)
+  ament_add_gtest(test_model test/src/test_model.cpp)
+  target_link_libraries(test_model navi_sim)
 endif()
 
 ament_auto_package()
