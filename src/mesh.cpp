@@ -46,8 +46,8 @@ void Mesh::initFromScene(const aiScene * scene_ptr)
 void Mesh::initMesh(unsigned int index, const aiMesh * mesh_ptr)
 {
   entries_[index].material_index = mesh_ptr->mMaterialIndex;
-  std::vector<Vertex> Vertices;
-  std::vector<unsigned int> Indices;
+  std::vector<Vertex> vertices;
+  std::vector<unsigned int> indices;
   const aiVector3D Zero3D(0.0f, 0.0f, 0.0f);
   for (unsigned int i = 0; i < mesh_ptr->mNumVertices; i++) {
     const aiVector3D * position_ptr = &(mesh_ptr->mVertices[i]);
@@ -57,8 +57,24 @@ void Mesh::initMesh(unsigned int index, const aiMesh * mesh_ptr)
     Vertex v(std::array<float, 3>{position_ptr->x, position_ptr->y, position_ptr->z},
       std::array<float, 2>{texture_coordinate_ptr->x, texture_coordinate_ptr->y},
       std::array<float, 3>{normal_ptr->x, normal_ptr->y, normal_ptr->z});
-    Vertices.push_back(v);
+    vertices.push_back(v);
   }
+  for (unsigned int i = 0; i < mesh_ptr->mNumFaces; i++) {
+    const aiFace & face = mesh_ptr->mFaces[i];
+    if (face.mNumIndices != 3) {
+      throw("index of face should be three.");
+    }
+    indices.push_back(face.mIndices[0]);
+    indices.push_back(face.mIndices[1]);
+    indices.push_back(face.mIndices[2]);
+  }
+  entries_[index].init(indices);
+}
+
+void Mesh::MeshEntry::init(
+  const std::vector<unsigned int> & indices)
+{
+  num_indices = indices.size();
 }
 
 Mesh::MeshEntry::MeshEntry()

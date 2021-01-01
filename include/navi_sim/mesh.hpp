@@ -39,8 +39,7 @@ private:
   struct MeshEntry
   {
     MeshEntry();
-    void Init(
-      const std::vector<Vertex> & vertices,
+    void init(
       const std::vector<unsigned int> & indices);
     std::int32_t VB;
     std::int32_t IB;
