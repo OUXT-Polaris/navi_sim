@@ -71,7 +71,7 @@ ament_export_libraries(navi_sim_component)
 #############
 ## Install ##
 #############
-install(DIRECTORY launch config
+install(DIRECTORY launch config models
   DESTINATION share/${PROJECT_NAME}
 )
 
