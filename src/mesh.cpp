@@ -68,13 +68,7 @@ void Mesh::initMesh(unsigned int index, const aiMesh * mesh_ptr)
     indices.push_back(face.mIndices[1]);
     indices.push_back(face.mIndices[2]);
   }
-  entries_[index].init(indices);
-}
-
-void Mesh::MeshEntry::init(
-  const std::vector<unsigned int> & indices)
-{
-  num_indices = indices.size();
+  entries_[index].num_indices = indices.size();
 }
 
 Mesh::MeshEntry::MeshEntry()

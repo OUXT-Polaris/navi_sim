@@ -39,8 +39,6 @@ private:
   struct MeshEntry
   {
     MeshEntry();
-    void init(
-      const std::vector<unsigned int> & indices);
     std::int32_t VB;
     std::int32_t IB;
     unsigned int num_indices;
