@@ -17,4 +17,13 @@
 
 #include <embree3/rtcore_device.h>
 
+namespace navi_sim
+{
+class Raycaster
+{
+public:
+  Raycaster();
+};
+}  // namespace navi_sim
+
 #endif  // NAVI_SIM__RAYCASTER_HPP_

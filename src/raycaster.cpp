@@ -12,3 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 #include <navi_sim/raycaster.hpp>
+
+namespace navi_sim
+{
+Raycaster::Raycaster()
+{}
+}  // namespace navi_sim
