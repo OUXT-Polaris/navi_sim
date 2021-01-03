@@ -22,6 +22,7 @@
   <depend>wamv_description</depend>
   <depend>visualization_msgs</depend>
   <depend>rviz_assimp_vendor</depend>
+  <depend>embree_vendor</depend>
   <depend>ament_cmake_auto</depend>
 
   <test_depend>ament_lint_auto</test_depend>

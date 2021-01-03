@@ -33,6 +33,7 @@ add_library(navi_sim_component SHARED
   src/navi_sim_component.cpp
   src/models.cpp
   src/mesh.cpp
+  src/raycaster.cpp
 )
 target_compile_definitions(navi_sim_component PRIVATE "NAVI_SIM_NAVI_SIM_COMPONENT_BUILDING_DLL")
 target_link_libraries(navi_sim_component ${quaternion_operation_LIBRARIES} ${Boost_LIBRARIES})
@@ -44,7 +45,8 @@ ament_target_dependencies(navi_sim_component
   quaternion_operation
   sensor_msgs
   visualization_msgs
-  rviz_assimp_vendor)
+  rviz_assimp_vendor
+  embree_vendor)
 
 add_executable(navi_sim_node
   src/navi_sim_node.cpp
@@ -58,7 +60,8 @@ ament_target_dependencies(navi_sim_node
   quaternion_operation
   sensor_msgs
   visualization_msgs
-  rviz_assimp_vendor)
+  rviz_assimp_vendor
+  embree_vendor)
 
 rclcpp_components_register_nodes(navi_sim_component
   "navi_sim::NaviSimComponent")
