@@ -45,6 +45,7 @@ private:
     unsigned int material_index;
   };
   std::vector<MeshEntry> entries_;
+  std::vector<geometry_msgs::msg::Point> vertices_;
 };
 }  // namespace navi_sim
 

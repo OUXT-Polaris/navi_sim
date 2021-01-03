@@ -15,7 +15,13 @@
 #ifndef NAVI_SIM__RAYCASTER_HPP_
 #define NAVI_SIM__RAYCASTER_HPP_
 
+#include <navi_sim/mesh.hpp>
+
 #include <embree3/rtcore_device.h>
+
+#include <geometry_msgs/msg/pose.hpp>
+
+#include <unordered_map>
 
 namespace navi_sim
 {
@@ -23,6 +29,12 @@ class Raycaster
 {
 public:
   Raycaster();
+  ~Raycaster();
+  void addObject(std::string name, geometry_msgs::msg::Pose pose, navi_sim::Mesh mesh);
+
+private:
+  RTCDevice device_handle_;
+  std::unordered_map<std::string, navi_sim::Mesh> objects_;
 };
 }  // namespace navi_sim
 

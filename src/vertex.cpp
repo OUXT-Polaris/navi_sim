@@ -12,26 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NAVI_SIM__VERTEX_HPP_
-#define NAVI_SIM__VERTEX_HPP_
-
-#include <array>
-#include <geometry_msgs/msg/point.hpp>
+#include <navi_sim/vertex.hpp>
 
 namespace navi_sim
 {
-class Vertex
+Vertex::Vertex(
+  geometry_msgs::msg::Point position,
+  double texture_position_x,
+  double texture_position_y)
 {
-public:
-  Vertex(
-    geometry_msgs::msg::Point position,
-    double texture_position_x,
-    double texture_position_y);
-
-private:
-  geometry_msgs::msg::Point position_;
-  std::array<double, 2> texture_position_;
-};
+  position_ = position;
+  texture_position_[0] = texture_position_x;
+  texture_position_[1] = texture_position_y;
+}
 } // namespace navi_sim
-
-#endif  // NAVI_SIM__VERTEX_HPP_

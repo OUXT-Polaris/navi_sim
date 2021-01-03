@@ -16,5 +16,17 @@
 namespace navi_sim
 {
 Raycaster::Raycaster()
-{}
+{
+  device_handle_ = rtcNewDevice(nullptr);
+  objects_ = std::unordered_map<std::string, navi_sim::Mesh>();
+}
+
+Raycaster::~Raycaster()
+{
+  rtcReleaseDevice(device_handle_);
+}
+
+void Raycaster::addObject(std::string name, geometry_msgs::msg::Pose pose, navi_sim::Mesh mesh)
+{
+}
 }  // namespace navi_sim

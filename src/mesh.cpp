@@ -23,6 +23,8 @@ namespace navi_sim
 {
 Mesh::Mesh(std::string path)
 {
+  vertices_ = {};
+  entries_ = {};
   Assimp::Importer importer;
   const aiScene * scene_ptr = importer.ReadFile(
     path,
@@ -46,18 +48,19 @@ void Mesh::initFromScene(const aiScene * scene_ptr)
 void Mesh::initMesh(unsigned int index, const aiMesh * mesh_ptr)
 {
   entries_[index].material_index = mesh_ptr->mMaterialIndex;
-  std::vector<Vertex> vertices;
   std::vector<unsigned int> indices;
   const aiVector3D Zero3D(0.0f, 0.0f, 0.0f);
   for (unsigned int i = 0; i < mesh_ptr->mNumVertices; i++) {
     const aiVector3D * position_ptr = &(mesh_ptr->mVertices[i]);
-    const aiVector3D * normal_ptr = &(mesh_ptr->mNormals[i]);
+    // const aiVector3D * normal_ptr = &(mesh_ptr->mNormals[i]);
     const aiVector3D * texture_coordinate_ptr =
       mesh_ptr->HasTextureCoords(0) ? &(mesh_ptr->mTextureCoords[0][i]) : &Zero3D;
-    Vertex v(std::array<float, 3>{position_ptr->x, position_ptr->y, position_ptr->z},
-      std::array<float, 2>{texture_coordinate_ptr->x, texture_coordinate_ptr->y},
-      std::array<float, 3>{normal_ptr->x, normal_ptr->y, normal_ptr->z});
-    vertices.push_back(v);
+    geometry_msgs::msg::Point p;
+    p.x = position_ptr->x;
+    p.y = position_ptr->y;
+    p.z = position_ptr->z;
+    navi_sim::Vertex v(p, texture_coordinate_ptr->x, texture_coordinate_ptr->y);
+    // vertices_.push_back(v);
   }
   for (unsigned int i = 0; i < mesh_ptr->mNumFaces; i++) {
     const aiFace & face = mesh_ptr->mFaces[i];
