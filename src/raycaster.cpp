@@ -28,5 +28,8 @@ Raycaster::~Raycaster()
 
 void Raycaster::addObject(std::string name, geometry_msgs::msg::Pose pose, navi_sim::Mesh mesh)
 {
+  RTCScene scen_handle_ = rtcNewScene(device_handle_);
+  mesh.transform(pose);
+  objects_.emplace(name, mesh);
 }
 }  // namespace navi_sim

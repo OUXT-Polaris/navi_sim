@@ -14,6 +14,10 @@
 
 #include <navi_sim/mesh.hpp>
 
+#include <quaternion_operation/quaternion_operation.h>
+
+#include <Eigen/Core>
+
 #include <stdexcept>
 #include <string>
 #include <iostream>
@@ -34,6 +38,26 @@ Mesh::Mesh(std::string path)
     throw std::runtime_error(importer.GetErrorString());
   }
   initFromScene(scene_ptr);
+}
+
+void Mesh::transform(const geometry_msgs::msg::Pose & pose)
+{
+  const auto mat = quaternion_operation::getRotationMatrix(pose.orientation);
+  for (size_t i = 0; i < vertices_.size(); i++) {
+    Eigen::VectorXd v(3);
+    v(0) = vertices_[i].x;
+    v(1) = vertices_[i].y;
+    v(2) = vertices_[i].z;
+    v = mat * v;
+    v(0) = v(0) + pose.position.x;
+    v(1) = v(1) + pose.position.y;
+    v(2) = v(2) + pose.position.z;
+    geometry_msgs::msg::Point transformed;
+    transformed.x = v(0);
+    transformed.y = v(1);
+    transformed.z = v(2);
+    vertices_[i] = transformed;
+  }
 }
 
 void Mesh::initFromScene(const aiScene * scene_ptr)

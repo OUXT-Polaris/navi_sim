@@ -17,6 +17,8 @@
 
 #include <navi_sim/vertex.hpp>
 
+#include <geometry_msgs/msg/pose.hpp>
+
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
@@ -32,6 +34,7 @@ class Mesh
 {
 public:
   explicit Mesh(std::string path);
+  void transform(const geometry_msgs::msg::Pose & pose);
 
 private:
   void initFromScene(const aiScene * scene_ptr);

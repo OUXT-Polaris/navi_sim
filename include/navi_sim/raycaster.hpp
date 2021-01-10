@@ -17,7 +17,7 @@
 
 #include <navi_sim/mesh.hpp>
 
-#include <embree3/rtcore_device.h>
+#include <embree3/rtcore.h>
 
 #include <geometry_msgs/msg/pose.hpp>
 
@@ -34,6 +34,7 @@ public:
 
 private:
   RTCDevice device_handle_;
+  RTCScene scen_handle_;
   std::unordered_map<std::string, navi_sim::Mesh> objects_;
 };
 }  // namespace navi_sim
