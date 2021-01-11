@@ -26,6 +26,7 @@
 #include <string>
 #include <vector>
 #include <array>
+#include <algorithm>
 
 #define INVALID_MATERIAL 0xFFFFFFFF
 

@@ -25,4 +25,4 @@ Vertex::Vertex(
   texture_position_[0] = texture_position_x;
   texture_position_[1] = texture_position_y;
 }
-} // namespace navi_sim
+}  // namespace navi_sim

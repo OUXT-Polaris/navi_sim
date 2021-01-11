@@ -15,8 +15,8 @@
 #ifndef NAVI_SIM__VERTEX_HPP_
 #define NAVI_SIM__VERTEX_HPP_
 
-#include <array>
 #include <geometry_msgs/msg/point.hpp>
+#include <array>
 
 namespace navi_sim
 {
@@ -40,6 +40,6 @@ private:
   geometry_msgs::msg::Point position_;
   std::array<double, 2> texture_position_;
 };
-} // namespace navi_sim
+}  // namespace navi_sim
 
 #endif  // NAVI_SIM__VERTEX_HPP_

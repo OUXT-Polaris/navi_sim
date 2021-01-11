@@ -22,6 +22,8 @@
 #include <geometry_msgs/msg/pose.hpp>
 
 #include <unordered_map>
+#include <vector>
+#include <string>
 
 namespace navi_sim
 {
@@ -31,6 +33,7 @@ public:
   Raycaster();
   ~Raycaster();
   void addObject(std::string name, geometry_msgs::msg::Pose pose, navi_sim::Mesh mesh);
+  void addObject(std::string name, navi_sim::Mesh mesh);
 
 private:
   RTCDevice device_handle_;
@@ -38,6 +41,8 @@ private:
   RTCGeometry geometry_handle_;
   std::unordered_map<std::string, navi_sim::Mesh> objects_;
   size_t getNumVertices() const;
+  std::vector<geometry_msgs::msg::Point> geometry_vertices_;
+  std::vector<std::array<unsigned int, 3>> geometry_indices_;
 };
 }  // namespace navi_sim
 

@@ -14,13 +14,16 @@
 
 #include <gtest/gtest.h>
 
+#include <navi_sim/raycaster.hpp>
 #include <navi_sim/models.hpp>
 
 TEST(Model, loadModel)
 {
   navi_sim::Models models;
   models.getPath("dock_block_2x2");
-  models.load("dock_block_2x2");
+  navi_sim::Mesh dock_block = models.load("dock_block_2x2");
+  navi_sim::Raycaster raycaster;
+  raycaster.addObject("dock", dock_block);
 }
 
 int main(int argc, char ** argv)

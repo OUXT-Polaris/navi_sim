@@ -17,6 +17,7 @@
 #include <exception>
 #include <string>
 #include <vector>
+#include <algorithm>
 
 namespace navi_sim
 {
@@ -41,10 +42,11 @@ Models::Models()
   }
 }
 
-void Models::load(std::string name) const
+navi_sim::Mesh Models::load(std::string name) const
 {
   std::string path = getPath(name);
   navi_sim::Mesh mesh(path);
+  return mesh;
 }
 
 std::string Models::getPath(std::string name) const

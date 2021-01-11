@@ -13,6 +13,9 @@
 // limitations under the License.
 #include <navi_sim/raycaster.hpp>
 
+#include <unordered_map>
+#include <string>
+
 namespace navi_sim
 {
 Raycaster::Raycaster()
@@ -28,13 +31,18 @@ Raycaster::~Raycaster()
   rtcReleaseGeometry(geometry_handle_);
 }
 
-void Raycaster::addObject(std::string name, geometry_msgs::msg::Pose pose, navi_sim::Mesh mesh)
+void Raycaster::addObject(std::string name, navi_sim::Mesh mesh)
 {
-  scene_handle_ = rtcNewScene(device_handle_);
-  mesh.transform(pose);
   mesh.offsetIndex(getNumVertices());
   objects_.emplace(name, mesh);
+  scene_handle_ = rtcNewScene(device_handle_);
   geometry_handle_ = rtcNewGeometry(device_handle_, RTC_GEOMETRY_TYPE_TRIANGLE);
+}
+
+void Raycaster::addObject(std::string name, geometry_msgs::msg::Pose pose, navi_sim::Mesh mesh)
+{
+  mesh.transform(pose);
+  addObject(name, mesh);
 }
 
 size_t Raycaster::getNumVertices() const
