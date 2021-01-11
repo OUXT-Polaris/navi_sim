@@ -37,6 +37,7 @@ private:
   RTCScene scene_handle_;
   RTCGeometry geometry_handle_;
   std::unordered_map<std::string, navi_sim::Mesh> objects_;
+  size_t getNumVertices() const;
 };
 }  // namespace navi_sim
 

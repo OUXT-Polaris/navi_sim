@@ -32,7 +32,17 @@ void Raycaster::addObject(std::string name, geometry_msgs::msg::Pose pose, navi_
 {
   scene_handle_ = rtcNewScene(device_handle_);
   mesh.transform(pose);
+  mesh.offsetIndex(getNumVertices());
   objects_.emplace(name, mesh);
   geometry_handle_ = rtcNewGeometry(device_handle_, RTC_GEOMETRY_TYPE_TRIANGLE);
+}
+
+size_t Raycaster::getNumVertices() const
+{
+  size_t ret = 0;
+  for (const auto object : objects_) {
+    ret = ret + object.second.getNumVertices();
+  }
+  return ret;
 }
 }  // namespace navi_sim
