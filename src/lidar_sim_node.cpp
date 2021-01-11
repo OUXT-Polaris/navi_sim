@@ -28,11 +28,12 @@ int main(int argc, char * argv[])
   navi_sim::Raycaster raycaster;
   raycaster.addObject("dock1", dock_block);
   raycaster.addObject("dock2", dock_block);
+  geometry_msgs::msg::Point origin;
   dock_block.getNumVertices();
   std::cout << __FILE__ << "," << __LINE__ << std::endl;
-  raycaster.raycast();
+  raycaster.raycast(origin, {});
   std::cout << __FILE__ << "," << __LINE__ << std::endl;
-  raycaster.raycast();
+  raycaster.raycast(origin, {});
   std::cout << __FILE__ << "," << __LINE__ << std::endl;
   return 0;
 }

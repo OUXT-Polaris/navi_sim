@@ -13,6 +13,8 @@
 // limitations under the License.
 #include <navi_sim/raycaster.hpp>
 
+#include <quaternion_operation/quaternion_operation.h>
+
 #include <unordered_map>
 #include <string>
 #include <algorithm>
@@ -53,7 +55,10 @@ void Raycaster::constractGeometry()
   }
 }
 
-void Raycaster::raycast()
+void Raycaster::raycast(
+  geometry_msgs::msg::Point origin,
+  std::vector<geometry_msgs::msg::Vector3> directions,
+  double raycast_distance)
 {
   RTCDevice device_handle = rtcNewDevice(nullptr);
   RTCScene scene_handle = rtcNewScene(device_handle);
@@ -80,6 +85,27 @@ void Raycaster::raycast()
   rtcAttachGeometry(scene_handle, geometry_handle);
   rtcReleaseGeometry(geometry_handle);
   rtcCommitScene(scene_handle);
+  /**
+   * @brief raycast
+   */
+  RTCRayHit rayhit;
+  rayhit.ray.org_x = origin.x;
+  rayhit.ray.org_y = origin.y;
+  rayhit.ray.org_z = origin.z;
+  rayhit.ray.tfar = raycast_distance;
+  rayhit.ray.flags = false;
+  for (const auto direction : directions) {
+    RTCIntersectContext context;
+    rtcInitIntersectContext(&context);
+    rayhit.ray.dir_x = direction.x;
+    rayhit.ray.dir_y = direction.y;
+    rayhit.ray.dir_z = direction.z;
+    rayhit.hit.geomID = RTC_INVALID_GEOMETRY_ID;
+    rtcIntersect1(scene_handle, &context, &rayhit);
+    if (rayhit.hit.geomID != RTC_INVALID_GEOMETRY_ID) {
+      // Intersect something
+    }
+  }
   /**
    * @brief release handlers
    */

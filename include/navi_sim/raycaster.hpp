@@ -20,6 +20,7 @@
 #include <embree3/rtcore.h>
 
 #include <geometry_msgs/msg/pose.hpp>
+#include <geometry_msgs/msg/vector3.hpp>
 
 #include <unordered_map>
 #include <vector>
@@ -27,6 +28,7 @@
 
 namespace navi_sim
 {
+
 class Raycaster
 {
 public:
@@ -34,7 +36,10 @@ public:
   ~Raycaster();
   void addObject(std::string name, geometry_msgs::msg::Pose pose, navi_sim::Mesh mesh);
   void addObject(std::string name, navi_sim::Mesh mesh);
-  void raycast();
+  void raycast(
+    geometry_msgs::msg::Point origin,
+    std::vector<geometry_msgs::msg::Vector3> directions,
+    double raycast_distance = 100);
 
 private:
   std::unordered_map<std::string, navi_sim::Mesh> objects_;

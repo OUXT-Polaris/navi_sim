@@ -27,6 +27,9 @@ TEST(Model, loadModel)
   raycaster.addObject("dock2", dock_block);
   EXPECT_EQ(dock_block.getNumVertices(), static_cast<size_t>(2664));
   EXPECT_EQ(dock_block.getIndices().size(), static_cast<size_t>(2448));
+  geometry_msgs::msg::Point origin;
+  raycaster.raycast(origin, {});
+  raycaster.raycast(origin, {});
 }
 
 int main(int argc, char ** argv)
