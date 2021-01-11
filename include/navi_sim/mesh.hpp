@@ -40,6 +40,8 @@ public:
   void offsetIndex(unsigned int offset);
   size_t getNumVertices() const;
   const std::vector<navi_sim::Vertex> getVertices() const;
+  const std::vector<geometry_msgs::msg::Point> getVerticesAsPoints() const;
+  size_t getNumIndices() const;
   const std::vector<std::array<unsigned int, 3>> getIndices() const;
 
 private:

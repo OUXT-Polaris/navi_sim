@@ -25,6 +25,7 @@ TEST(Model, loadModel)
   navi_sim::Raycaster raycaster;
   raycaster.addObject("dock", dock_block);
   EXPECT_EQ(dock_block.getNumVertices(), static_cast<size_t>(2664));
+  EXPECT_EQ(dock_block.getIndices().size(), static_cast<size_t>(2448));
 }
 
 int main(int argc, char ** argv)

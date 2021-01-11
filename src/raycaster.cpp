@@ -15,6 +15,8 @@
 
 #include <unordered_map>
 #include <string>
+#include <algorithm>
+#include <vector>
 
 namespace navi_sim
 {
@@ -31,18 +33,69 @@ Raycaster::~Raycaster()
   rtcReleaseGeometry(geometry_handle_);
 }
 
+void Raycaster::constractGeometry()
+{
+  geometry_vertices_ = std::vector<VertexData>(getNumVertices());
+  geometry_indices_ = std::vector<PolygonIndexData>(getNumIndices());
+  rtcSetSharedGeometryBuffer(
+    geometry_handle_,
+    RTC_BUFFER_TYPE_VERTEX,
+    0,
+    RTC_FORMAT_FLOAT3,
+    geometry_vertices_.data(),
+    0,
+    sizeof(Vertex),
+    geometry_vertices_.size());
+  rtcSetSharedGeometryBuffer(
+    geometry_handle_,
+    RTC_BUFFER_TYPE_INDEX,
+    0,
+    RTC_FORMAT_UINT3,
+    geometry_indices_.data(),
+    0,
+    sizeof(Vertex),
+    geometry_indices_.size());
+  scene_handle_ = rtcNewScene(device_handle_);
+  geometry_handle_ = rtcNewGeometry(device_handle_, RTC_GEOMETRY_TYPE_TRIANGLE);
+  size_t current_vertices = 0;
+  size_t current_polygon_index = 0;
+  for (const auto object : objects_) {
+    const auto vertex_points = object.second.getVertices();
+    for (const auto vertex : vertex_points) {
+      const auto p = vertex.getPosition();
+      VertexData v = {static_cast<float>(p.x), static_cast<float>(p.y), static_cast<float>(p.z)};
+      geometry_vertices_[current_vertices] = v;
+      ++current_vertices;
+    }
+    const auto indices = object.second.getIndices();
+    for (const auto index : indices) {
+      PolygonIndexData i = {index[0], index[1], index[2]};
+      geometry_indices_[current_polygon_index] = i;
+      ++current_polygon_index;
+    }
+  }
+}
+
 void Raycaster::addObject(std::string name, navi_sim::Mesh mesh)
 {
   mesh.offsetIndex(getNumVertices());
   objects_.emplace(name, mesh);
-  scene_handle_ = rtcNewScene(device_handle_);
-  geometry_handle_ = rtcNewGeometry(device_handle_, RTC_GEOMETRY_TYPE_TRIANGLE);
+  constractGeometry();
 }
 
 void Raycaster::addObject(std::string name, geometry_msgs::msg::Pose pose, navi_sim::Mesh mesh)
 {
   mesh.transform(pose);
   addObject(name, mesh);
+}
+
+size_t Raycaster::getNumIndices() const
+{
+  size_t ret = 0;
+  for (const auto object : objects_) {
+    ret = ret + object.second.getNumIndices();
+  }
+  return ret;
 }
 
 size_t Raycaster::getNumVertices() const

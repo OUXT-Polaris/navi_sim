@@ -71,6 +71,20 @@ const std::vector<navi_sim::Vertex> Mesh::getVertices() const
   return vertices_;
 }
 
+const std::vector<geometry_msgs::msg::Point> Mesh::getVerticesAsPoints() const
+{
+  std::vector<geometry_msgs::msg::Point> points;
+  for (const auto vertex : vertices_) {
+    points.emplace_back(vertex.getPosition());
+  }
+  return points;
+}
+
+size_t Mesh::getNumIndices() const
+{
+  return indices_.size();
+}
+
 const std::vector<std::array<unsigned int, 3>> Mesh::getIndices() const
 {
   return indices_;

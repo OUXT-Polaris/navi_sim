@@ -41,8 +41,21 @@ private:
   RTCGeometry geometry_handle_;
   std::unordered_map<std::string, navi_sim::Mesh> objects_;
   size_t getNumVertices() const;
-  std::vector<geometry_msgs::msg::Point> geometry_vertices_;
-  std::vector<std::array<unsigned int, 3>> geometry_indices_;
+  size_t getNumIndices() const;
+
+  struct VertexData
+  {
+    float x, y, z;
+  };
+
+  struct PolygonIndexData
+  {
+    unsigned int v0, v1, v2;
+  };
+
+  std::vector<VertexData> geometry_vertices_;
+  std::vector<PolygonIndexData> geometry_indices_;
+  void constractGeometry();
 };
 }  // namespace navi_sim
 
