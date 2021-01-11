@@ -23,41 +23,17 @@ namespace navi_sim
 {
 Raycaster::Raycaster()
 {
-  device_handle_ = rtcNewDevice(nullptr);
   objects_ = std::unordered_map<std::string, navi_sim::Mesh>();
 }
 
 Raycaster::~Raycaster()
 {
-  rtcReleaseDevice(device_handle_);
-  rtcReleaseScene(scene_handle_);
-  rtcReleaseGeometry(geometry_handle_);
 }
 
 void Raycaster::constractGeometry()
 {
-  scene_handle_ = rtcNewScene(device_handle_);
-  geometry_handle_ = rtcNewGeometry(device_handle_, RTC_GEOMETRY_TYPE_TRIANGLE);
   geometry_vertices_ = std::vector<VertexData>(getNumVertices());
   geometry_indices_ = std::vector<PolygonIndexData>(getNumIndices());
-  rtcSetSharedGeometryBuffer(
-    geometry_handle_,
-    RTC_BUFFER_TYPE_VERTEX,
-    0,
-    RTC_FORMAT_FLOAT3,
-    geometry_vertices_.data(),
-    0,
-    sizeof(Vertex),
-    geometry_vertices_.size());
-  rtcSetSharedGeometryBuffer(
-    geometry_handle_,
-    RTC_BUFFER_TYPE_INDEX,
-    0,
-    RTC_FORMAT_UINT3,
-    geometry_indices_.data(),
-    0,
-    sizeof(PolygonIndexData),
-    geometry_indices_.size());
   size_t current_vertices = 0;
   size_t current_polygon_index = 0;
   for (const auto object : objects_) {
@@ -75,6 +51,40 @@ void Raycaster::constractGeometry()
       ++current_polygon_index;
     }
   }
+}
+
+void Raycaster::raycast()
+{
+  RTCDevice device_handle = rtcNewDevice(nullptr);
+  RTCScene scene_handle = rtcNewScene(device_handle);
+  RTCGeometry geometry_handle = rtcNewGeometry(device_handle, RTC_GEOMETRY_TYPE_TRIANGLE);
+  rtcSetSharedGeometryBuffer(
+    geometry_handle,
+    RTC_BUFFER_TYPE_VERTEX,
+    0,
+    RTC_FORMAT_FLOAT3,
+    geometry_vertices_.data(),
+    0,
+    sizeof(Vertex),
+    geometry_vertices_.size());
+  rtcSetSharedGeometryBuffer(
+    geometry_handle,
+    RTC_BUFFER_TYPE_INDEX,
+    0,
+    RTC_FORMAT_UINT3,
+    geometry_indices_.data(),
+    0,
+    sizeof(PolygonIndexData),
+    geometry_indices_.size());
+  rtcCommitGeometry(geometry_handle);
+  rtcAttachGeometry(scene_handle, geometry_handle);
+  rtcReleaseGeometry(geometry_handle);
+  rtcCommitScene(scene_handle);
+  /**
+   * @brief release handlers
+   */
+  rtcReleaseScene(scene_handle);
+  rtcReleaseDevice(device_handle);
 }
 
 void Raycaster::addObject(std::string name, navi_sim::Mesh mesh)

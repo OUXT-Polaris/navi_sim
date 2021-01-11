@@ -26,7 +26,13 @@ int main(int argc, char * argv[])
   models.getPath("dock_block_2x2");
   navi_sim::Mesh dock_block = models.load("dock_block_2x2");
   navi_sim::Raycaster raycaster;
-  raycaster.addObject("dock", dock_block);
+  raycaster.addObject("dock1", dock_block);
+  raycaster.addObject("dock2", dock_block);
   dock_block.getNumVertices();
+  std::cout << __FILE__ << "," << __LINE__ << std::endl;
+  raycaster.raycast();
+  std::cout << __FILE__ << "," << __LINE__ << std::endl;
+  raycaster.raycast();
+  std::cout << __FILE__ << "," << __LINE__ << std::endl;
   return 0;
 }

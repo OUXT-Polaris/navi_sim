@@ -34,11 +34,9 @@ public:
   ~Raycaster();
   void addObject(std::string name, geometry_msgs::msg::Pose pose, navi_sim::Mesh mesh);
   void addObject(std::string name, navi_sim::Mesh mesh);
+  void raycast();
 
 private:
-  RTCDevice device_handle_;
-  RTCScene scene_handle_;
-  RTCGeometry geometry_handle_;
   std::unordered_map<std::string, navi_sim::Mesh> objects_;
   size_t getNumVertices() const;
   size_t getNumIndices() const;
