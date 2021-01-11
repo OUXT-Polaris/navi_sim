@@ -24,6 +24,7 @@ TEST(Model, loadModel)
   navi_sim::Mesh dock_block = models.load("dock_block_2x2");
   navi_sim::Raycaster raycaster;
   raycaster.addObject("dock", dock_block);
+  EXPECT_EQ(dock_block.getNumVertices(), static_cast<size_t>(2664));
 }
 
 int main(int argc, char ** argv)
