@@ -17,6 +17,7 @@
 #include <string>
 #include <algorithm>
 #include <vector>
+#include <iostream>
 
 namespace navi_sim
 {
@@ -35,6 +36,8 @@ Raycaster::~Raycaster()
 
 void Raycaster::constractGeometry()
 {
+  scene_handle_ = rtcNewScene(device_handle_);
+  geometry_handle_ = rtcNewGeometry(device_handle_, RTC_GEOMETRY_TYPE_TRIANGLE);
   geometry_vertices_ = std::vector<VertexData>(getNumVertices());
   geometry_indices_ = std::vector<PolygonIndexData>(getNumIndices());
   rtcSetSharedGeometryBuffer(
@@ -53,10 +56,8 @@ void Raycaster::constractGeometry()
     RTC_FORMAT_UINT3,
     geometry_indices_.data(),
     0,
-    sizeof(Vertex),
+    sizeof(PolygonIndexData),
     geometry_indices_.size());
-  scene_handle_ = rtcNewScene(device_handle_);
-  geometry_handle_ = rtcNewGeometry(device_handle_, RTC_GEOMETRY_TYPE_TRIANGLE);
   size_t current_vertices = 0;
   size_t current_polygon_index = 0;
   for (const auto object : objects_) {

@@ -67,8 +67,28 @@ ament_target_dependencies(navi_sim_node
 rclcpp_components_register_nodes(navi_sim_component
   "navi_sim::NaviSimComponent")
 
+add_executable(lidar_sim_node
+  src/lidar_sim_node.cpp
+  src/models.cpp
+  src/mesh.cpp
+  src/raycaster.cpp
+  src/vertex.cpp
+)
+ament_target_dependencies(lidar_sim_node
+  rclcpp
+  rclcpp_components
+  tf2_ros
+  tf2_geometry_msgs
+  quaternion_operation
+  sensor_msgs
+  visualization_msgs
+  rviz_assimp_vendor
+  embree_vendor)
+  target_link_libraries(lidar_sim_node ${quaternion_operation_LIBRARIES} ${Boost_LIBRARIES})
+
 install(TARGETS
   navi_sim_node
+  lidar_sim_node
   DESTINATION lib/navi_sim
 )
 install(TARGETS
