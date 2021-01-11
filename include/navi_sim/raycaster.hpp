@@ -34,7 +34,8 @@ public:
 
 private:
   RTCDevice device_handle_;
-  RTCScene scen_handle_;
+  RTCScene scene_handle_;
+  RTCGeometry geometry_handle_;
   std::unordered_map<std::string, navi_sim::Mesh> objects_;
 };
 }  // namespace navi_sim

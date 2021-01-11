@@ -25,6 +25,7 @@
 
 #include <string>
 #include <vector>
+#include <array>
 
 #define INVALID_MATERIAL 0xFFFFFFFF
 
@@ -35,20 +36,16 @@ class Mesh
 public:
   explicit Mesh(std::string path);
   void transform(const geometry_msgs::msg::Pose & pose);
+  void offsetIndex(unsigned int offset);
+  size_t getNumVertices() const;
+  const std::vector<navi_sim::Vertex> getVertices() const;
+  const std::vector<std::array<unsigned int, 3>> getIndices() const;
 
 private:
   void initFromScene(const aiScene * scene_ptr);
-  void initMesh(unsigned int index, const aiMesh * mesh_ptr);
-  struct MeshEntry
-  {
-    MeshEntry();
-    std::int32_t VB;
-    std::int32_t IB;
-    unsigned int num_indices;
-    unsigned int material_index;
-  };
-  std::vector<MeshEntry> entries_;
-  std::vector<geometry_msgs::msg::Point> vertices_;
+  void initMesh(const aiMesh * mesh_ptr);
+  std::vector<navi_sim::Vertex> vertices_;
+  std::vector<std::array<unsigned int, 3>> indices_;
 };
 }  // namespace navi_sim
 

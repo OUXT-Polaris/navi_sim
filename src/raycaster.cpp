@@ -24,12 +24,15 @@ Raycaster::Raycaster()
 Raycaster::~Raycaster()
 {
   rtcReleaseDevice(device_handle_);
+  rtcReleaseScene(scene_handle_);
+  rtcReleaseGeometry(geometry_handle_);
 }
 
 void Raycaster::addObject(std::string name, geometry_msgs::msg::Pose pose, navi_sim::Mesh mesh)
 {
-  RTCScene scen_handle_ = rtcNewScene(device_handle_);
+  scene_handle_ = rtcNewScene(device_handle_);
   mesh.transform(pose);
   objects_.emplace(name, mesh);
+  geometry_handle_ = rtcNewGeometry(device_handle_, RTC_GEOMETRY_TYPE_TRIANGLE);
 }
 }  // namespace navi_sim

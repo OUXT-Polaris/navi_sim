@@ -27,6 +27,14 @@ public:
     geometry_msgs::msg::Point position,
     double texture_position_x,
     double texture_position_y);
+  const geometry_msgs::msg::Point getPosition() const
+  {
+    return position_;
+  }
+  void setPosition(const geometry_msgs::msg::Point & p)
+  {
+    position_ = p;
+  }
 
 private:
   geometry_msgs::msg::Point position_;
