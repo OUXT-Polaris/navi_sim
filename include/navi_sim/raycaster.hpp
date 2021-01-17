@@ -40,7 +40,13 @@ public:
   void addObject(std::string name, geometry_msgs::msg::Pose pose, navi_sim::Mesh mesh);
   void addObject(std::string name, navi_sim::Mesh mesh);
   const sensor_msgs::msg::PointCloud2 raycast(
-    geometry_msgs::msg::Point origin,
+    geometry_msgs::msg::Pose origin,
+    double horizontal_resolution,
+    std::vector<double> vertical_angles,
+    double max_distance = 100, double min_distance = 0
+  );
+  const sensor_msgs::msg::PointCloud2 raycast(
+    geometry_msgs::msg::Pose origin,
     std::vector<geometry_msgs::msg::Quaternion> directions,
     double max_distance = 100, double min_distance = 0);
 

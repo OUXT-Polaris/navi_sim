@@ -28,7 +28,7 @@ int main(int argc, char * argv[])
   navi_sim::Raycaster raycaster;
   raycaster.addObject("dock1", dock_block);
   raycaster.addObject("dock2", dock_block);
-  geometry_msgs::msg::Point origin;
+  geometry_msgs::msg::Pose origin;
   geometry_msgs::msg::Quaternion direction;
   dock_block.getNumVertices();
   std::cout << __FILE__ << "," << __LINE__ << std::endl;
@@ -36,5 +36,13 @@ int main(int argc, char * argv[])
   std::cout << __FILE__ << "," << __LINE__ << std::endl;
   raycaster.raycast(origin, {direction});
   std::cout << __FILE__ << "," << __LINE__ << std::endl;
+  raycaster.raycast(
+    origin, 2 * M_PI / 360.0,
+  {
+    RAD2DEG(-15.0), RAD2DEG(-13.0), RAD2DEG(-11.0), RAD2DEG(-9.0),
+    RAD2DEG(-7.0), RAD2DEG(-5.0), RAD2DEG(-3.0), RAD2DEG(-1.0),
+    RAD2DEG(1.0), RAD2DEG(3.0), RAD2DEG(5.0), RAD2DEG(7.0),
+    RAD2DEG(9.0), RAD2DEG(11.0), RAD2DEG(13.0), RAD2DEG(15.0)
+  });
   return 0;
 }
