@@ -17,6 +17,7 @@
 // Headers in RCLCPP
 
 #include <navi_sim/lidar_sim_component.hpp>
+#include <navi_sim/primitives/box.hpp>
 
 #include <rclcpp/rclcpp.hpp>
 #include <memory>
@@ -28,7 +29,7 @@ int main(int argc, char * argv[])
   auto component = std::make_shared<navi_sim::LidarSimComponent>(options);
   geometry_msgs::msg::Pose bouy_pose;
   bouy_pose.position.x = 10;
-  component->addObject("object", bouy_pose, "dock_block_2x2");
+  component->addObject("object", bouy_pose, navi_sim::Box(5, 5, 10).mesh());
   rclcpp::spin(component);
   rclcpp::shutdown();
   return 0;

@@ -67,6 +67,7 @@ add_library(lidar_sim_component SHARED
   src/mesh.cpp
   src/raycaster.cpp
   src/vertex.cpp
+  src/primitives/box.cpp
 )
 target_compile_definitions(lidar_sim_component PRIVATE "NAVI_SIM_LIDAR_SIM_COMPONENT_BUILDING_DLL")
 target_link_libraries(lidar_sim_component ${quaternion_operation_LIBRARIES} ${Boost_LIBRARIES})
@@ -88,6 +89,7 @@ add_executable(lidar_sim_node
   src/mesh.cpp
   src/raycaster.cpp
   src/vertex.cpp
+  src/primitives/box.cpp
 )
 ament_target_dependencies(lidar_sim_node
   rclcpp

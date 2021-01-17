@@ -26,6 +26,14 @@
 
 namespace navi_sim
 {
+Mesh::Mesh(
+  std::vector<navi_sim::Vertex> vertices,
+  std::vector<std::array<unsigned int, 3>> indices)
+{
+  vertices_ = vertices;
+  indices_ = indices;
+}
+
 Mesh::Mesh(std::string path)
 {
   vertices_ = {};

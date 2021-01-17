@@ -75,6 +75,7 @@ public:
   NAVI_SIM_LIDAR_SIM_COMPONENT_PUBLIC
   explicit LidarSimComponent(const rclcpp::NodeOptions & options);
   void addObject(std::string name, geometry_msgs::msg::Pose pose, std::string model);
+  void addObject(std::string name, geometry_msgs::msg::Pose pose, navi_sim::Mesh mesh);
 
 private:
   void updateScan();

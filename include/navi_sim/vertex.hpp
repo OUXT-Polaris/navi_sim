@@ -25,8 +25,8 @@ class Vertex
 public:
   Vertex(
     geometry_msgs::msg::Point position,
-    double texture_position_x,
-    double texture_position_y);
+    double texture_position_x = 0,
+    double texture_position_y = 0);
   const geometry_msgs::msg::Point getPosition() const
   {
     return position_;

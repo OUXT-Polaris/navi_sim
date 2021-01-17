@@ -36,6 +36,9 @@ class Mesh
 {
 public:
   explicit Mesh(std::string path);
+  explicit Mesh(
+    std::vector<navi_sim::Vertex> vertices,
+    std::vector<std::array<unsigned int, 3>> indices);
   void transform(const geometry_msgs::msg::Pose & pose);
   void offsetIndex(unsigned int offset);
   size_t getNumVertices() const;
