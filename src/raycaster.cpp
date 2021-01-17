@@ -112,6 +112,9 @@ const sensor_msgs::msg::PointCloud2 Raycaster::raycast(
   /**
    * @brief raycast
    */
+  std::chrono::system_clock::time_point start, end;
+  start = std::chrono::system_clock::now();
+  std::cout << "size of directions " << directions.size() << std::endl;
   for (auto direction : directions) {
     RTCRayHit rayhit;
     rayhit.ray.org_x = origin.position.x;
@@ -137,9 +140,13 @@ const sensor_msgs::msg::PointCloud2 Raycaster::raycast(
       p.x = origin.position.x + vector[0];
       p.y = origin.position.y + vector[1];
       p.z = origin.position.z + vector[2];
-      cloud->emplace_back(p);
+      // cloud->emplace_back(p);
     }
   }
+  end = std::chrono::system_clock::now();
+  std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() <<
+    "milli second" <<
+    std::endl;
   /**
    * @brief release handlers
    */

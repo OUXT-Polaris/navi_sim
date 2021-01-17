@@ -15,34 +15,21 @@
 // Headers in this package
 
 // Headers in RCLCPP
+
+#include <navi_sim/lidar_sim_component.hpp>
+
 #include <rclcpp/rclcpp.hpp>
 #include <memory>
 
 int main(int argc, char * argv[])
 {
-  /*
-  navi_sim::Models models;
-  models.getPath("dock_block_2x2");
-  navi_sim::Mesh dock_block = models.load("dock_block_2x2");
-  navi_sim::Raycaster raycaster;
-  raycaster.addObject("dock1", dock_block);
-  raycaster.addObject("dock2", dock_block);
-  geometry_msgs::msg::Pose origin;
-  geometry_msgs::msg::Quaternion direction;
-  dock_block.getNumVertices();
-  std::cout << __FILE__ << "," << __LINE__ << std::endl;
-  raycaster.raycast(origin, {direction});
-  std::cout << __FILE__ << "," << __LINE__ << std::endl;
-  raycaster.raycast(origin, {direction});
-  std::cout << __FILE__ << "," << __LINE__ << std::endl;
-  raycaster.raycast(
-    origin, 2 * M_PI / 360.0,
-  {
-    RAD2DEG(-15.0), RAD2DEG(-13.0), RAD2DEG(-11.0), RAD2DEG(-9.0),
-    RAD2DEG(-7.0), RAD2DEG(-5.0), RAD2DEG(-3.0), RAD2DEG(-1.0),
-    RAD2DEG(1.0), RAD2DEG(3.0), RAD2DEG(5.0), RAD2DEG(7.0),
-    RAD2DEG(9.0), RAD2DEG(11.0), RAD2DEG(13.0), RAD2DEG(15.0)
-  });
-  */
+  rclcpp::init(argc, argv);
+  rclcpp::NodeOptions options;
+  auto component = std::make_shared<navi_sim::LidarSimComponent>(options);
+  geometry_msgs::msg::Pose bouy_pose;
+  bouy_pose.position.x = 10;
+  component->addObject("light_buoy", bouy_pose, "robotx_light_buoy");
+  rclcpp::spin(component);
+  rclcpp::shutdown();
   return 0;
 }

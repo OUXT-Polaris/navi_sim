@@ -40,6 +40,11 @@ def generate_launch_description():
             executable='navi_sim_node',
             name='navi_sim_node',
             output='screen'),
+        Node(
+            package='navi_sim',
+            executable='lidar_sim_node',
+            name='lidar_sim_node',
+            output='screen'),
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource([description_dir, '/wamv_description.launch.py']),
         ),

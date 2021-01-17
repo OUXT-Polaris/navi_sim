@@ -27,7 +27,7 @@ void LidarSimComponent::addObject(
 
 void LidarSimComponent::updateScan()
 {
-  auto now = get_clock()->now();
+  rclcpp::Time now = get_clock()->now();
   try {
     geometry_msgs::msg::TransformStamped transform_stamped = buffer_.lookupTransform(
       map_frame_, lidar_frame_, now, tf2::durationFromSec(1.0));
@@ -36,7 +36,7 @@ void LidarSimComponent::updateScan()
     pose.position.y = transform_stamped.transform.translation.y;
     pose.position.z = transform_stamped.transform.translation.z;
     pose.orientation = transform_stamped.transform.rotation;
-    const auto pointcloud_msg = raycaster_.raycast(
+    auto pointcloud_msg = raycaster_.raycast(
       pose, 2 * M_PI / 360.0,
       {
         RAD2DEG(-15.0), RAD2DEG(-13.0), RAD2DEG(-11.0), RAD2DEG(-9.0),
@@ -44,6 +44,8 @@ void LidarSimComponent::updateScan()
         RAD2DEG(1.0), RAD2DEG(3.0), RAD2DEG(5.0), RAD2DEG(7.0),
         RAD2DEG(9.0), RAD2DEG(11.0), RAD2DEG(13.0), RAD2DEG(15.0)
       });
+    pointcloud_msg.header.stamp = now;
+    pointcloud_msg.header.frame_id = lidar_frame_;
     pointcloud_pub_->publish(pointcloud_msg);
   } catch (tf2::ExtrapolationException & ex) {
     RCLCPP_ERROR(get_logger(), ex.what());
