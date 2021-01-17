@@ -29,11 +29,12 @@ int main(int argc, char * argv[])
   raycaster.addObject("dock1", dock_block);
   raycaster.addObject("dock2", dock_block);
   geometry_msgs::msg::Point origin;
+  geometry_msgs::msg::Quaternion direction;
   dock_block.getNumVertices();
   std::cout << __FILE__ << "," << __LINE__ << std::endl;
-  raycaster.raycast(origin, {});
+  raycaster.raycast(origin, {direction});
   std::cout << __FILE__ << "," << __LINE__ << std::endl;
-  raycaster.raycast(origin, {});
+  raycaster.raycast(origin, {direction});
   std::cout << __FILE__ << "," << __LINE__ << std::endl;
   return 0;
 }

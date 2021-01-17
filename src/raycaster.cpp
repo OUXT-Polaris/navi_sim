@@ -55,11 +55,12 @@ void Raycaster::constractGeometry()
   }
 }
 
-void Raycaster::raycast(
+const sensor_msgs::msg::PointCloud2 Raycaster::raycast(
   geometry_msgs::msg::Point origin,
-  std::vector<geometry_msgs::msg::Vector3> directions,
-  double raycast_distance)
+  std::vector<geometry_msgs::msg::Quaternion> directions,
+  double max_distance, double min_distance)
 {
+  pcl::PointCloud<pcl::PointXYZI>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZI>());
   RTCDevice device_handle = rtcNewDevice(nullptr);
   RTCScene scene_handle = rtcNewScene(device_handle);
   RTCGeometry geometry_handle = rtcNewGeometry(device_handle, RTC_GEOMETRY_TYPE_TRIANGLE);
@@ -88,22 +89,31 @@ void Raycaster::raycast(
   /**
    * @brief raycast
    */
-  RTCRayHit rayhit;
-  rayhit.ray.org_x = origin.x;
-  rayhit.ray.org_y = origin.y;
-  rayhit.ray.org_z = origin.z;
-  rayhit.ray.tfar = raycast_distance;
-  rayhit.ray.flags = false;
   for (const auto direction : directions) {
+    RTCRayHit rayhit;
+    rayhit.ray.org_x = origin.x;
+    rayhit.ray.org_y = origin.y;
+    rayhit.ray.org_z = origin.z;
+    rayhit.ray.tfar = max_distance;
+    rayhit.ray.tnear = min_distance;
+    rayhit.ray.flags = false;
     RTCIntersectContext context;
     rtcInitIntersectContext(&context);
-    rayhit.ray.dir_x = direction.x;
-    rayhit.ray.dir_y = direction.y;
-    rayhit.ray.dir_z = direction.z;
+    const auto rotation_mat = quaternion_operation::getRotationMatrix(direction);
+    const auto rotated_direction = rotation_mat * Eigen::Vector3d(1.0f, 0.0f, 0.0f);
+    rayhit.ray.dir_x = rotated_direction[0];
+    rayhit.ray.dir_y = rotated_direction[1];
+    rayhit.ray.dir_z = rotated_direction[2];
     rayhit.hit.geomID = RTC_INVALID_GEOMETRY_ID;
     rtcIntersect1(scene_handle, &context, &rayhit);
     if (rayhit.hit.geomID != RTC_INVALID_GEOMETRY_ID) {
-      // Intersect something
+      double distance = rayhit.ray.tfar;
+      const auto vector = rotated_direction * distance;
+      pcl::PointXYZI p;
+      p.x = origin.x + vector[0];
+      p.y = origin.y + vector[1];
+      p.z = origin.z + vector[2];
+      cloud->emplace_back(p);
     }
   }
   /**
@@ -111,6 +121,9 @@ void Raycaster::raycast(
    */
   rtcReleaseScene(scene_handle);
   rtcReleaseDevice(device_handle);
+  sensor_msgs::msg::PointCloud2 pointcloud_msg;
+  pcl::toROSMsg(*cloud, pointcloud_msg);
+  return pointcloud_msg;
 }
 
 void Raycaster::addObject(std::string name, navi_sim::Mesh mesh)

@@ -19,8 +19,11 @@
 
 #include <embree3/rtcore.h>
 
+#include <pcl_conversions/pcl_conversions.h>
+
 #include <geometry_msgs/msg/pose.hpp>
 #include <geometry_msgs/msg/vector3.hpp>
+#include <sensor_msgs/msg/point_cloud2.hpp>
 
 #include <unordered_map>
 #include <vector>
@@ -36,10 +39,10 @@ public:
   ~Raycaster();
   void addObject(std::string name, geometry_msgs::msg::Pose pose, navi_sim::Mesh mesh);
   void addObject(std::string name, navi_sim::Mesh mesh);
-  void raycast(
+  const sensor_msgs::msg::PointCloud2 raycast(
     geometry_msgs::msg::Point origin,
-    std::vector<geometry_msgs::msg::Vector3> directions,
-    double raycast_distance = 100);
+    std::vector<geometry_msgs::msg::Quaternion> directions,
+    double max_distance = 100, double min_distance = 0);
 
 private:
   std::unordered_map<std::string, navi_sim::Mesh> objects_;

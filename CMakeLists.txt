@@ -18,15 +18,17 @@ endif()
 # find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(ament_cmake_auto REQUIRED)
+find_package(PCL REQUIRED)
 ament_auto_find_build_dependencies()
 
 find_package(Boost COMPONENTS filesystem REQUIRED)
-link_directories(${Boost_LIBRARY_DIR})
+link_directories(${Boost_LIBRARY_DIR} ${PCL_LIBRARY_DIRS})
 
 include_directories(
   include
   ${EIGEN3_INCLUDE_DIR}
   ${Boost_INCLUDE_DIR}
+  ${PCL_INCLUDE_DIRS}
 )
 
 add_library(navi_sim_component SHARED
