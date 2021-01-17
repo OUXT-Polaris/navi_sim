@@ -98,7 +98,11 @@ ament_target_dependencies(lidar_sim_node
   visualization_msgs
   rviz_assimp_vendor
   embree_vendor)
-  target_link_libraries(lidar_sim_node ${quaternion_operation_LIBRARIES} ${Boost_LIBRARIES})
+target_link_libraries(lidar_sim_node ${quaternion_operation_LIBRARIES} ${Boost_LIBRARIES})
+
+
+rclcpp_components_register_nodes(lidar_sim_component
+  "lidar_sim::LidarSimComponent")
 
 install(TARGETS
   navi_sim_node

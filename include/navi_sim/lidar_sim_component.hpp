@@ -62,6 +62,7 @@ extern "C" {
 #include <tf2_ros/transform_listener.h>
 
 #include <sensor_msgs/msg/point_cloud2.hpp>
+#include <visualization_msgs/msg/marker_array.hpp>
 
 #include <memory>
 
@@ -75,11 +76,15 @@ public:
   void addObject(std::string name, geometry_msgs::msg::Pose pose, std::string model);
 
 private:
+  void updateScan();
   rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr pointcloud_pub_;
+  // rclcpp::Publisher<visualization_msgs::msg::MarkerArray>::SharedPtr marker_pub_;
   navi_sim::Raycaster raycaster_;
   navi_sim::Models models;
   tf2_ros::Buffer buffer_;
   tf2_ros::TransformListener listener_;
+  rclcpp::TimerBase::SharedPtr update_scan_timer_;
+  std::string lidar_frame_, map_frame_;
 };
 }  // namespace navi_sim
 
