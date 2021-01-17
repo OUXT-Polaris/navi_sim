@@ -1,4 +1,20 @@
+// Copyright (c) 2021 OUXT Polaris
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 #include <navi_sim/lidar_sim_component.hpp>
+
+#include <string>
 
 namespace navi_sim
 {
@@ -14,7 +30,6 @@ LidarSimComponent::LidarSimComponent(const rclcpp::NodeOptions & options)
   pointcloud_pub_ = this->create_publisher<sensor_msgs::msg::PointCloud2>("lidar_points", 1);
   update_scan_timer_ =
     this->create_wall_timer(100ms, std::bind(&LidarSimComponent::updateScan, this));
-  // marker_pub_ = this->create_publisher<visualization_msgs::msg::MarkerArray>("objects/marker", 1);
 }
 
 void LidarSimComponent::addObject(

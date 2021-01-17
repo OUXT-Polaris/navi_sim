@@ -65,6 +65,7 @@ extern "C" {
 #include <visualization_msgs/msg/marker_array.hpp>
 
 #include <memory>
+#include <string>
 
 namespace navi_sim
 {

@@ -1,4 +1,4 @@
-// Copyright (c) 2020 OUXT Polaris
+// Copyright (c) 2021 OUXT Polaris
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,24 +12,4 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// Headers in this package
-
-// Headers in RCLCPP
-
-#include <navi_sim/lidar_sim_component.hpp>
-
-#include <rclcpp/rclcpp.hpp>
-#include <memory>
-
-int main(int argc, char * argv[])
-{
-  rclcpp::init(argc, argv);
-  rclcpp::NodeOptions options;
-  auto component = std::make_shared<navi_sim::LidarSimComponent>(options);
-  geometry_msgs::msg::Pose bouy_pose;
-  bouy_pose.position.x = 10;
-  component->addObject("object", bouy_pose, "dock_block_2x2");
-  rclcpp::spin(component);
-  rclcpp::shutdown();
-  return 0;
-}
+#include <navi_sim/primitives/box.hpp>
