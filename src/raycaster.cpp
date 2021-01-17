@@ -112,19 +112,16 @@ const sensor_msgs::msg::PointCloud2 Raycaster::raycast(
   /**
    * @brief raycast
    */
-  std::chrono::system_clock::time_point start, end;
-  start = std::chrono::system_clock::now();
-  std::cout << "size of directions " << directions.size() << std::endl;
+  RTCIntersectContext context;
+  rtcInitIntersectContext(&context);
+  RTCRayHit rayhit;
   for (auto direction : directions) {
-    RTCRayHit rayhit;
     rayhit.ray.org_x = origin.position.x;
     rayhit.ray.org_y = origin.position.y;
     rayhit.ray.org_z = origin.position.z;
     rayhit.ray.tfar = max_distance;
     rayhit.ray.tnear = min_distance;
     rayhit.ray.flags = false;
-    RTCIntersectContext context;
-    rtcInitIntersectContext(&context);
     direction = origin.orientation * direction;
     const auto rotation_mat = quaternion_operation::getRotationMatrix(direction);
     const auto rotated_direction = rotation_mat * Eigen::Vector3d(1.0f, 0.0f, 0.0f);
@@ -140,13 +137,9 @@ const sensor_msgs::msg::PointCloud2 Raycaster::raycast(
       p.x = origin.position.x + vector[0];
       p.y = origin.position.y + vector[1];
       p.z = origin.position.z + vector[2];
-      // cloud->emplace_back(p);
+      cloud->emplace_back(p);
     }
   }
-  end = std::chrono::system_clock::now();
-  std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() <<
-    "milli second" <<
-    std::endl;
   /**
    * @brief release handlers
    */
