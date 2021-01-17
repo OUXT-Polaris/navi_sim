@@ -122,7 +122,6 @@ private:
     geometry_msgs::msg::PointStamped obstacle, double theta);
   visualization_msgs::msg::MarkerArray generateDeleteMarker();
   visualization_msgs::msg::MarkerArray generateMarker();
-  Models models_;
 };
 }  // namespace navi_sim
 

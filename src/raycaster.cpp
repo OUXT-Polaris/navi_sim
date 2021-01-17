@@ -62,6 +62,7 @@ const sensor_msgs::msg::PointCloud2 Raycaster::raycast(
   double max_distance, double min_distance
 )
 {
+  std::vector<geometry_msgs::msg::Quaternion> directions;
   double horizontal_angle = 0;
   while (horizontal_angle <= (2 * M_PI)) {
     horizontal_angle = horizontal_angle + horizontal_resolution;
@@ -71,8 +72,10 @@ const sensor_msgs::msg::PointCloud2 Raycaster::raycast(
       rpy.y = vertical_angle;
       rpy.z = horizontal_angle;
       auto quat = quaternion_operation::convertEulerAngleToQuaternion(rpy);
+      directions.emplace_back(quat);
     }
   }
+  return raycast(origin, directions, max_distance, min_distance);
 }
 
 const sensor_msgs::msg::PointCloud2 Raycaster::raycast(

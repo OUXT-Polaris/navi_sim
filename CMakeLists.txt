@@ -33,10 +33,6 @@ include_directories(
 
 add_library(navi_sim_component SHARED
   src/navi_sim_component.cpp
-  src/models.cpp
-  src/mesh.cpp
-  src/raycaster.cpp
-  src/vertex.cpp
 )
 target_compile_definitions(navi_sim_component PRIVATE "NAVI_SIM_NAVI_SIM_COMPONENT_BUILDING_DLL")
 target_link_libraries(navi_sim_component ${quaternion_operation_LIBRARIES} ${Boost_LIBRARIES})
@@ -47,9 +43,7 @@ ament_target_dependencies(navi_sim_component
   tf2_geometry_msgs
   quaternion_operation
   sensor_msgs
-  visualization_msgs
-  rviz_assimp_vendor
-  embree_vendor)
+  visualization_msgs)
 
 add_executable(navi_sim_node
   src/navi_sim_node.cpp
@@ -62,12 +56,30 @@ ament_target_dependencies(navi_sim_node
   tf2_geometry_msgs
   quaternion_operation
   sensor_msgs
-  visualization_msgs
-  rviz_assimp_vendor
-  embree_vendor)
+  visualization_msgs)
 
 rclcpp_components_register_nodes(navi_sim_component
   "navi_sim::NaviSimComponent")
+
+add_library(lidar_sim_component SHARED
+  src/lidar_sim_component.cpp
+  src/models.cpp
+  src/mesh.cpp
+  src/raycaster.cpp
+  src/vertex.cpp
+)
+target_compile_definitions(lidar_sim_component PRIVATE "NAVI_SIM_LIDAR_SIM_COMPONENT_BUILDING_DLL")
+target_link_libraries(lidar_sim_component ${quaternion_operation_LIBRARIES} ${Boost_LIBRARIES})
+ament_target_dependencies(lidar_sim_component
+  rclcpp
+  rclcpp_components
+  tf2_ros
+  tf2_geometry_msgs
+  quaternion_operation
+  sensor_msgs
+  visualization_msgs
+  rviz_assimp_vendor
+  embree_vendor)
 
 add_executable(lidar_sim_node
   src/lidar_sim_node.cpp
@@ -95,6 +107,7 @@ install(TARGETS
 )
 install(TARGETS
   navi_sim_component
+  lidar_sim_component
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin)
@@ -112,7 +125,7 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
   find_package(ament_cmake_gtest REQUIRED)
   ament_add_gtest(test_model test/src/test_model.cpp)
-  target_link_libraries(test_model navi_sim_component)
+  target_link_libraries(test_model lidar_sim_component)
 endif()
 
 ament_auto_package()

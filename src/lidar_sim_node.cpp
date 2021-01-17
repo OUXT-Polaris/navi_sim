@@ -13,8 +13,6 @@
 // limitations under the License.
 
 // Headers in this package
-#include <navi_sim/raycaster.hpp>
-#include <navi_sim/models.hpp>
 
 // Headers in RCLCPP
 #include <rclcpp/rclcpp.hpp>
@@ -22,6 +20,7 @@
 
 int main(int argc, char * argv[])
 {
+  /*
   navi_sim::Models models;
   models.getPath("dock_block_2x2");
   navi_sim::Mesh dock_block = models.load("dock_block_2x2");
@@ -44,5 +43,6 @@ int main(int argc, char * argv[])
     RAD2DEG(1.0), RAD2DEG(3.0), RAD2DEG(5.0), RAD2DEG(7.0),
     RAD2DEG(9.0), RAD2DEG(11.0), RAD2DEG(13.0), RAD2DEG(15.0)
   });
+  */
   return 0;
 }
