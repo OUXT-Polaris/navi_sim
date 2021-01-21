@@ -65,6 +65,7 @@ extern "C" {
 
 #include <memory>
 #include <string>
+#include <utility>
 
 namespace navi_sim
 {
@@ -76,14 +77,14 @@ public:
   template<typename T, typename ... Ts>
   void addPrimitive(std::string name, Ts && ... xs)
   {
-    raycaster_.addPrimitive<T>(name, std::forward<Ts>(xs)...);
+    raycaster_ptr_->addPrimitive<T>(name, std::forward<Ts>(xs)...);
   }
 
 private:
   void updateScan();
   rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr pointcloud_pub_;
   // rclcpp::Publisher<visualization_msgs::msg::MarkerArray>::SharedPtr marker_pub_;
-  navi_sim::Raycaster raycaster_;
+  std::unique_ptr<navi_sim::Raycaster> raycaster_ptr_;
   tf2_ros::Buffer buffer_;
   tf2_ros::TransformListener listener_;
   rclcpp::TimerBase::SharedPtr update_scan_timer_;

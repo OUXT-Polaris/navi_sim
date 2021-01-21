@@ -15,6 +15,7 @@
 #include <navi_sim/lidar_sim_component.hpp>
 
 #include <string>
+#include <memory>
 
 namespace navi_sim
 {
@@ -31,9 +32,9 @@ LidarSimComponent::LidarSimComponent(const rclcpp::NodeOptions & options)
   if (has_parameter("embree_config")) {
     std::string embree_config;
     get_parameter("embree_config", embree_config);
-    raycaster_ = Raycaster(embree_config);
+    raycaster_ptr_ = std::make_unique<Raycaster>(embree_config);
   } else {
-    raycaster_ = Raycaster();
+    raycaster_ptr_ = std::make_unique<Raycaster>();
   }
   pointcloud_pub_ = this->create_publisher<sensor_msgs::msg::PointCloud2>("lidar_points", 1);
   update_scan_timer_ =
@@ -51,7 +52,7 @@ void LidarSimComponent::updateScan()
     pose.position.y = transform_stamped.transform.translation.y;
     pose.position.z = transform_stamped.transform.translation.z;
     pose.orientation = transform_stamped.transform.rotation;
-    auto pointcloud_msg = raycaster_.raycast(
+    auto pointcloud_msg = raycaster_ptr_->raycast(
       pose, 2 * M_PI / 360.0,
       {
         RAD2DEG(-15.0), RAD2DEG(-13.0), RAD2DEG(-11.0), RAD2DEG(-9.0),

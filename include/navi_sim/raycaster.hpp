@@ -30,6 +30,7 @@
 #include <vector>
 #include <string>
 #include <memory>
+#include <utility>
 
 namespace navi_sim
 {
@@ -37,7 +38,7 @@ namespace navi_sim
 class Raycaster
 {
 public:
-  explicit Raycaster();
+  Raycaster();
   explicit Raycaster(std::string embree_config);
   ~Raycaster();
   template<typename T, typename ... Ts>

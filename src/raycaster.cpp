@@ -19,6 +19,7 @@
 #include <string>
 #include <algorithm>
 #include <vector>
+#include <utility>
 #include <iostream>
 
 namespace navi_sim
@@ -32,6 +33,9 @@ Raycaster::Raycaster()
 }
 
 Raycaster::Raycaster(std::string embree_config)
+: primitive_ptrs_(),
+  device_(nullptr),
+  scene_(nullptr)
 {
   device_ = rtcNewDevice(embree_config.c_str());
 }
