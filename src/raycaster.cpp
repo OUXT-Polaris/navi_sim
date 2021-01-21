@@ -28,7 +28,12 @@ Raycaster::Raycaster()
   device_(nullptr),
   scene_(nullptr)
 {
-  // objects_ = std::unordered_map<std::string, navi_sim::Mesh>();
+  device_ = rtcNewDevice(nullptr);
+}
+
+Raycaster::Raycaster(std::string embree_config)
+{
+  device_ = rtcNewDevice(embree_config.c_str());
 }
 
 Raycaster::~Raycaster()

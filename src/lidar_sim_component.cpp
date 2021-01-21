@@ -27,6 +27,14 @@ LidarSimComponent::LidarSimComponent(const rclcpp::NodeOptions & options)
   get_parameter("lidar_frame", lidar_frame_);
   declare_parameter("map_frame", "map");
   get_parameter("map_frame", map_frame_);
+  declare_parameter("embree_config");
+  if (has_parameter("embree_config")) {
+    std::string embree_config;
+    get_parameter("embree_config", embree_config);
+    raycaster_ = Raycaster(embree_config);
+  } else {
+    raycaster_ = Raycaster();
+  }
   pointcloud_pub_ = this->create_publisher<sensor_msgs::msg::PointCloud2>("lidar_points", 1);
   update_scan_timer_ =
     this->create_wall_timer(100ms, std::bind(&LidarSimComponent::updateScan, this));

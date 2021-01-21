@@ -37,7 +37,8 @@ namespace navi_sim
 class Raycaster
 {
 public:
-  Raycaster();
+  explicit Raycaster();
+  explicit Raycaster(std::string embree_config);
   ~Raycaster();
   template<typename T, typename ... Ts>
   void addPrimitive(std::string name, Ts && ... xs)
