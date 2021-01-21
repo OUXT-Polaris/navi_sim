@@ -16,6 +16,9 @@
 
 #include <quaternion_operation/quaternion_operation.h>
 
+#include <algorithm>
+#include <string>
+
 namespace navi_sim
 {
 Primitive::Primitive(std::string type, geometry_msgs::msg::Pose pose)
