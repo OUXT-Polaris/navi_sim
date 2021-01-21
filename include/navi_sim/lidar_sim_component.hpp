@@ -52,7 +52,6 @@ extern "C" {
 }  // extern "C"
 #endif
 
-#include <navi_sim/models.hpp>
 #include <navi_sim/raycaster.hpp>
 
 #include <rclcpp/rclcpp.hpp>
@@ -74,15 +73,12 @@ class LidarSimComponent : public rclcpp::Node
 public:
   NAVI_SIM_LIDAR_SIM_COMPONENT_PUBLIC
   explicit LidarSimComponent(const rclcpp::NodeOptions & options);
-  void addObject(std::string name, geometry_msgs::msg::Pose pose, std::string model);
-  void addObject(std::string name, geometry_msgs::msg::Pose pose, navi_sim::Mesh mesh);
 
 private:
   void updateScan();
   rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr pointcloud_pub_;
   // rclcpp::Publisher<visualization_msgs::msg::MarkerArray>::SharedPtr marker_pub_;
   navi_sim::Raycaster raycaster_;
-  navi_sim::Models models;
   tf2_ros::Buffer buffer_;
   tf2_ros::TransformListener listener_;
   rclcpp::TimerBase::SharedPtr update_scan_timer_;

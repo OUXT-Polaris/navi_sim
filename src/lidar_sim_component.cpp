@@ -32,21 +32,6 @@ LidarSimComponent::LidarSimComponent(const rclcpp::NodeOptions & options)
     this->create_wall_timer(100ms, std::bind(&LidarSimComponent::updateScan, this));
 }
 
-void LidarSimComponent::addObject(
-  std::string name, geometry_msgs::msg::Pose pose,
-  navi_sim::Mesh mesh)
-{
-  raycaster_.addObject(name, pose, mesh);
-}
-
-void LidarSimComponent::addObject(
-  std::string name, geometry_msgs::msg::Pose pose,
-  std::string model)
-{
-  navi_sim::Mesh mesh = models.load(model);
-  raycaster_.addObject(name, pose, mesh);
-}
-
 void LidarSimComponent::updateScan()
 {
   rclcpp::Time now = get_clock()->now();

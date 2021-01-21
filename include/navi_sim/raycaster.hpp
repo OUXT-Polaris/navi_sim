@@ -15,8 +15,6 @@
 #ifndef NAVI_SIM__RAYCASTER_HPP_
 #define NAVI_SIM__RAYCASTER_HPP_
 
-#include <navi_sim/mesh.hpp>
-
 #include <embree3/rtcore.h>
 
 #include <pcl_conversions/pcl_conversions.h>
@@ -37,8 +35,8 @@ class Raycaster
 public:
   Raycaster();
   ~Raycaster();
-  void addObject(std::string name, geometry_msgs::msg::Pose pose, navi_sim::Mesh mesh);
-  void addObject(std::string name, navi_sim::Mesh mesh);
+  // void addObject(std::string name, geometry_msgs::msg::Pose pose, navi_sim::Mesh mesh);
+  // void addObject(std::string name, navi_sim::Mesh mesh);
   const sensor_msgs::msg::PointCloud2 raycast(
     geometry_msgs::msg::Pose origin,
     double horizontal_resolution,
@@ -51,23 +49,6 @@ public:
     double max_distance = 100, double min_distance = 0);
 
 private:
-  std::unordered_map<std::string, navi_sim::Mesh> objects_;
-  size_t getNumVertices() const;
-  size_t getNumIndices() const;
-
-  struct VertexData
-  {
-    float x, y, z;
-  };
-
-  struct PolygonIndexData
-  {
-    unsigned int v0, v1, v2;
-  };
-
-  std::vector<VertexData> geometry_vertices_;
-  std::vector<PolygonIndexData> geometry_indices_;
-  void constractGeometry();
 };
 }  // namespace navi_sim
 

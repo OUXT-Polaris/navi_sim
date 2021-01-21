@@ -25,34 +25,11 @@ namespace navi_sim
 {
 Raycaster::Raycaster()
 {
-  objects_ = std::unordered_map<std::string, navi_sim::Mesh>();
+  // objects_ = std::unordered_map<std::string, navi_sim::Mesh>();
 }
 
 Raycaster::~Raycaster()
 {
-}
-
-void Raycaster::constractGeometry()
-{
-  geometry_vertices_ = std::vector<VertexData>(getNumVertices());
-  geometry_indices_ = std::vector<PolygonIndexData>(getNumIndices());
-  size_t current_vertices = 0;
-  size_t current_polygon_index = 0;
-  for (const auto object : objects_) {
-    const auto vertex_points = object.second.getVertices();
-    for (const auto vertex : vertex_points) {
-      const auto p = vertex.getPosition();
-      VertexData v = {static_cast<float>(p.x), static_cast<float>(p.y), static_cast<float>(p.z)};
-      geometry_vertices_[current_vertices] = v;
-      ++current_vertices;
-    }
-    const auto indices = object.second.getIndices();
-    for (const auto index : indices) {
-      PolygonIndexData i = {index[0], index[1], index[2]};
-      geometry_indices_[current_polygon_index] = i;
-      ++current_polygon_index;
-    }
-  }
 }
 
 const sensor_msgs::msg::PointCloud2 Raycaster::raycast(
@@ -84,6 +61,7 @@ const sensor_msgs::msg::PointCloud2 Raycaster::raycast(
   double max_distance, double min_distance)
 {
   pcl::PointCloud<pcl::PointXYZI>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZI>());
+  /*
   RTCDevice device_handle = rtcNewDevice(nullptr);
   RTCScene scene_handle = rtcNewScene(device_handle);
   RTCGeometry geometry_handle = rtcNewGeometry(device_handle, RTC_GEOMETRY_TYPE_TRIANGLE);
@@ -109,9 +87,6 @@ const sensor_msgs::msg::PointCloud2 Raycaster::raycast(
   rtcAttachGeometry(scene_handle, geometry_handle);
   rtcReleaseGeometry(geometry_handle);
   rtcCommitScene(scene_handle);
-  /**
-   * @brief raycast
-   */
   RTCIntersectContext context;
   rtcInitIntersectContext(&context);
   RTCRayHit rayhit;
@@ -140,44 +115,11 @@ const sensor_msgs::msg::PointCloud2 Raycaster::raycast(
       cloud->emplace_back(p);
     }
   }
-  /**
-   * @brief release handlers
-   */
   rtcReleaseScene(scene_handle);
   rtcReleaseDevice(device_handle);
   sensor_msgs::msg::PointCloud2 pointcloud_msg;
   pcl::toROSMsg(*cloud, pointcloud_msg);
   return pointcloud_msg;
-}
-
-void Raycaster::addObject(std::string name, navi_sim::Mesh mesh)
-{
-  mesh.offsetIndex(getNumVertices());
-  objects_.emplace(name, mesh);
-  constractGeometry();
-}
-
-void Raycaster::addObject(std::string name, geometry_msgs::msg::Pose pose, navi_sim::Mesh mesh)
-{
-  mesh.transform(pose);
-  addObject(name, mesh);
-}
-
-size_t Raycaster::getNumIndices() const
-{
-  size_t ret = 0;
-  for (const auto object : objects_) {
-    ret = ret + object.second.getNumIndices();
-  }
-  return ret;
-}
-
-size_t Raycaster::getNumVertices() const
-{
-  size_t ret = 0;
-  for (const auto object : objects_) {
-    ret = ret + object.second.getNumVertices();
-  }
-  return ret;
+  */
 }
 }  // namespace navi_sim

@@ -63,11 +63,9 @@ rclcpp_components_register_nodes(navi_sim_component
 
 add_library(lidar_sim_component SHARED
   src/lidar_sim_component.cpp
-  src/models.cpp
-  src/mesh.cpp
-  src/raycaster.cpp
-  src/vertex.cpp
+  src/lidar_sim_node.cpp
   src/primitives/box.cpp
+  src/raycaster.cpp
 )
 target_compile_definitions(lidar_sim_component PRIVATE "NAVI_SIM_LIDAR_SIM_COMPONENT_BUILDING_DLL")
 target_link_libraries(lidar_sim_component ${quaternion_operation_LIBRARIES} ${Boost_LIBRARIES})
@@ -83,13 +81,7 @@ ament_target_dependencies(lidar_sim_component
   embree_vendor)
 
 add_executable(lidar_sim_node
-  src/lidar_sim_component.cpp
   src/lidar_sim_node.cpp
-  src/models.cpp
-  src/mesh.cpp
-  src/raycaster.cpp
-  src/vertex.cpp
-  src/primitives/box.cpp
 )
 ament_target_dependencies(lidar_sim_node
   rclcpp
@@ -101,7 +93,7 @@ ament_target_dependencies(lidar_sim_node
   visualization_msgs
   rviz_assimp_vendor
   embree_vendor)
-target_link_libraries(lidar_sim_node ${quaternion_operation_LIBRARIES} ${Boost_LIBRARIES})
+target_link_libraries(lidar_sim_node ${quaternion_operation_LIBRARIES} ${Boost_LIBRARIES} lidar_sim_component)
 
 
 rclcpp_components_register_nodes(lidar_sim_component
@@ -130,7 +122,7 @@ ament_export_libraries(navi_sim_component)
 #############
 ## Install ##
 #############
-install(DIRECTORY launch config models
+install(DIRECTORY launch config
   DESTINATION share/${PROJECT_NAME}
 )
 

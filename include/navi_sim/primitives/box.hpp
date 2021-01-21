@@ -15,9 +15,6 @@
 #ifndef NAVI_SIM__PRIMITIVES__BOX_HPP_
 #define NAVI_SIM__PRIMITIVES__BOX_HPP_
 
-#include <navi_sim/mesh.hpp>
-#include <navi_sim/vertex.hpp>
-
 #include <array>
 #include <vector>
 
@@ -27,11 +24,8 @@ class Box
 {
 public:
   Box(double deapth, double width, double height);
-  Mesh mesh();
 
 private:
-  std::vector<navi_sim::Vertex> vertices_;
-  std::vector<std::array<unsigned int, 3>> indices_;
 };
 }  // namespace navi_sim
 
