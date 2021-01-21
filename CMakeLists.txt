@@ -65,6 +65,7 @@ add_library(lidar_sim_component SHARED
   src/lidar_sim_component.cpp
   src/lidar_sim_node.cpp
   src/primitives/box.cpp
+  src/primitives/primitive.cpp
   src/raycaster.cpp
 )
 target_compile_definitions(lidar_sim_component PRIVATE "NAVI_SIM_LIDAR_SIM_COMPONENT_BUILDING_DLL")

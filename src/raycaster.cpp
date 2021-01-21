@@ -61,8 +61,8 @@ const sensor_msgs::msg::PointCloud2 Raycaster::raycast(
   double max_distance, double min_distance)
 {
   pcl::PointCloud<pcl::PointXYZI>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZI>());
-  /*
   RTCDevice device_handle = rtcNewDevice(nullptr);
+  /*
   RTCScene scene_handle = rtcNewScene(device_handle);
   RTCGeometry geometry_handle = rtcNewGeometry(device_handle, RTC_GEOMETRY_TYPE_TRIANGLE);
   rtcSetSharedGeometryBuffer(
