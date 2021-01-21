@@ -61,6 +61,8 @@ public:
 
 private:
   std::unordered_map<std::string, std::unique_ptr<Primitive>> primitive_ptrs_;
+  RTCScene scene_;
+  RTCDevice device_;
 };
 }  // namespace navi_sim
 
