@@ -24,6 +24,7 @@
 namespace navi_sim
 {
 Raycaster::Raycaster()
+: primitives_()
 {
   // objects_ = std::unordered_map<std::string, navi_sim::Mesh>();
 }

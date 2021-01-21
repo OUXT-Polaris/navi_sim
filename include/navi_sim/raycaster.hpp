@@ -15,6 +15,9 @@
 #ifndef NAVI_SIM__RAYCASTER_HPP_
 #define NAVI_SIM__RAYCASTER_HPP_
 
+#include <navi_sim/primitives/box.hpp>
+#include <navi_sim/primitives/primitive.hpp>
+
 #include <embree3/rtcore.h>
 
 #include <pcl_conversions/pcl_conversions.h>
@@ -26,6 +29,7 @@
 #include <unordered_map>
 #include <vector>
 #include <string>
+#include <memory>
 
 namespace navi_sim
 {
@@ -35,8 +39,15 @@ class Raycaster
 public:
   Raycaster();
   ~Raycaster();
-  // void addObject(std::string name, geometry_msgs::msg::Pose pose, navi_sim::Mesh mesh);
-  // void addObject(std::string name, navi_sim::Mesh mesh);
+  template<typename T, typename ... Ts>
+  void addPrimitive(std::string name, Ts && ... xs)
+  {
+    if (primitives_.count(name) != 0) {
+      throw std::runtime_error("primitive " + name + " already exist.");
+    }
+    auto primitive_ptr = std::make_unique<T>(std::forward<Ts>(xs)...);
+    primitives_.emplace(name, primitive_ptr);
+  }
   const sensor_msgs::msg::PointCloud2 raycast(
     geometry_msgs::msg::Pose origin,
     double horizontal_resolution,
@@ -49,6 +60,7 @@ public:
     double max_distance = 100, double min_distance = 0);
 
 private:
+  std::unordered_map<std::string, std::unique_ptr<Primitive>> primitives_;
 };
 }  // namespace navi_sim
 
