@@ -16,4 +16,9 @@
 
 namespace navi_sim
 {
+Box::Box(double deapth, double width, double height, geometry_msgs::msg::Pose pose)
+: Primitive("Box", pose)
+{
+
+}
 }  // namespace navi_sim

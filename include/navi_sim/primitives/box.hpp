@@ -15,15 +15,14 @@
 #ifndef NAVI_SIM__PRIMITIVES__BOX_HPP_
 #define NAVI_SIM__PRIMITIVES__BOX_HPP_
 
-#include <array>
-#include <vector>
+#include <navi_sim/primitives/primitive.hpp>
 
 namespace navi_sim
 {
-class Box
+class Box : Primitive
 {
 public:
-  Box(double deapth, double width, double height);
+  explicit Box(double deapth, double width, double height, geometry_msgs::msg::Pose pose);
 
 private:
 };

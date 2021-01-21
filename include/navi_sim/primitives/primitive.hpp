@@ -29,6 +29,13 @@ struct Vertex
   float z;
 };
 
+struct Triangle
+{
+  int v0;
+  int v1;
+  int v2;
+};
+
 class Primitive
 {
 public:
@@ -38,6 +45,10 @@ public:
 
 private:
   std::vector<Vertex> vertex_;
+  std::vector<Triangle> triangles_;
+
+protected:
+  Vertex transform(Vertex v);
 };
 }  // namespace navi_sim
 
