@@ -36,5 +36,13 @@ Vertex Primitive::transform(Vertex v)
   ret.x = point(0);
   ret.y = point(1);
   ret.z = point(2);
+  return ret;
+}
+
+void Primitive::transform()
+{
+  for (auto & v : vertices_) {
+    v = transform(v);
+  }
 }
 }  // namespace navi_sim

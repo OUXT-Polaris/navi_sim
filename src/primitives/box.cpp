@@ -16,9 +16,34 @@
 
 namespace navi_sim
 {
-Box::Box(double deapth, double width, double height, geometry_msgs::msg::Pose pose)
+Box::Box(double depth, double width, double height, geometry_msgs::msg::Pose pose)
 : Primitive("Box", pose)
 {
-
+  vertices_ = std::vector<Vertex>(8);
+  vertices_[0].x = -0.5 * depth;
+  vertices_[0].y = -0.5 * width;
+  vertices_[0].z = -0.5 * height;
+  vertices_[1].x = -0.5 * depth;
+  vertices_[1].y = -0.5 * width;
+  vertices_[1].z = +0.5 * height;
+  vertices_[2].x = -0.5 * depth;
+  vertices_[2].y = +0.5 * width;
+  vertices_[2].z = -0.5 * height;
+  vertices_[3].x = -0.5 * depth;
+  vertices_[3].y = +0.5 * width;
+  vertices_[3].z = +0.5 * height;
+  vertices_[4].x = +0.5 * depth;
+  vertices_[4].y = -0.5 * width;
+  vertices_[4].z = -0.5 * height;
+  vertices_[5].x = +0.5 * depth;
+  vertices_[5].y = -0.5 * width;
+  vertices_[5].z = +0.5 * height;
+  vertices_[6].x = +0.5 * depth;
+  vertices_[6].y = +0.5 * width;
+  vertices_[6].z = -0.5 * height;
+  vertices_[7].x = +0.5 * depth;
+  vertices_[7].y = +0.5 * width;
+  vertices_[7].z = +0.5 * height;
+  transform();
 }
 }  // namespace navi_sim

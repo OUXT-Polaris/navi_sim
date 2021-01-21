@@ -43,11 +43,12 @@ public:
   const std::string type;
   const geometry_msgs::msg::Pose pose;
 
-private:
-  std::vector<Vertex> vertex_;
-  std::vector<Triangle> triangles_;
-
 protected:
+  std::vector<Vertex> vertices_;
+  std::vector<Triangle> triangles_;
+  void transform();
+
+private:
   Vertex transform(Vertex v);
 };
 }  // namespace navi_sim
