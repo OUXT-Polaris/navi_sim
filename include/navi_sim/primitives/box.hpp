@@ -19,7 +19,7 @@
 
 namespace navi_sim
 {
-class Box : Primitive
+class Box : public Primitive
 {
 public:
   explicit Box(double depth, double width, double height, geometry_msgs::msg::Pose pose);

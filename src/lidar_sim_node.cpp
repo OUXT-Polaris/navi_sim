@@ -27,11 +27,9 @@ int main(int argc, char * argv[])
   rclcpp::init(argc, argv);
   rclcpp::NodeOptions options;
   auto component = std::make_shared<navi_sim::LidarSimComponent>(options);
-  /*
   geometry_msgs::msg::Pose bouy_pose;
   bouy_pose.position.x = 10;
-  component->addObject("object", bouy_pose, navi_sim::Box(5, 5, 10).mesh());
-  */
+  component->addPrimitive<navi_sim::Box>("box", 5, 5, 5, bouy_pose);
   rclcpp::spin(component);
   rclcpp::shutdown();
   return 0;

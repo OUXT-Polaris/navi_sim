@@ -73,6 +73,11 @@ class LidarSimComponent : public rclcpp::Node
 public:
   NAVI_SIM_LIDAR_SIM_COMPONENT_PUBLIC
   explicit LidarSimComponent(const rclcpp::NodeOptions & options);
+  template<typename T, typename ... Ts>
+  void addPrimitive(std::string name, Ts && ... xs)
+  {
+    raycaster_.addPrimitive<T>(name, std::forward<Ts>(xs)...);
+  }
 
 private:
   void updateScan();

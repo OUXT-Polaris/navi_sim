@@ -42,11 +42,11 @@ public:
   template<typename T, typename ... Ts>
   void addPrimitive(std::string name, Ts && ... xs)
   {
-    if (primitives_.count(name) != 0) {
+    if (primitive_ptrs_.count(name) != 0) {
       throw std::runtime_error("primitive " + name + " already exist.");
     }
     auto primitive_ptr = std::make_unique<T>(std::forward<Ts>(xs)...);
-    primitives_.emplace(name, primitive_ptr);
+    primitive_ptrs_.emplace(name, std::move(primitive_ptr));
   }
   const sensor_msgs::msg::PointCloud2 raycast(
     geometry_msgs::msg::Pose origin,
@@ -60,7 +60,7 @@ public:
     double max_distance = 100, double min_distance = 0);
 
 private:
-  std::unordered_map<std::string, std::unique_ptr<Primitive>> primitives_;
+  std::unordered_map<std::string, std::unique_ptr<Primitive>> primitive_ptrs_;
 };
 }  // namespace navi_sim
 
