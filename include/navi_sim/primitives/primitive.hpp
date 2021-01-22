@@ -17,6 +17,8 @@
 
 #include <geometry_msgs/msg/pose.hpp>
 
+#include <embree3/rtcore.h>
+
 #include <string>
 #include <vector>
 #include <algorithm>
@@ -48,6 +50,7 @@ protected:
   std::vector<Vertex> vertices_;
   std::vector<Triangle> triangles_;
   void transform();
+  unsigned int addToScene(RTCDevice device, RTCScene scene);
 
 private:
   Vertex transform(Vertex v);

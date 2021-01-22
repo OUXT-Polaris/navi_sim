@@ -48,4 +48,26 @@ void Primitive::transform()
     v = transform(v);
   }
 }
+
+unsigned int Primitive::addToScene(RTCDevice device, RTCScene scene)
+{
+  RTCGeometry mesh = rtcNewGeometry(device, RTC_GEOMETRY_TYPE_TRIANGLE);
+  Vertex * vertices = (Vertex *) rtcSetNewGeometryBuffer(
+    mesh, RTC_BUFFER_TYPE_VERTEX, 0,
+    RTC_FORMAT_FLOAT3, sizeof(Vertex), vertices_.size());
+  for (size_t i = 0; i < vertices_.size(); i++) {
+    vertices[i] = vertices_[i];
+  }
+  Triangle * triangles = (Triangle *) rtcSetNewGeometryBuffer(
+    mesh, RTC_BUFFER_TYPE_INDEX, 0,
+    RTC_FORMAT_UINT3, sizeof(Triangle),
+    triangles_.size());
+  for (size_t i = 0; i < triangles_.size(); i++) {
+    triangles[i] = triangles_[i];
+  }
+  rtcCommitGeometry(mesh);
+  unsigned int geometry_id = rtcAttachGeometry(scene, mesh);
+  rtcReleaseGeometry(mesh);
+  return geometry_id;
+}
 }  // namespace navi_sim
