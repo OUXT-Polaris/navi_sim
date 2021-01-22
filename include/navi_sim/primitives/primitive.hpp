@@ -45,12 +45,12 @@ public:
   Primitive(std::string type, geometry_msgs::msg::Pose pose);
   const std::string type;
   const geometry_msgs::msg::Pose pose;
+  unsigned int addToScene(RTCDevice device, RTCScene scene);
 
 protected:
   std::vector<Vertex> vertices_;
   std::vector<Triangle> triangles_;
   void transform();
-  unsigned int addToScene(RTCDevice device, RTCScene scene);
 
 private:
   Vertex transform(Vertex v);

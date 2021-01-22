@@ -75,8 +75,10 @@ const sensor_msgs::msg::PointCloud2 Raycaster::raycast(
   double max_distance, double min_distance)
 {
   pcl::PointCloud<pcl::PointXYZI>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZI>());
+  for (auto && pair : primitive_ptrs_) {
+    pair.second->addToScene(device_, scene_);
+  }
   /*
-
   RTCGeometry geometry_handle = rtcNewGeometry(device_handle, RTC_GEOMETRY_TYPE_TRIANGLE);
   rtcSetSharedGeometryBuffer(
     geometry_handle,
@@ -134,5 +136,7 @@ const sensor_msgs::msg::PointCloud2 Raycaster::raycast(
   pcl::toROSMsg(*cloud, pointcloud_msg);
   return pointcloud_msg;
   */
+  sensor_msgs::msg::PointCloud2 pointcloud_msg;
+  return pointcloud_msg;
 }
 }  // namespace navi_sim
