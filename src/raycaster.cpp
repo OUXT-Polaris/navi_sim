@@ -25,19 +25,21 @@
 namespace navi_sim
 {
 Raycaster::Raycaster()
-: primitive_ptrs_(),
+: primitive_ptrs_(0),
   device_(nullptr),
   scene_(nullptr)
 {
   device_ = rtcNewDevice(nullptr);
+  scene_ = rtcNewScene(device_);
 }
 
 Raycaster::Raycaster(std::string embree_config)
-: primitive_ptrs_(),
+: primitive_ptrs_(0),
   device_(nullptr),
   scene_(nullptr)
 {
   device_ = rtcNewDevice(embree_config.c_str());
+  scene_ = rtcNewScene(device_);
 }
 
 Raycaster::~Raycaster()
@@ -73,9 +75,8 @@ const sensor_msgs::msg::PointCloud2 Raycaster::raycast(
   double max_distance, double min_distance)
 {
   pcl::PointCloud<pcl::PointXYZI>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZI>());
-  RTCDevice device_handle = rtcNewDevice(nullptr);
   /*
-  RTCScene scene_handle = rtcNewScene(device_handle);
+
   RTCGeometry geometry_handle = rtcNewGeometry(device_handle, RTC_GEOMETRY_TYPE_TRIANGLE);
   rtcSetSharedGeometryBuffer(
     geometry_handle,
