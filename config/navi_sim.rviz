@@ -11,7 +11,7 @@ Panels:
       Expanded:
         - /Status1
       Splitter Ratio: 0.5
-    Tree Height: 1031
+    Tree Height: 1023
   - Class: rviz_common/Tool Properties
     Expanded: ~
     Name: Tool Properties
@@ -55,8 +55,7 @@ Visualization Manager:
       Enabled: true
       Name: HermitePath
       Namespaces:
-        center_line: true
-        polygon: true
+        {}
       Topic:
         Depth: 5
         Durability Policy: Volatile
@@ -68,10 +67,7 @@ Visualization Manager:
       Enabled: true
       Name: PurePursuit
       Namespaces:
-        circle: true
-        current: true
-        target: true
-        target_twist: true
+        {}
       Topic:
         Depth: 5
         Durability Policy: Volatile
@@ -83,7 +79,7 @@ Visualization Manager:
       Enabled: true
       Name: VelocityPlanner
       Namespaces:
-        polygon: true
+        {}
       Topic:
         Depth: 5
         Durability Policy: Volatile
@@ -195,7 +191,7 @@ Visualization Manager:
       Enabled: true
       Name: AvoidPath
       Namespaces:
-        center_line: true
+        {}
       Topic:
         Depth: 5
         Durability Policy: Volatile
@@ -226,8 +222,7 @@ Visualization Manager:
       Enabled: true
       Name: ReferenceVelocity
       Namespaces:
-        reference_velocity: true
-        reference_velocity_text: true
+        {}
       Topic:
         Depth: 5
         Durability Policy: Volatile
@@ -239,7 +234,7 @@ Visualization Manager:
       Enabled: true
       Name: Obstacle
       Namespaces:
-        polygon: true
+        {}
       Topic:
         Depth: 5
         Durability Policy: Volatile
@@ -251,13 +246,46 @@ Visualization Manager:
       Enabled: true
       Name: SimulatedObstacle
       Namespaces:
-        obstacle: true
+        {}
       Topic:
         Depth: 5
         Durability Policy: Volatile
         History Policy: Keep Last
         Reliability Policy: Reliable
         Value: /navi_sim_node/marker
+      Value: true
+    - Alpha: 0.800000011920929
+      Autocompute Intensity Bounds: true
+      Autocompute Value Bounds:
+        Max Value: 2.4926085472106934
+        Min Value: -2.4926085472106934
+        Value: true
+      Axis: Z
+      Channel Name: intensity
+      Class: rviz_default_plugins/PointCloud2
+      Color: 255; 255; 255
+      Color Transformer: AxisColor
+      Decay Time: 0
+      Enabled: true
+      Invert Rainbow: false
+      Max Color: 255; 255; 255
+      Max Intensity: 0
+      Min Color: 0; 0; 0
+      Min Intensity: 0
+      Name: LidarPoints
+      Position Transformer: XYZ
+      Selectable: true
+      Size (Pixels): 3
+      Size (m): 0.03999999910593033
+      Style: Spheres
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /lidar_points
+      Use Fixed Frame: true
+      Use rainbow: true
       Value: true
   Enabled: true
   Global Options:
@@ -325,14 +353,14 @@ Visualization Manager:
 Window Geometry:
   Displays:
     collapsed: false
-  Height: 1385
+  Height: 1376
   Hide Left Dock: false
   Hide Right Dock: false
-  QMainWindow State: 000000ff00000000fd0000000200000000000003ad0000050ffc0200000002fb000000100044006900730070006c006100790073010000003d0000048a000000c900fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007301000004cd0000007f0000005c00ffffff00000001000001cb0000050ffc0200000001fb0000000a00560069006500770073010000003d0000050f000000a400ffffff000007a90000050f00000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  QMainWindow State: 000000ff00000000fd0000000200000000000003ad00000506fc0200000002fb000000100044006900730070006c006100790073010000003d00000482000000c900fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007301000004c50000007e0000005c00ffffff00000001000001cb00000506fc0200000001fb0000000a00560069006500770073010000003d00000506000000a400ffffff000007a40000050600000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   Tool Properties:
     collapsed: false
   Views:
     collapsed: false
-  Width: 3373
-  X: 67
+  Width: 3368
+  X: 72
   Y: 27
