@@ -22,7 +22,6 @@
   <depend>wamv_description</depend>
   <depend>visualization_msgs</depend>
   <depend>rviz_assimp_vendor</depend>
-  <depend>embree_vendor</depend>
   <depend>ament_cmake_auto</depend>
   <depend>pcl_conversions</depend>
   <depend>libpcl-all-dev</depend>

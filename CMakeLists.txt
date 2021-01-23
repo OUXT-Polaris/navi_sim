@@ -69,7 +69,7 @@ add_library(lidar_sim_component SHARED
   src/raycaster.cpp
 )
 target_compile_definitions(lidar_sim_component PRIVATE "NAVI_SIM_LIDAR_SIM_COMPONENT_BUILDING_DLL")
-target_link_libraries(lidar_sim_component ${quaternion_operation_LIBRARIES} ${Boost_LIBRARIES})
+target_link_libraries(lidar_sim_component ${quaternion_operation_LIBRARIES} ${Boost_LIBRARIES} embree3)
 ament_target_dependencies(lidar_sim_component
   rclcpp
   rclcpp_components
@@ -78,8 +78,8 @@ ament_target_dependencies(lidar_sim_component
   quaternion_operation
   sensor_msgs
   visualization_msgs
-  rviz_assimp_vendor
-  embree_vendor)
+  rviz_assimp_vendor)
+  #embree_vendor)
 
 add_executable(lidar_sim_node
   src/lidar_sim_node.cpp
@@ -92,8 +92,8 @@ ament_target_dependencies(lidar_sim_node
   quaternion_operation
   sensor_msgs
   visualization_msgs
-  rviz_assimp_vendor
-  embree_vendor)
+  rviz_assimp_vendor)
+  #embree_vendor)
 target_link_libraries(lidar_sim_node ${quaternion_operation_LIBRARIES} ${Boost_LIBRARIES} lidar_sim_component)
 
 
