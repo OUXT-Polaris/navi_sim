@@ -61,7 +61,7 @@ void LidarSimComponent::updateScan()
         DEG2RAD(9.0), DEG2RAD(11.0), DEG2RAD(13.0), DEG2RAD(15.0)
       });
     pointcloud_msg.header.stamp = now;
-    pointcloud_msg.header.frame_id = lidar_frame_;
+    pointcloud_msg.header.frame_id = "map";
     pointcloud_pub_->publish(pointcloud_msg);
   } catch (tf2::ExtrapolationException & ex) {
     RCLCPP_ERROR(get_logger(), ex.what());

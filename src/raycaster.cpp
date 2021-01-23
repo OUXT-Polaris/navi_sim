@@ -89,8 +89,8 @@ const sensor_msgs::msg::PointCloud2 Raycaster::raycast(
     rayhit.ray.tfar = max_distance;
     rayhit.ray.tnear = min_distance;
     rayhit.ray.flags = false;
-    direction = origin.orientation * direction;
-    const auto rotation_mat = quaternion_operation::getRotationMatrix(direction);
+    const auto ray_direction = origin.orientation * direction;
+    const auto rotation_mat = quaternion_operation::getRotationMatrix(ray_direction);
     const auto rotated_direction = rotation_mat * Eigen::Vector3d(1.0f, 0.0f, 0.0f);
     rayhit.ray.dir_x = rotated_direction[0];
     rayhit.ray.dir_y = rotated_direction[1];
@@ -102,9 +102,9 @@ const sensor_msgs::msg::PointCloud2 Raycaster::raycast(
       double distance = rayhit.ray.tfar;
       const auto vector = rotated_direction * distance;
       pcl::PointXYZI p;
-      p.x = origin.position.x + vector[0];
-      p.y = origin.position.y + vector[1];
-      p.z = origin.position.z + vector[2];
+      p.x = vector[0] + origin.position.x;
+      p.y = vector[1] + origin.position.y;
+      p.z = vector[2] + origin.position.z;
       cloud->emplace_back(p);
     }
   }
