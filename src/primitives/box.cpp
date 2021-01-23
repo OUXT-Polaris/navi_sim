@@ -118,10 +118,10 @@ nlohmann::json Box::toJson() const
 
 void to_json(nlohmann::json & j, const Box & p)
 {
-  j = nlohmann::json{{"depth", p.depth}, {"width", p.width}, {"height", p.height}};
-  auto j_pose = nlohmann::json{};
-  to_json(j_pose, p.pose);
-  j["pose"] = j_pose;
+  j = p.toBaseJson();
+  j["depth"] = p.depth;
+  j["width"] = p.width;
+  j["height"] = p.height;
 }
 
 void from_json(const nlohmann::json & j, Box & p)

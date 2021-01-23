@@ -85,6 +85,21 @@ unsigned int Primitive::addToScene(RTCDevice device, RTCScene scene)
   return geometry_id;
 }
 
+nlohmann::json Primitive::toBaseJson() const
+{
+  auto j = nlohmann::json{};
+  j = *this;
+  return j;
+}
+
+void to_json(nlohmann::json & j, const Primitive & p)
+{
+  auto j_pose = nlohmann::json{};
+  to_json(j_pose, p.pose);
+  j = nlohmann::json{{"p", p.type}};
+  j["pose"] = j_pose;
+}
+
 void to_json(nlohmann::json & j, const geometry_msgs::msg::Point & p)
 {
   j = nlohmann::json{{"x", p.x}, {"y", p.y}, {"z", p.z}};

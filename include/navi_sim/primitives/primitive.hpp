@@ -45,13 +45,14 @@ class Primitive
 {
 public:
   Primitive(std::string type, geometry_msgs::msg::Pose pose);
-  virtual ~Primitive() {}
+  virtual ~Primitive() = default;
   const std::string type;
   const geometry_msgs::msg::Pose pose;
   unsigned int addToScene(RTCDevice device, RTCScene scene);
   std::vector<Vertex> getVertex() const;
   std::vector<Triangle> getTriangles() const;
-  virtual nlohmann::json toJson() const = 0;
+  virtual nlohmann::json toJson() const {return nlohmann::json{};}
+  nlohmann::json toBaseJson() const;
 
 protected:
   std::vector<Vertex> transform() const;
@@ -62,6 +63,7 @@ private:
   Vertex transform(Vertex v) const;
 };
 
+void to_json(nlohmann::json & j, const Primitive & p);
 void to_json(nlohmann::json & j, const geometry_msgs::msg::Point & p);
 void from_json(const nlohmann::json & j, geometry_msgs::msg::Point & p);
 void to_json(nlohmann::json & j, const geometry_msgs::msg::Quaternion & q);
