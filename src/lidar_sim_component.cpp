@@ -14,7 +14,12 @@
 
 #include <navi_sim/lidar_sim_component.hpp>
 
+#include <nlohmann/json.hpp>
+
+#include <boost/filesystem.hpp>
+
 #include <string>
+#include <fstream>
 #include <memory>
 
 namespace navi_sim
@@ -36,6 +41,26 @@ LidarSimComponent::LidarSimComponent(const rclcpp::NodeOptions & options)
   } else {
     raycaster_ptr_ = std::make_unique<Raycaster>();
   }
+  declare_parameter("objects_path");
+  if (!has_parameter("objects_path")) {
+    throw std::runtime_error("objects_path parameter does not exist");
+  }
+  get_parameter("objects_path", objects_path_);
+  namespace fs = boost::filesystem;
+  const fs::path path(objects_path_);
+  boost::system::error_code error;
+  const bool result = fs::exists(path, error);
+  if (!result || error) {
+    throw std::runtime_error(objects_path_ + " did not find");
+  }
+  std::ifstream fin;
+  fin.open(objects_path_, std::ios::in);
+  std::string json_string = "";
+  std::string line;
+  while (std::getline(fin, line)) {
+    json_string = json_string + line;
+  }
+  raycaster_ptr_->addPrimitives(nlohmann::json::parse(json_string));
   pointcloud_pub_ = this->create_publisher<sensor_msgs::msg::PointCloud2>("lidar_points", 1);
   update_scan_timer_ =
     this->create_wall_timer(100ms, std::bind(&LidarSimComponent::updateScan, this));

@@ -46,6 +46,16 @@ Raycaster::~Raycaster()
   std::cout << dumpPrimitives() << std::endl;
 }
 
+void Raycaster::addPrimitives(nlohmann::json json)
+{
+  for (const auto item : json.items()) {
+    if (item.value()["type"] == "Box") {
+      auto box = item.value().get<Box>();
+      addPrimitive(item.key(), box);
+    }
+  }
+}
+
 nlohmann::json Raycaster::dumpPrimitives() const
 {
   nlohmann::json j;

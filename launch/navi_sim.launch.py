@@ -26,6 +26,10 @@ def generate_launch_description():
             get_package_share_directory('navi_sim'),
             'config',
             'navi_sim.rviz')
+    object_config_path = os.path.join(
+            get_package_share_directory('navi_sim'),
+            'config',
+            'objects.json')
     description_dir = os.path.join(
             get_package_share_directory('wamv_description'), 'launch')
     description = LaunchDescription([
@@ -44,6 +48,7 @@ def generate_launch_description():
             package='navi_sim',
             executable='lidar_sim_node',
             name='lidar_sim_node',
+            parameters=[{"objects_path": object_config_path}],
             output='screen'),
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource([description_dir, '/wamv_description.launch.py']),

@@ -96,7 +96,7 @@ void to_json(nlohmann::json & j, const Primitive & p)
 {
   auto j_pose = nlohmann::json{};
   to_json(j_pose, p.pose);
-  j = nlohmann::json{{"p", p.type}};
+  j = nlohmann::json{{"type", p.type}};
   j["pose"] = j_pose;
 }
 

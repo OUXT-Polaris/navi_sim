@@ -89,6 +89,7 @@ private:
   tf2_ros::TransformListener listener_;
   rclcpp::TimerBase::SharedPtr update_scan_timer_;
   std::string lidar_frame_, map_frame_;
+  std::string objects_path_;
 };
 }  // namespace navi_sim
 
