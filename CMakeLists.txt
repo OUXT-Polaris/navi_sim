@@ -100,16 +100,9 @@ target_link_libraries(lidar_sim_node ${quaternion_operation_LIBRARIES} ${Boost_L
 rclcpp_components_register_nodes(lidar_sim_component
   "lidar_sim::LidarSimComponent")
 
-add_executable(embree_example
-  src/embree_example.cpp
-)
-ament_target_dependencies(embree_example
-  embree_vendor)
-
 install(TARGETS
   navi_sim_node
   lidar_sim_node
-  embree_example
   DESTINATION lib/navi_sim
 )
 install(TARGETS
