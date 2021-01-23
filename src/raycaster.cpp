@@ -76,8 +76,27 @@ const sensor_msgs::msg::PointCloud2 Raycaster::raycast(
   scene_ = rtcNewScene(device_);
   pcl::PointCloud<pcl::PointXYZI>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZI>());
   for (auto && pair : primitive_ptrs_) {
-    pair.second->addToScene(device_, scene_);
+    RTCGeometry mesh = rtcNewGeometry(device_, RTC_GEOMETRY_TYPE_TRIANGLE);
+    const auto vertices = pair.second->getVertex();
+    Vertex * vertices_ptr = (Vertex *) rtcSetNewGeometryBuffer(
+      mesh, RTC_BUFFER_TYPE_VERTEX, 0,
+      RTC_FORMAT_FLOAT3, sizeof(Vertex), vertices.size());
+    for (size_t i = 0; i < vertices.size(); i++) {
+      vertices_ptr[i] = vertices[i];
+    }
+    const auto triangles = pair.second->getTriangles();
+    Triangle * triangles_ptr = (Triangle *) rtcSetNewGeometryBuffer(
+      mesh, RTC_BUFFER_TYPE_INDEX, 0,
+      RTC_FORMAT_UINT3, sizeof(Triangle),
+      triangles.size());
+    for (size_t i = 0; i < triangles.size(); i++) {
+      triangles_ptr[i] = triangles[i];
+    }
+    rtcCommitGeometry(mesh);
+    rtcAttachGeometry(scene_, mesh);
+    rtcReleaseGeometry(mesh);
   }
+  rtcCommitScene(scene_);
   RTCIntersectContext context;
   rtcInitIntersectContext(&context);
   RTCRayHit rayhit;
@@ -96,6 +115,7 @@ const sensor_msgs::msg::PointCloud2 Raycaster::raycast(
     rayhit.ray.dir_z = rotated_direction[2];
     rayhit.hit.geomID = RTC_INVALID_GEOMETRY_ID;
     rtcIntersect1(scene_, &context, &rayhit);
+
     if (rayhit.hit.geomID != RTC_INVALID_GEOMETRY_ID) {
       double distance = rayhit.ray.tfar;
       const auto vector = rotated_direction * distance;
@@ -106,7 +126,6 @@ const sensor_msgs::msg::PointCloud2 Raycaster::raycast(
       cloud->emplace_back(p);
     }
   }
-  std::cout << cloud->size() << std::endl;
   sensor_msgs::msg::PointCloud2 pointcloud_msg;
   pcl::toROSMsg(*cloud, pointcloud_msg);
   rtcReleaseScene(scene_);

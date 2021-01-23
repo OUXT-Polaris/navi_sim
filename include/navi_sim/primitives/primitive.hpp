@@ -34,9 +34,9 @@ struct Vertex
 
 struct Triangle
 {
-  int v0;
-  int v1;
-  int v2;
+  unsigned int v0;
+  unsigned int v1;
+  unsigned int v2;
 };
 
 class Primitive
@@ -46,14 +46,16 @@ public:
   const std::string type;
   const geometry_msgs::msg::Pose pose;
   unsigned int addToScene(RTCDevice device, RTCScene scene);
+  std::vector<Vertex> getVertex() const;
+  std::vector<Triangle> getTriangles() const;
 
 protected:
-  std::vector<Vertex> transform();
+  std::vector<Vertex> transform() const;
   std::vector<Vertex> vertices_;
   std::vector<Triangle> triangles_;
 
 private:
-  Vertex transform(Vertex v);
+  Vertex transform(Vertex v) const;
 };
 }  // namespace navi_sim
 

@@ -25,7 +25,7 @@ namespace navi_sim
 Primitive::Primitive(std::string type, geometry_msgs::msg::Pose pose)
 : type(type), pose(pose) {}
 
-Vertex Primitive::transform(Vertex v)
+Vertex Primitive::transform(Vertex v) const
 {
   auto mat = quaternion_operation::getRotationMatrix(pose.orientation);
   Eigen::VectorXd point(3);
@@ -43,13 +43,23 @@ Vertex Primitive::transform(Vertex v)
   return ret;
 }
 
-std::vector<Vertex> Primitive::transform()
+std::vector<Vertex> Primitive::transform() const
 {
   std::vector<Vertex> ret;
   for (auto & v : vertices_) {
     ret.emplace_back(transform(v));
   }
   return ret;
+}
+
+std::vector<Vertex> Primitive::getVertex() const
+{
+  return transform();
+}
+
+std::vector<Triangle> Primitive::getTriangles() const
+{
+  return triangles_;
 }
 
 unsigned int Primitive::addToScene(RTCDevice device, RTCScene scene)

@@ -19,7 +19,7 @@
 
 namespace navi_sim
 {
-Box::Box(double depth, double width, double height, geometry_msgs::msg::Pose pose)
+Box::Box(float depth, float width, float height, geometry_msgs::msg::Pose pose)
 : Primitive("Box", pose)
 {
   vertices_ = std::vector<Vertex>(8);
