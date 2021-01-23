@@ -79,7 +79,6 @@ ament_target_dependencies(lidar_sim_component
   sensor_msgs
   visualization_msgs
   rviz_assimp_vendor)
-  #embree_vendor)
 
 add_executable(lidar_sim_node
   src/lidar_sim_node.cpp
@@ -93,7 +92,6 @@ ament_target_dependencies(lidar_sim_node
   sensor_msgs
   visualization_msgs
   rviz_assimp_vendor)
-  #embree_vendor)
 target_link_libraries(lidar_sim_node ${quaternion_operation_LIBRARIES} ${Boost_LIBRARIES} lidar_sim_component)
 
 
