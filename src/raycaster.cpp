@@ -100,7 +100,11 @@ const sensor_msgs::msg::PointCloud2 Raycaster::raycast(
 
     if (rayhit.hit.geomID != RTC_INVALID_GEOMETRY_ID) {
       double distance = rayhit.ray.tfar;
-      const auto vector = quaternion_operation::getRotationMatrix(direction) * Eigen::Vector3d(1.0f, 0.0f, 0.0f) * distance;
+      const auto vector = quaternion_operation::getRotationMatrix(direction) * Eigen::Vector3d(
+        1.0f,
+        0.0f,
+        0.0f) *
+        distance;
       pcl::PointXYZI p;
       p.x = vector[0];
       p.y = vector[1];
