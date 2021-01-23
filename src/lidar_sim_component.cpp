@@ -55,10 +55,10 @@ void LidarSimComponent::updateScan()
     auto pointcloud_msg = raycaster_ptr_->raycast(
       pose, 2 * M_PI / 360.0,
       {
-        RAD2DEG(-15.0), RAD2DEG(-13.0), RAD2DEG(-11.0), RAD2DEG(-9.0),
-        RAD2DEG(-7.0), RAD2DEG(-5.0), RAD2DEG(-3.0), RAD2DEG(-1.0),
-        RAD2DEG(1.0), RAD2DEG(3.0), RAD2DEG(5.0), RAD2DEG(7.0),
-        RAD2DEG(9.0), RAD2DEG(11.0), RAD2DEG(13.0), RAD2DEG(15.0)
+        DEG2RAD(-15.0), DEG2RAD(-13.0), DEG2RAD(-11.0), DEG2RAD(-9.0),
+        DEG2RAD(-7.0), DEG2RAD(-5.0), DEG2RAD(-3.0), DEG2RAD(-1.0),
+        DEG2RAD(1.0), DEG2RAD(3.0), DEG2RAD(5.0), DEG2RAD(7.0),
+        DEG2RAD(9.0), DEG2RAD(11.0), DEG2RAD(13.0), DEG2RAD(15.0)
       });
     pointcloud_msg.header.stamp = now;
     pointcloud_msg.header.frame_id = lidar_frame_;
