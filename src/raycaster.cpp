@@ -50,8 +50,8 @@ void Raycaster::addPrimitives(nlohmann::json json)
 {
   for (const auto item : json.items()) {
     if (item.value()["type"] == "Box") {
-      auto box = item.value().get<Box>();
-      addPrimitive(item.key(), box);
+      // auto box = item.value().get<Box>();
+      // addPrimitive(item.key(), box);
     }
   }
 }
