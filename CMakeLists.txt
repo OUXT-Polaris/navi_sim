@@ -31,37 +31,21 @@ include_directories(
   ${PCL_INCLUDE_DIRS}
 )
 
-add_library(navi_sim_component SHARED
+ament_auto_add_library(navi_sim_component SHARED
   src/navi_sim_component.cpp
 )
 target_compile_definitions(navi_sim_component PRIVATE "NAVI_SIM_NAVI_SIM_COMPONENT_BUILDING_DLL")
 target_link_libraries(navi_sim_component ${quaternion_operation_LIBRARIES} ${Boost_LIBRARIES})
-ament_target_dependencies(navi_sim_component
-  rclcpp
-  rclcpp_components
-  tf2_ros
-  tf2_geometry_msgs
-  quaternion_operation
-  sensor_msgs
-  visualization_msgs)
 
-add_executable(navi_sim_node
+ament_auto_add_executable(navi_sim_node
   src/navi_sim_node.cpp
 )
 target_link_libraries(navi_sim_node navi_sim_component ${quaternion_operation_LIBRARIES})
-ament_target_dependencies(navi_sim_node
-  rclcpp
-  rclcpp_components
-  tf2_ros
-  tf2_geometry_msgs
-  quaternion_operation
-  sensor_msgs
-  visualization_msgs)
 
 rclcpp_components_register_nodes(navi_sim_component
   "navi_sim::NaviSimComponent")
 
-add_library(lidar_sim_component SHARED
+ament_auto_add_library(lidar_sim_component SHARED
   src/lidar_sim_component.cpp
   src/lidar_sim_node.cpp
   src/primitives/box.cpp
@@ -70,28 +54,10 @@ add_library(lidar_sim_component SHARED
 )
 target_compile_definitions(lidar_sim_component PRIVATE "NAVI_SIM_LIDAR_SIM_COMPONENT_BUILDING_DLL")
 target_link_libraries(lidar_sim_component ${quaternion_operation_LIBRARIES} ${Boost_LIBRARIES} embree3)
-ament_target_dependencies(lidar_sim_component
-  rclcpp
-  rclcpp_components
-  tf2_ros
-  tf2_geometry_msgs
-  quaternion_operation
-  sensor_msgs
-  visualization_msgs
-  rviz_assimp_vendor)
 
-add_executable(lidar_sim_node
+ament_auto_add_executable(lidar_sim_node
   src/lidar_sim_node.cpp
 )
-ament_target_dependencies(lidar_sim_node
-  rclcpp
-  rclcpp_components
-  tf2_ros
-  tf2_geometry_msgs
-  quaternion_operation
-  sensor_msgs
-  visualization_msgs
-  rviz_assimp_vendor)
 target_link_libraries(lidar_sim_node ${quaternion_operation_LIBRARIES} ${Boost_LIBRARIES} lidar_sim_component)
 
 
