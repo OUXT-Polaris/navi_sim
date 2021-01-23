@@ -42,15 +42,6 @@ public:
   explicit Raycaster(std::string embree_config);
   ~Raycaster();
   void addPrimitives(nlohmann::json json);
-  template<typename T>
-  void addPrimitive(std::string name, T primitive)
-  {
-    if (primitive_ptrs_.count(name) != 0) {
-      throw std::runtime_error("primitive " + name + " already exist.");
-    }
-    auto primitive_ptr = std::make_unique<T>(primitive);
-    primitive_ptrs_.emplace(name, std::move(primitive_ptr));
-  }
   template<typename T, typename ... Ts>
   void addPrimitive(std::string name, Ts && ... xs)
   {

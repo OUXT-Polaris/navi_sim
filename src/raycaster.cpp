@@ -55,7 +55,7 @@ void Raycaster::addPrimitives(nlohmann::json json)
       float w = item.value()["width"];
       float h = item.value()["height"];
       geometry_msgs::msg::Pose pose;
-      to_json(item.value()["pose"], pose);
+      from_json(item.value()["pose"], pose);
       addPrimitive<Box>(item.key(), d, w, h, pose);
     }
   }
