@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 #include <navi_sim/raycaster.hpp>
+#include <navi_sim/primitives/primitive.hpp>
 
 #include <quaternion_operation/quaternion_operation.h>
 
@@ -50,8 +51,12 @@ void Raycaster::addPrimitives(nlohmann::json json)
 {
   for (const auto item : json.items()) {
     if (item.value()["type"] == "Box") {
-      // auto box = item.value().get<Box>();
-      // addPrimitive(item.key(), box);
+      float d = item.value()["depth"];
+      float w = item.value()["width"];
+      float h = item.value()["height"];
+      geometry_msgs::msg::Pose pose;
+      to_json(item.value()["pose"], pose);
+      addPrimitive<Box>(item.key(), d, w, h, pose);
     }
   }
 }
