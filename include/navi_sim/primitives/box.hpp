@@ -28,9 +28,14 @@ public:
   const float depth;
   const float width;
   const float height;
+  Box & operator=(const Box &)
+  {
+    return *this;
+  }
 };
 
 void to_json(nlohmann::json & j, const Box & p);
+void from_json(const nlohmann::json & j, Box & p);
 }  // namespace navi_sim
 
 #endif  // NAVI_SIM__PRIMITIVES__BOX_HPP_

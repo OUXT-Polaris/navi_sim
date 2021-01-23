@@ -116,4 +116,14 @@ void to_json(nlohmann::json & j, const Box & p)
   to_json(j_pose, p.pose);
   j["pose"] = j_pose;
 }
+
+void from_json(const nlohmann::json & j, Box & p)
+{
+  geometry_msgs::msg::Pose pose;
+  from_json(j["pose"], pose);
+  double d = j.at("depth").get<float>();
+  double w = j.at("width").get<float>();
+  double h = j.at("height").get<float>();
+  p = Box(d, w, h, pose);
+}
 }  // namespace navi_sim

@@ -90,9 +90,24 @@ void to_json(nlohmann::json & j, const geometry_msgs::msg::Point & p)
   j = nlohmann::json{{"x", p.x}, {"y", p.y}, {"z", p.z}};
 }
 
+void from_json(const nlohmann::json & j, geometry_msgs::msg::Point & p)
+{
+  j.at("x").get_to(p.x);
+  j.at("y").get_to(p.y);
+  j.at("z").get_to(p.z);
+}
+
 void to_json(nlohmann::json & j, const geometry_msgs::msg::Quaternion & q)
 {
   j = nlohmann::json{{"x", q.x}, {"y", q.y}, {"z", q.z}, {"w", q.w}};
+}
+
+void from_json(const nlohmann::json & j, geometry_msgs::msg::Quaternion & q)
+{
+  j.at("x").get_to(q.x);
+  j.at("y").get_to(q.y);
+  j.at("z").get_to(q.z);
+  j.at("w").get_to(q.w);
 }
 
 void to_json(nlohmann::json & j, const geometry_msgs::msg::Pose & p)
@@ -104,5 +119,11 @@ void to_json(nlohmann::json & j, const geometry_msgs::msg::Pose & p)
   auto j_orientation = nlohmann::json{};
   to_json(j_orientation, p.orientation);
   j["orientation"] = j_orientation;
+}
+
+void from_json(const nlohmann::json & j, geometry_msgs::msg::Pose & p)
+{
+  from_json(j["position"], p.position);
+  from_json(j["orientation"], p.orientation);
 }
 }  // namespace navi_sim

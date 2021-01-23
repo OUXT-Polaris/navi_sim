@@ -61,8 +61,11 @@ private:
 };
 
 void to_json(nlohmann::json & j, const geometry_msgs::msg::Point & p);
+void from_json(const nlohmann::json & j, geometry_msgs::msg::Point & p);
 void to_json(nlohmann::json & j, const geometry_msgs::msg::Quaternion & q);
+void from_json(const nlohmann::json & j, geometry_msgs::msg::Quaternion & q);
 void to_json(nlohmann::json & j, const geometry_msgs::msg::Pose & p);
+void from_json(const nlohmann::json & j, geometry_msgs::msg::Pose & p);
 }  // namespace navi_sim
 
 #endif  // NAVI_SIM__PRIMITIVES__PRIMITIVE_HPP_
