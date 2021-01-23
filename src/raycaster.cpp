@@ -43,6 +43,16 @@ Raycaster::Raycaster(std::string embree_config)
 Raycaster::~Raycaster()
 {
   rtcReleaseDevice(device_);
+  std::cout << dumpPrimitives() << std::endl;
+}
+
+nlohmann::json Raycaster::dumpPrimitives() const
+{
+  nlohmann::json j;
+  for (auto && pair : primitive_ptrs_) {
+    j[pair.first] = pair.second->toJson();
+  }
+  return j;
 }
 
 const sensor_msgs::msg::PointCloud2 Raycaster::raycast(

@@ -60,6 +60,7 @@ public:
     geometry_msgs::msg::Pose origin,
     std::vector<geometry_msgs::msg::Quaternion> directions,
     double max_distance = 100, double min_distance = 0);
+  nlohmann::json dumpPrimitives() const;
 
 private:
   std::unordered_map<std::string, std::unique_ptr<Primitive>> primitive_ptrs_;

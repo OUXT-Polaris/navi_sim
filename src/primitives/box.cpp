@@ -112,6 +112,7 @@ Box::Box(float depth, float width, float height, geometry_msgs::msg::Pose pose)
 nlohmann::json Box::toJson() const
 {
   auto j = nlohmann::json{};
+  j = *this;
   return j;
 }
 
