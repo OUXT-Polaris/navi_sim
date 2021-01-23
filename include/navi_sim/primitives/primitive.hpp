@@ -45,6 +45,7 @@ class Primitive
 {
 public:
   Primitive(std::string type, geometry_msgs::msg::Pose pose);
+  virtual ~Primitive() {}
   const std::string type;
   const geometry_msgs::msg::Pose pose;
   unsigned int addToScene(RTCDevice device, RTCScene scene);

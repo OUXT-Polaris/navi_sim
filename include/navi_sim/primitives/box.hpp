@@ -25,6 +25,7 @@ class Box : public Primitive
 public:
   explicit Box(float depth, float width, float height, geometry_msgs::msg::Pose pose);
   Box() = default;
+  ~Box() = default;
   const float depth;
   const float width;
   const float height;
