@@ -48,9 +48,9 @@ public:
   unsigned int addToScene(RTCDevice device, RTCScene scene);
 
 protected:
+  std::vector<Vertex> transform();
   std::vector<Vertex> vertices_;
   std::vector<Triangle> triangles_;
-  void transform();
 
 private:
   Vertex transform(Vertex v);

@@ -30,7 +30,6 @@ Raycaster::Raycaster()
   scene_(nullptr)
 {
   device_ = rtcNewDevice(nullptr);
-  scene_ = rtcNewScene(device_);
 }
 
 Raycaster::Raycaster(std::string embree_config)
@@ -39,11 +38,11 @@ Raycaster::Raycaster(std::string embree_config)
   scene_(nullptr)
 {
   device_ = rtcNewDevice(embree_config.c_str());
-  scene_ = rtcNewScene(device_);
 }
 
 Raycaster::~Raycaster()
 {
+  rtcReleaseDevice(device_);
 }
 
 const sensor_msgs::msg::PointCloud2 Raycaster::raycast(
@@ -74,34 +73,11 @@ const sensor_msgs::msg::PointCloud2 Raycaster::raycast(
   std::vector<geometry_msgs::msg::Quaternion> directions,
   double max_distance, double min_distance)
 {
+  scene_ = rtcNewScene(device_);
   pcl::PointCloud<pcl::PointXYZI>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZI>());
   for (auto && pair : primitive_ptrs_) {
     pair.second->addToScene(device_, scene_);
   }
-  /*
-  RTCGeometry geometry_handle = rtcNewGeometry(device_handle, RTC_GEOMETRY_TYPE_TRIANGLE);
-  rtcSetSharedGeometryBuffer(
-    geometry_handle,
-    RTC_BUFFER_TYPE_VERTEX,
-    0,
-    RTC_FORMAT_FLOAT3,
-    geometry_vertices_.data(),
-    0,
-    sizeof(Vertex),
-    geometry_vertices_.size());
-  rtcSetSharedGeometryBuffer(
-    geometry_handle,
-    RTC_BUFFER_TYPE_INDEX,
-    0,
-    RTC_FORMAT_UINT3,
-    geometry_indices_.data(),
-    0,
-    sizeof(PolygonIndexData),
-    geometry_indices_.size());
-  rtcCommitGeometry(geometry_handle);
-  rtcAttachGeometry(scene_handle, geometry_handle);
-  rtcReleaseGeometry(geometry_handle);
-  rtcCommitScene(scene_handle);
   RTCIntersectContext context;
   rtcInitIntersectContext(&context);
   RTCRayHit rayhit;
@@ -119,7 +95,7 @@ const sensor_msgs::msg::PointCloud2 Raycaster::raycast(
     rayhit.ray.dir_y = rotated_direction[1];
     rayhit.ray.dir_z = rotated_direction[2];
     rayhit.hit.geomID = RTC_INVALID_GEOMETRY_ID;
-    rtcIntersect1(scene_handle, &context, &rayhit);
+    rtcIntersect1(scene_, &context, &rayhit);
     if (rayhit.hit.geomID != RTC_INVALID_GEOMETRY_ID) {
       double distance = rayhit.ray.tfar;
       const auto vector = rotated_direction * distance;
@@ -130,13 +106,10 @@ const sensor_msgs::msg::PointCloud2 Raycaster::raycast(
       cloud->emplace_back(p);
     }
   }
-  rtcReleaseScene(scene_handle);
-  rtcReleaseDevice(device_handle);
+  std::cout << cloud->size() << std::endl;
   sensor_msgs::msg::PointCloud2 pointcloud_msg;
   pcl::toROSMsg(*cloud, pointcloud_msg);
-  return pointcloud_msg;
-  */
-  sensor_msgs::msg::PointCloud2 pointcloud_msg;
+  rtcReleaseScene(scene_);
   return pointcloud_msg;
 }
 }  // namespace navi_sim

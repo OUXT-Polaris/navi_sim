@@ -18,6 +18,7 @@
 
 #include <algorithm>
 #include <string>
+#include <iostream>
 
 namespace navi_sim
 {
@@ -42,21 +43,24 @@ Vertex Primitive::transform(Vertex v)
   return ret;
 }
 
-void Primitive::transform()
+std::vector<Vertex> Primitive::transform()
 {
+  std::vector<Vertex> ret;
   for (auto & v : vertices_) {
-    v = transform(v);
+    ret.emplace_back(transform(v));
   }
+  return ret;
 }
 
 unsigned int Primitive::addToScene(RTCDevice device, RTCScene scene)
 {
   RTCGeometry mesh = rtcNewGeometry(device, RTC_GEOMETRY_TYPE_TRIANGLE);
+  const auto transformed_vertices = transform();
   Vertex * vertices = (Vertex *) rtcSetNewGeometryBuffer(
     mesh, RTC_BUFFER_TYPE_VERTEX, 0,
-    RTC_FORMAT_FLOAT3, sizeof(Vertex), vertices_.size());
-  for (size_t i = 0; i < vertices_.size(); i++) {
-    vertices[i] = vertices_[i];
+    RTC_FORMAT_FLOAT3, sizeof(Vertex), transformed_vertices.size());
+  for (size_t i = 0; i < transformed_vertices.size(); i++) {
+    vertices[i] = transformed_vertices[i];
   }
   Triangle * triangles = (Triangle *) rtcSetNewGeometryBuffer(
     mesh, RTC_BUFFER_TYPE_INDEX, 0,
