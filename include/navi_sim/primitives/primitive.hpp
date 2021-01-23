@@ -51,6 +51,7 @@ public:
   unsigned int addToScene(RTCDevice device, RTCScene scene);
   std::vector<Vertex> getVertex() const;
   std::vector<Triangle> getTriangles() const;
+  virtual nlohmann::json toJson() const = 0;
 
 protected:
   std::vector<Vertex> transform() const;

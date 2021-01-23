@@ -33,6 +33,7 @@ public:
   {
     return *this;
   }
+  nlohmann::json toJson() const;
 };
 
 void to_json(nlohmann::json & j, const Box & p);
