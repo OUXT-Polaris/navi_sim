@@ -16,6 +16,7 @@
 #define NAVI_SIM__PRIMITIVES__BOX_HPP_
 
 #include <navi_sim/primitives/primitive.hpp>
+#include <nlohmann/json.hpp>
 
 namespace navi_sim
 {
@@ -23,9 +24,13 @@ class Box : public Primitive
 {
 public:
   explicit Box(float depth, float width, float height, geometry_msgs::msg::Pose pose);
-
-private:
+  Box() = default;
+  const float depth;
+  const float width;
+  const float height;
 };
+
+void to_json(nlohmann::json & j, const Box & p);
 }  // namespace navi_sim
 
 #endif  // NAVI_SIM__PRIMITIVES__BOX_HPP_

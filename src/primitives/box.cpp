@@ -20,7 +20,7 @@
 namespace navi_sim
 {
 Box::Box(float depth, float width, float height, geometry_msgs::msg::Pose pose)
-: Primitive("Box", pose)
+: Primitive("Box", pose), depth(depth), width(width), height(height)
 {
   vertices_ = std::vector<Vertex>(8);
 
@@ -107,5 +107,13 @@ Box::Box(float depth, float width, float height, geometry_msgs::msg::Pose pose)
   triangles_[11].v2 = 7;
 
   transform();
+}
+
+void to_json(nlohmann::json & j, const Box & p)
+{
+  j = nlohmann::json{{"depth", p.depth}, {"width", p.width}, {"height", p.height}};
+  auto j_pose = nlohmann::json{};
+  to_json(j_pose, p.pose);
+  j["pose"] = j_pose;
 }
 }  // namespace navi_sim
