@@ -114,7 +114,6 @@ const sensor_msgs::msg::PointCloud2 Raycaster::raycast(
   rtcCommitScene(scene_);
   RTCIntersectContext context;
   rtcInitIntersectContext(&context);
-  size_t ghost_points = 0;
   for (auto direction : directions) {
     RTCRayHit rayhit;
     rayhit.ray.org_x = origin.position.x;
