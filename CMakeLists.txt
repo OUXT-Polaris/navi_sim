@@ -62,7 +62,7 @@ target_link_libraries(lidar_sim_node ${quaternion_operation_LIBRARIES} ${Boost_L
 
 
 rclcpp_components_register_nodes(lidar_sim_component
-  "lidar_sim::LidarSimComponent")
+  "navi_sim::LidarSimComponent")
 
 install(TARGETS
   navi_sim_node
@@ -76,6 +76,7 @@ install(TARGETS
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin)
 ament_export_libraries(navi_sim_component)
+ament_export_libraries(lidar_sim_component)
 
 #############
 ## Install ##

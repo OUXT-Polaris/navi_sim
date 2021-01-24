@@ -90,6 +90,12 @@ private:
   rclcpp::TimerBase::SharedPtr update_scan_timer_;
   std::string lidar_frame_, map_frame_;
   std::string objects_path_;
+  std::vector<double> vertical_angles_;
+  double max_distance_;
+  double min_distance_;
+  double start_horizontal_angle_;
+  double end_horizontal_angle_;
+  double horizontal_resolution_;
 };
 }  // namespace navi_sim
 

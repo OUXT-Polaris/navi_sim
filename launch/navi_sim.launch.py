@@ -19,6 +19,42 @@ from launch import LaunchDescription
 from launch_ros.actions import Node
 from launch.actions import IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
+from launch_ros.actions import ComposableNodeContainer
+from launch_ros.descriptions import ComposableNode
+
+import yaml
+
+
+def getLidarSimComponent(lidar_name):
+    config_directory = os.path.join(
+        get_package_share_directory('navi_sim'),
+        'config')
+    param_config = os.path.join(config_directory, lidar_name+'.yaml')
+    params = {}
+    with open(param_config, 'r') as f:
+        params = yaml.safe_load(f)[lidar_name + '_node']['ros__parameters']
+        print(params)
+    object_config_path = os.path.join(
+            get_package_share_directory('navi_sim'),
+            'config',
+            'objects.json')
+    params["objects_path"] = object_config_path
+    component = ComposableNode(
+        package='navi_sim',
+        plugin='navi_sim::LidarSimComponent',
+        namespace='/sensing/'+lidar_name,
+        name=lidar_name + '_node',
+        remappings=[("output", "points_raw/transformed")],
+        parameters=[params])
+    return component
+
+
+def getNaviSimComponent():
+    component = ComposableNode(
+        package='navi_sim',
+        plugin='navi_sim::NaviSimComponent',
+        name='navi_sim_node')
+    return component
 
 
 def generate_launch_description():
@@ -26,10 +62,6 @@ def generate_launch_description():
             get_package_share_directory('navi_sim'),
             'config',
             'navi_sim.rviz')
-    object_config_path = os.path.join(
-            get_package_share_directory('navi_sim'),
-            'config',
-            'objects.json')
     description_dir = os.path.join(
             get_package_share_directory('wamv_description'), 'launch')
     description = LaunchDescription([
@@ -39,16 +71,15 @@ def generate_launch_description():
             name='rviz2',
             arguments=['-d', rviz_config_dir],
             output='screen'),
-        Node(
-            package='navi_sim',
-            executable='navi_sim_node',
-            name='navi_sim_node',
-            output='screen'),
-        Node(
-            package='navi_sim',
-            executable='lidar_sim_node',
-            name='lidar_sim_node',
-            parameters=[{"objects_path": object_config_path}],
+        ComposableNodeContainer(
+            name='preception_bringup_container',
+            namespace='perception',
+            package='rclcpp_components',
+            executable='component_container_mt',
+            composable_node_descriptions=[
+                getNaviSimComponent(),
+                getLidarSimComponent("front_lidar")
+            ],
             output='screen'),
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource([description_dir, '/wamv_description.launch.py']),

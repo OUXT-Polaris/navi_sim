@@ -14,6 +14,8 @@
 
 #include <navi_sim/lidar_sim_component.hpp>
 
+#include <rclcpp_components/register_node_macro.hpp>
+
 #include <nlohmann/json.hpp>
 
 #include <boost/filesystem.hpp>
@@ -46,6 +48,21 @@ LidarSimComponent::LidarSimComponent(const rclcpp::NodeOptions & options)
     throw std::runtime_error("objects_path parameter does not exist");
   }
   get_parameter("objects_path", objects_path_);
+  declare_parameter("vertical_angles");
+  if (!has_parameter("vertical_angles")) {
+    throw std::runtime_error("vertical_angles parameter does not exist");
+  }
+  vertical_angles_ = get_parameter("vertical_angles").as_double_array();
+  declare_parameter("max_distance", 100.0);
+  get_parameter("max_distance", max_distance_);
+  declare_parameter("min_distance", 0.0);
+  get_parameter("min_distance", min_distance_);
+  declare_parameter("start_horizontal_angle", 0.0);
+  get_parameter("start_horizontal_angle", start_horizontal_angle_);
+  declare_parameter("end_horizontal_angle", M_PI * 2);
+  get_parameter("end_horizontal_angle", end_horizontal_angle_);
+  declare_parameter("horizontal_resolution", 2 * M_PI / 360.0);
+  get_parameter("horizontal_resolution", horizontal_resolution_);
   namespace fs = boost::filesystem;
   const fs::path path(objects_path_);
   boost::system::error_code error;
@@ -78,13 +95,10 @@ void LidarSimComponent::updateScan()
     pose.position.z = transform_stamped.transform.translation.z;
     pose.orientation = transform_stamped.transform.rotation;
     auto pointcloud_msg = raycaster_ptr_->raycast(
-      pose, 2 * M_PI / 360.0,
-      {
-        DEG2RAD(-15.0), DEG2RAD(-13.0), DEG2RAD(-11.0), DEG2RAD(-9.0),
-        DEG2RAD(-7.0), DEG2RAD(-5.0), DEG2RAD(-3.0), DEG2RAD(-1.0),
-        DEG2RAD(1.0), DEG2RAD(3.0), DEG2RAD(5.0), DEG2RAD(7.0),
-        DEG2RAD(9.0), DEG2RAD(11.0), DEG2RAD(13.0), DEG2RAD(15.0)
-      });
+      pose, horizontal_resolution_, vertical_angles_,
+      start_horizontal_angle_,
+      end_horizontal_angle_,
+      max_distance_, min_distance_);
     pointcloud_msg.header.stamp = now;
     pointcloud_msg.header.frame_id = lidar_frame_;
     pointcloud_pub_->publish(pointcloud_msg);
@@ -93,3 +107,5 @@ void LidarSimComponent::updateScan()
   }
 }
 }  // namespace navi_sim
+
+RCLCPP_COMPONENTS_REGISTER_NODE(navi_sim::LidarSimComponent)
