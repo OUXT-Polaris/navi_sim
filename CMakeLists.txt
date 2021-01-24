@@ -41,7 +41,6 @@ ament_auto_add_executable(navi_sim_node
   src/navi_sim_node.cpp
 )
 target_link_libraries(navi_sim_node navi_sim_component ${quaternion_operation_LIBRARIES})
-
 rclcpp_components_register_nodes(navi_sim_component
   "navi_sim::NaviSimComponent")
 
@@ -59,10 +58,12 @@ ament_auto_add_executable(lidar_sim_node
   src/lidar_sim_node.cpp
 )
 target_link_libraries(lidar_sim_node ${quaternion_operation_LIBRARIES} ${Boost_LIBRARIES} lidar_sim_component)
-
-
 rclcpp_components_register_nodes(lidar_sim_component
   "navi_sim::LidarSimComponent")
+
+ament_auto_add_executable(navi_sim_bringup_node
+  src/navi_sim_bringup_node.cpp
+)
 
 install(TARGETS
   navi_sim_node
