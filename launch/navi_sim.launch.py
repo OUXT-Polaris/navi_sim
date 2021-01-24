@@ -78,7 +78,10 @@ def generate_launch_description():
             executable='component_container',
             composable_node_descriptions=[
                 getNaviSimComponent(),
-                getLidarSimComponent("front_lidar")
+                getLidarSimComponent("front_lidar"),
+                getLidarSimComponent("rear_lidar"),
+                getLidarSimComponent("right_lidar"),
+                getLidarSimComponent("left_lidar")
             ],
             output='screen'),
         IncludeLaunchDescription(

@@ -1,0 +1,27 @@
+right_lidar_node:
+  ros__parameters:
+    lidar_frame: right_lidar_link
+    start_horizontal_angle: -0.712967
+    end_horizontal_angle: 0.712967
+    max_distance: 260.0
+    min_distance: 1.0
+    horizontal_resolution: 0.017453292519943295
+    vertical_angles: [
+        -0.21903882,
+        -0.18983364, 
+        -0.16062847,
+        -0.13142329,
+        -0.10221812,
+        -0.07301294,
+        -0.04380776,
+        -0.01460259, 
+        0.01460259,
+        0.04380776,
+        0.07301294,
+        0.10221812,
+        0.13142329,
+        0.16062847,
+        0.18983364,
+        0.21903882
+      ]
+    objects_filename: objects.json
