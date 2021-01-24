@@ -74,6 +74,8 @@ class LidarSimComponent : public rclcpp::Node
 public:
   NAVI_SIM_LIDAR_SIM_COMPONENT_PUBLIC
   explicit LidarSimComponent(const rclcpp::NodeOptions & options);
+  NAVI_SIM_LIDAR_SIM_COMPONENT_PUBLIC
+  explicit LidarSimComponent(std::string name, const rclcpp::NodeOptions & options);
   template<typename T, typename ... Ts>
   void addPrimitive(Ts && ... xs)
   {
@@ -81,6 +83,7 @@ public:
   }
 
 private:
+  void setParameters();
   void updateScan();
   rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr pointcloud_pub_;
   // rclcpp::Publisher<visualization_msgs::msg::MarkerArray>::SharedPtr marker_pub_;

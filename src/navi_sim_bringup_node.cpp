@@ -24,7 +24,11 @@ int main(int argc, char * argv[])
   rclcpp::executors::SingleThreadedExecutor exec;
   rclcpp::NodeOptions options;
   auto navi_sim_component = std::make_shared<navi_sim::NaviSimComponent>(options);
+  auto front_lidar_sim_component = std::make_shared<navi_sim::LidarSimComponent>(
+    "front_lidar_node",
+    options);
   exec.add_node(navi_sim_component);
+  exec.add_node(front_lidar_sim_component);
   exec.spin();
   rclcpp::shutdown();
   return 0;

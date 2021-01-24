@@ -24,3 +24,4 @@ front_lidar_node:
       0.22689280275926285,
       0.2617993877991494
       ]
+    objects_filename: objects.json

@@ -18,6 +18,8 @@
 
 #include <nlohmann/json.hpp>
 
+#include <ament_index_cpp/get_package_share_directory.hpp>
+
 #include <boost/filesystem.hpp>
 
 #include <string>
@@ -26,13 +28,25 @@
 
 namespace navi_sim
 {
+LidarSimComponent::LidarSimComponent(std::string name, const rclcpp::NodeOptions & options)
+: Node(name, options), buffer_(get_clock()), listener_(buffer_)
+{
+  setParameters();
+}
+
 LidarSimComponent::LidarSimComponent(const rclcpp::NodeOptions & options)
-: Node("navi_sim", options), buffer_(get_clock()), listener_(buffer_)
+: Node("lidar_sim", options), buffer_(get_clock()), listener_(buffer_)
+{
+  setParameters();
+}
+
+void LidarSimComponent::setParameters()
 {
   using namespace std::chrono_literals;
 
   declare_parameter("lidar_frame", "base_link");
   get_parameter("lidar_frame", lidar_frame_);
+  std::cout << "frame : " << lidar_frame_ << std::endl;
   declare_parameter("map_frame", "map");
   get_parameter("map_frame", map_frame_);
   declare_parameter("embree_config");
@@ -43,12 +57,12 @@ LidarSimComponent::LidarSimComponent(const rclcpp::NodeOptions & options)
   } else {
     raycaster_ptr_ = std::make_unique<Raycaster>();
   }
-  declare_parameter("objects_path");
-  if (!has_parameter("objects_path")) {
-    throw std::runtime_error("objects_path parameter does not exist");
-  }
-  get_parameter("objects_path", objects_path_);
-  declare_parameter("vertical_angles");
+  declare_parameter("objects_filename", "objects.json");
+  std::string objects_filename;
+  get_parameter("objects_filename", objects_filename);
+  objects_path_ = ament_index_cpp::get_package_share_directory("navi_sim") + "/config/" +
+    objects_filename;
+  declare_parameter("vertical_angles", std::vector<double>(0));
   if (!has_parameter("vertical_angles")) {
     throw std::runtime_error("vertical_angles parameter does not exist");
   }
@@ -88,7 +102,7 @@ void LidarSimComponent::updateScan()
   rclcpp::Time now = get_clock()->now();
   try {
     geometry_msgs::msg::TransformStamped transform_stamped = buffer_.lookupTransform(
-      map_frame_, lidar_frame_, now, tf2::durationFromSec(1.0));
+      map_frame_, lidar_frame_, rclcpp::Time(0), tf2::durationFromSec(1.0));
     geometry_msgs::msg::Pose pose;
     pose.position.x = transform_stamped.transform.translation.x;
     pose.position.y = transform_stamped.transform.translation.y;
