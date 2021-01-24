@@ -152,6 +152,10 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
+        front_lidar_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
         left_battery_link:
           Alpha: 1
           Show Axes: false
@@ -162,11 +166,19 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
+        left_lidar_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
         left_propeller_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
+        rear_lidar_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
         right_battery_link:
           Alpha: 1
           Show Axes: false
@@ -177,6 +189,10 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
+        right_lidar_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
         right_propeller_link:
           Alpha: 1
           Show Axes: false
@@ -257,8 +273,8 @@ Visualization Manager:
     - Alpha: 0.800000011920929
       Autocompute Intensity Bounds: true
       Autocompute Value Bounds:
-        Max Value: 2.4926085472106934
-        Min Value: -2.4926085472106934
+        Max Value: 0.66472327709198
+        Min Value: -0.7456226944923401
         Value: true
       Axis: Z
       Channel Name: intensity
@@ -272,7 +288,7 @@ Visualization Manager:
       Max Intensity: 0
       Min Color: 0; 0; 0
       Min Intensity: 0
-      Name: LidarPoints
+      Name: FrontLidar
       Position Transformer: XYZ
       Selectable: true
       Size (Pixels): 3
@@ -283,7 +299,7 @@ Visualization Manager:
         Durability Policy: Volatile
         History Policy: Keep Last
         Reliability Policy: Reliable
-        Value: /lidar_points
+        Value: /sensing/front_lidar/lidar_points
       Use Fixed Frame: true
       Use rainbow: true
       Value: true
