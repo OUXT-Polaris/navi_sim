@@ -18,6 +18,7 @@
   <depend>quaternion_operation</depend>
   <depend>eigen</depend>
   <depend>hermite_path_planner_bringup</depend>
+  <depend>perception_bringup</depend>
   <depend>sensor_msgs</depend>
   <depend>wamv_description</depend>
   <depend>visualization_msgs</depend>
