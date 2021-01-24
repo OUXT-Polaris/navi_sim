@@ -99,6 +99,7 @@ private:
   double start_horizontal_angle_;
   double end_horizontal_angle_;
   double horizontal_resolution_;
+  double noise_distribution_;
 };
 }  // namespace navi_sim
 

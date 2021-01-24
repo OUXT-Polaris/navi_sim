@@ -31,6 +31,7 @@
 #include <string>
 #include <memory>
 #include <utility>
+#include <random>
 
 namespace navi_sim
 {
@@ -57,18 +58,22 @@ public:
     std::vector<double> vertical_angles,
     double horizontal_angle_start = 0,
     double horizontal_angle_end = 2 * M_PI,
-    double max_distance = 100, double min_distance = 0
+    double max_distance = 100, double min_distance = 0,
+    double noise_distribution = 0.15
   );
   const sensor_msgs::msg::PointCloud2 raycast(
     geometry_msgs::msg::Pose origin,
     std::vector<geometry_msgs::msg::Quaternion> directions,
-    double max_distance = 100, double min_distance = 0);
+    double max_distance = 100, double min_distance = 0,
+    double noise_distribution = 0.15);
   nlohmann::json dumpPrimitives() const;
 
 private:
   std::unordered_map<std::string, std::unique_ptr<Primitive>> primitive_ptrs_;
   RTCDevice device_;
   RTCScene scene_;
+  std::random_device seed_gen_;
+  std::default_random_engine engine_;
 };
 }  // namespace navi_sim
 

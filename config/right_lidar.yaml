@@ -25,3 +25,4 @@ right_lidar_node:
         0.21903882
       ]
     objects_filename: objects.json
+    noise_distribution: 0.01

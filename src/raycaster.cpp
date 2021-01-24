@@ -28,7 +28,8 @@ namespace navi_sim
 Raycaster::Raycaster()
 : primitive_ptrs_(0),
   device_(nullptr),
-  scene_(nullptr)
+  scene_(nullptr),
+  engine_(seed_gen_())
 {
   device_ = rtcNewDevice(nullptr);
 }
@@ -36,7 +37,8 @@ Raycaster::Raycaster()
 Raycaster::Raycaster(std::string embree_config)
 : primitive_ptrs_(0),
   device_(nullptr),
-  scene_(nullptr)
+  scene_(nullptr),
+  engine_(seed_gen_())
 {
   device_ = rtcNewDevice(embree_config.c_str());
 }
@@ -76,7 +78,8 @@ const sensor_msgs::msg::PointCloud2 Raycaster::raycast(
   std::vector<double> vertical_angles,
   double horizontal_angle_start,
   double horizontal_angle_end,
-  double max_distance, double min_distance
+  double max_distance, double min_distance,
+  double noise_distribution
 )
 {
   std::vector<geometry_msgs::msg::Quaternion> directions;
@@ -92,14 +95,16 @@ const sensor_msgs::msg::PointCloud2 Raycaster::raycast(
       directions.emplace_back(quat);
     }
   }
-  return raycast(origin, directions, max_distance, min_distance);
+  return raycast(origin, directions, max_distance, min_distance, noise_distribution);
 }
 
 const sensor_msgs::msg::PointCloud2 Raycaster::raycast(
   geometry_msgs::msg::Pose origin,
   std::vector<geometry_msgs::msg::Quaternion> directions,
-  double max_distance, double min_distance)
+  double max_distance, double min_distance,
+  double noise_distribution)
 {
+  std::normal_distribution<> dist(0.0, noise_distribution);
   scene_ = rtcNewScene(device_);
   pcl::PointCloud<pcl::PointXYZI>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZI>());
   for (auto && pair : primitive_ptrs_) {
@@ -126,7 +131,7 @@ const sensor_msgs::msg::PointCloud2 Raycaster::raycast(
     rtcIntersect1(scene_, &context, &rayhit);
 
     if (rayhit.hit.geomID != RTC_INVALID_GEOMETRY_ID) {
-      double distance = rayhit.ray.tfar;
+      double distance = rayhit.ray.tfar + dist(engine_);
       const auto vector = quaternion_operation::getRotationMatrix(direction) * Eigen::Vector3d(
         1.0f,
         0.0f,

@@ -77,6 +77,8 @@ void LidarSimComponent::setParameters()
   get_parameter("end_horizontal_angle", end_horizontal_angle_);
   declare_parameter("horizontal_resolution", 2 * M_PI / 360.0);
   get_parameter("horizontal_resolution", horizontal_resolution_);
+  declare_parameter("noise_distribution", 0.15);
+  get_parameter("noise_distribution", noise_distribution_);
   namespace fs = boost::filesystem;
   const fs::path path(objects_path_);
   boost::system::error_code error;
@@ -112,7 +114,8 @@ void LidarSimComponent::updateScan()
       pose, horizontal_resolution_, vertical_angles_,
       start_horizontal_angle_,
       end_horizontal_angle_,
-      max_distance_, min_distance_);
+      max_distance_, min_distance_,
+      noise_distribution_);
     pointcloud_msg.header.stamp = now;
     pointcloud_msg.header.frame_id = lidar_frame_;
     pointcloud_pub_->publish(pointcloud_msg);
