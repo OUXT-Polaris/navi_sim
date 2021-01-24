@@ -25,6 +25,7 @@
 #include <string>
 #include <fstream>
 #include <memory>
+#include <vector>
 
 namespace navi_sim
 {

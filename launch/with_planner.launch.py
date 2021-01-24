@@ -21,13 +21,13 @@ from launch.launch_description_sources import PythonLaunchDescriptionSource
 
 def generate_launch_description():
     navi_sim_launch_file_dir = os.path.join(get_package_share_directory('navi_sim'), 'launch')
-    package_path = get_package_share_directory('hermite_path_planner_bringup')
-    launch_dir = os.path.join(package_path, 'launch')
+    hermite_path_planner_package_path = get_package_share_directory('hermite_path_planner_bringup')
+    hermite_path_planner_launch_dir = os.path.join(hermite_path_planner_package_path, 'launch')
     return LaunchDescription([
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource([navi_sim_launch_file_dir, '/navi_sim.launch.py']),
         ),
         IncludeLaunchDescription(
-            PythonLaunchDescriptionSource([launch_dir, '/bringup.launch.py']),
+            PythonLaunchDescriptionSource([hermite_path_planner_launch_dir, '/bringup.launch.py']),
         )
     ])
