@@ -61,10 +61,6 @@ target_link_libraries(lidar_sim_node ${quaternion_operation_LIBRARIES} ${Boost_L
 rclcpp_components_register_nodes(lidar_sim_component
   "navi_sim::LidarSimComponent")
 
-ament_auto_add_executable(navi_sim_bringup_node
-  src/navi_sim_bringup_node.cpp
-)
-
 install(TARGETS
   navi_sim_node
   lidar_sim_node

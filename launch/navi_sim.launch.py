@@ -19,17 +19,45 @@ from launch import LaunchDescription
 from launch_ros.actions import Node
 from launch.actions import IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.actions import DeclareLaunchArgument
-from launch.substitutions import LaunchConfiguration
+from launch_ros.actions import ComposableNodeContainer
+from launch_ros.descriptions import ComposableNode
+
+import yaml
+
+
+def getLidarSimComponent(lidar_name):
+    config_directory = os.path.join(
+        get_package_share_directory('navi_sim'),
+        'config')
+    param_config = os.path.join(config_directory, lidar_name+'.yaml')
+    params = {}
+    with open(param_config, 'r') as f:
+        params = yaml.safe_load(f)[lidar_name + '_node']['ros__parameters']
+        print(params)
+    object_config_path = os.path.join(
+            get_package_share_directory('navi_sim'),
+            'config',
+            'objects.json')
+    params["objects_path"] = object_config_path
+    component = ComposableNode(
+        package='navi_sim',
+        plugin='navi_sim::LidarSimComponent',
+        namespace='/sensing/'+lidar_name,
+        name=lidar_name + '_node',
+        remappings=[("output", "points_raw/transformed")],
+        parameters=[params])
+    return component
+
+
+def getNaviSimComponent():
+    component = ComposableNode(
+        package='navi_sim',
+        plugin='navi_sim::NaviSimComponent',
+        name='navi_sim_node')
+    return component
 
 
 def generate_launch_description():
-    front_lidar_parm_file = LaunchConfiguration(
-        'front_lidar_parm_file',
-        default=os.path.join(
-            get_package_share_directory('navi_sim'),
-            'config', 'front_lidar.yaml')
-    )
     rviz_config_dir = os.path.join(
             get_package_share_directory('navi_sim'),
             'config',
@@ -43,16 +71,15 @@ def generate_launch_description():
             name='rviz2',
             arguments=['-d', rviz_config_dir],
             output='screen'),
-        DeclareLaunchArgument(
-            'front_lidar_parm_file',
-            default_value=front_lidar_parm_file,
-            description='front_lidar parameters'
-        ),
-        Node(
-            package='navi_sim',
-            executable='navi_sim_bringup_node',
-            name='navi_sim_bringup',
-            parameters=[front_lidar_parm_file],
+        ComposableNodeContainer(
+            name='preception_bringup_container',
+            namespace='perception',
+            package='rclcpp_components',
+            executable='component_container',
+            composable_node_descriptions=[
+                getNaviSimComponent(),
+                getLidarSimComponent("front_lidar")
+            ],
             output='screen'),
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource([description_dir, '/wamv_description.launch.py']),
