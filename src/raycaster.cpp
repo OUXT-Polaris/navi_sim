@@ -74,12 +74,14 @@ const sensor_msgs::msg::PointCloud2 Raycaster::raycast(
   geometry_msgs::msg::Pose origin,
   double horizontal_resolution,
   std::vector<double> vertical_angles,
+  double horizontal_angle_start,
+  double horizontal_angle_end,
   double max_distance, double min_distance
 )
 {
   std::vector<geometry_msgs::msg::Quaternion> directions;
-  double horizontal_angle = 0;
-  while (horizontal_angle <= (2 * M_PI)) {
+  double horizontal_angle = horizontal_angle_start;
+  while (horizontal_angle <= (horizontal_angle_end)) {
     horizontal_angle = horizontal_angle + horizontal_resolution;
     for (const auto vertical_angle : vertical_angles) {
       geometry_msgs::msg::Vector3 rpy;

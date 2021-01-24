@@ -55,6 +55,8 @@ public:
     geometry_msgs::msg::Pose origin,
     double horizontal_resolution,
     std::vector<double> vertical_angles,
+    double horizontal_angle_start = 0,
+    double horizontal_angle_end = 2 * M_PI,
     double max_distance = 100, double min_distance = 0
   );
   const sensor_msgs::msg::PointCloud2 raycast(

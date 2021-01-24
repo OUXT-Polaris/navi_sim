@@ -1,0 +1,5 @@
+front_lidar_node:
+  ros__parameters:
+    lidar_frame: front_lidar_link
+    horizontal_angle_start : 0
+    horizontal_angle_end: 
