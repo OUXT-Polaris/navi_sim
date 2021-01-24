@@ -44,7 +44,7 @@ def getLidarSimComponent(lidar_name):
         plugin='navi_sim::LidarSimComponent',
         namespace='/sensing/'+lidar_name,
         name=lidar_name + '_node',
-        remappings=[("output", "points_raw/transformed")],
+        remappings=[("lidar_points", "points_raw")],
         parameters=[params])
     return component
 
