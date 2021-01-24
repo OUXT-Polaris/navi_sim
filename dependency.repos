@@ -11,15 +11,11 @@ repositories:
     type: git
     url: https://github.com/OUXT-Polaris/color_names.git
     version: master
-  data_buffer:
+  pcl_apps:
     type: git
-    url: https://github.com/OUXT-Polaris/data_buffer.git
-    version: ros2
-  geometry_msgs_data_buffer:
+    url: https://github.com/OUXT-Polaris/pcl_apps.git
+    version: master
+  perception_bringup:
     type: git
-    url: https://github.com/OUXT-Polaris/geometry_msgs_data_buffer.git
-    version: ros2
-  embree_vendor:
-    type: git
-    url: https://github.com/OUXT-Polaris/embree_vendor.git
+    url: https://github.com/OUXT-Polaris/perception_bringup.git
     version: master
