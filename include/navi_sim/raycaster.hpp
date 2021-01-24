@@ -59,13 +59,15 @@ public:
     double horizontal_angle_start = 0,
     double horizontal_angle_end = 2 * M_PI,
     double max_distance = 100, double min_distance = 0,
-    double noise_distribution = 0.15
+    double noise_distribution = 0.15,
+    double ghost_ratio = 0.001
   );
   const sensor_msgs::msg::PointCloud2 raycast(
     geometry_msgs::msg::Pose origin,
     std::vector<geometry_msgs::msg::Quaternion> directions,
     double max_distance = 100, double min_distance = 0,
-    double noise_distribution = 0.15);
+    double noise_distribution = 0.15,
+    double ghost_ratio = 0.001);
   nlohmann::json dumpPrimitives() const;
 
 private:

@@ -79,6 +79,8 @@ void LidarSimComponent::setParameters()
   get_parameter("horizontal_resolution", horizontal_resolution_);
   declare_parameter("noise_distribution", 0.15);
   get_parameter("noise_distribution", noise_distribution_);
+  declare_parameter("double ghost_ratio", 0.001);
+  get_parameter("ghost_ratio", ghost_ratio_);
   namespace fs = boost::filesystem;
   const fs::path path(objects_path_);
   boost::system::error_code error;

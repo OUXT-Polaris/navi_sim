@@ -79,7 +79,7 @@ const sensor_msgs::msg::PointCloud2 Raycaster::raycast(
   double horizontal_angle_start,
   double horizontal_angle_end,
   double max_distance, double min_distance,
-  double noise_distribution
+  double noise_distribution, double ghost_ratio
 )
 {
   std::vector<geometry_msgs::msg::Quaternion> directions;
@@ -95,16 +95,17 @@ const sensor_msgs::msg::PointCloud2 Raycaster::raycast(
       directions.emplace_back(quat);
     }
   }
-  return raycast(origin, directions, max_distance, min_distance, noise_distribution);
+  return raycast(origin, directions, max_distance, min_distance, noise_distribution, ghost_ratio);
 }
 
 const sensor_msgs::msg::PointCloud2 Raycaster::raycast(
   geometry_msgs::msg::Pose origin,
   std::vector<geometry_msgs::msg::Quaternion> directions,
   double max_distance, double min_distance,
-  double noise_distribution)
+  double noise_distribution, double ghost_ratio)
 {
   std::normal_distribution<> dist(0.0, noise_distribution);
+  std::uniform_real_distribution<> ghost_dist(0.0, 1.0);
   scene_ = rtcNewScene(device_);
   pcl::PointCloud<pcl::PointXYZI>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZI>());
   for (auto && pair : primitive_ptrs_) {
@@ -113,8 +114,9 @@ const sensor_msgs::msg::PointCloud2 Raycaster::raycast(
   rtcCommitScene(scene_);
   RTCIntersectContext context;
   rtcInitIntersectContext(&context);
-  RTCRayHit rayhit;
+  size_t ghost_points = 0;
   for (auto direction : directions) {
+    RTCRayHit rayhit;
     rayhit.ray.org_x = origin.position.x;
     rayhit.ray.org_y = origin.position.y;
     rayhit.ray.org_z = origin.position.z;
@@ -129,9 +131,8 @@ const sensor_msgs::msg::PointCloud2 Raycaster::raycast(
     rayhit.ray.dir_z = rotated_direction[2];
     rayhit.hit.geomID = RTC_INVALID_GEOMETRY_ID;
     rtcIntersect1(scene_, &context, &rayhit);
-
-    if (rayhit.hit.geomID != RTC_INVALID_GEOMETRY_ID) {
-      double distance = rayhit.ray.tfar + dist(engine_);
+    if (ghost_dist(engine_) < ghost_ratio) {
+      double distance = (max_distance - min_distance) * ghost_dist(engine_) + min_distance;
       const auto vector = quaternion_operation::getRotationMatrix(direction) * Eigen::Vector3d(
         1.0f,
         0.0f,
@@ -142,6 +143,20 @@ const sensor_msgs::msg::PointCloud2 Raycaster::raycast(
       p.y = vector[1];
       p.z = vector[2];
       cloud->emplace_back(p);
+    } else {
+      if (rayhit.hit.geomID != RTC_INVALID_GEOMETRY_ID) {
+        double distance = rayhit.ray.tfar + dist(engine_);
+        const auto vector = quaternion_operation::getRotationMatrix(direction) * Eigen::Vector3d(
+          1.0f,
+          0.0f,
+          0.0f) *
+          distance;
+        pcl::PointXYZI p;
+        p.x = vector[0];
+        p.y = vector[1];
+        p.z = vector[2];
+        cloud->emplace_back(p);
+      }
     }
   }
   sensor_msgs::msg::PointCloud2 pointcloud_msg;
