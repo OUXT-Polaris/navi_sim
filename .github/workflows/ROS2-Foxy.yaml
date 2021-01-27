@@ -34,6 +34,8 @@ jobs:
                   vcs import src < src/navi_sim/dependency.repos
                   cd ~/ros2_ws/src
                   rosdep install -r -y --from-paths . --ignore-src
+            - name: Setup tmate session
+              uses: mxschmitt/action-tmate@v3
             - name: Build packages
               run: |
                   source /opt/ros/foxy/setup.bash
