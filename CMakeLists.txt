@@ -17,50 +17,63 @@ endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
-find_package(rclcpp REQUIRED)
-find_package(rclcpp_components REQUIRED)
-find_package(geometry_msgs REQUIRED)
-find_package(sensor_msgs REQUIRED)
-find_package(tf2 REQUIRED)
-find_package(tf2_ros REQUIRED)
-find_package(tf2_geometry_msgs REQUIRED)
-find_package(visualization_msgs REQUIRED)
-find_package(quaternion_operation REQUIRED)
-find_package(Eigen3 REQUIRED)
+find_package(ament_cmake_auto REQUIRED)
+find_package(PCL REQUIRED)
+ament_auto_find_build_dependencies()
+
+find_package(Boost COMPONENTS filesystem REQUIRED)
+link_directories(${Boost_LIBRARY_DIR} ${PCL_LIBRARY_DIRS})
 
 include_directories(
   include
   ${EIGEN3_INCLUDE_DIR}
+  ${Boost_INCLUDE_DIR}
+  ${PCL_INCLUDE_DIRS}
 )
 
-add_library(navi_sim_component SHARED
+ament_auto_add_library(navi_sim_component SHARED
   src/navi_sim_component.cpp
 )
 target_compile_definitions(navi_sim_component PRIVATE "NAVI_SIM_NAVI_SIM_COMPONENT_BUILDING_DLL")
-target_link_libraries(navi_sim_component ${quaternion_operation_LIBRARIES})
-ament_target_dependencies(navi_sim_component
-  rclcpp rclcpp_components tf2_ros tf2_geometry_msgs quaternion_operation sensor_msgs visualization_msgs)
+target_link_libraries(navi_sim_component ${quaternion_operation_LIBRARIES} ${Boost_LIBRARIES})
 
-add_executable(navi_sim_node
+ament_auto_add_executable(navi_sim_node
   src/navi_sim_node.cpp
 )
 target_link_libraries(navi_sim_node navi_sim_component ${quaternion_operation_LIBRARIES})
-ament_target_dependencies(navi_sim_node
-  rclcpp rclcpp_components tf2_ros tf2_geometry_msgs quaternion_operation sensor_msgs visualization_msgs)
-
 rclcpp_components_register_nodes(navi_sim_component
   "navi_sim::NaviSimComponent")
 
+ament_auto_add_library(lidar_sim_component SHARED
+  src/lidar_sim_component.cpp
+  src/lidar_sim_node.cpp
+  src/primitives/box.cpp
+  src/primitives/primitive.cpp
+  src/raycaster.cpp
+)
+target_compile_definitions(lidar_sim_component PRIVATE "NAVI_SIM_LIDAR_SIM_COMPONENT_BUILDING_DLL")
+target_link_libraries(lidar_sim_component ${quaternion_operation_LIBRARIES} ${Boost_LIBRARIES} embree3)
+
+ament_auto_add_executable(lidar_sim_node
+  src/lidar_sim_node.cpp
+)
+target_link_libraries(lidar_sim_node ${quaternion_operation_LIBRARIES} ${Boost_LIBRARIES} lidar_sim_component)
+rclcpp_components_register_nodes(lidar_sim_component
+  "navi_sim::LidarSimComponent")
+
 install(TARGETS
   navi_sim_node
+  lidar_sim_node
   DESTINATION lib/navi_sim
 )
 install(TARGETS
   navi_sim_component
+  lidar_sim_component
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin)
 ament_export_libraries(navi_sim_component)
+ament_export_libraries(lidar_sim_component)
 
 #############
 ## Install ##
@@ -71,13 +84,10 @@ install(DIRECTORY launch config
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
-  # the following line skips the linter which checks for copyrights
-  # uncomment the line when a copyright and license is not present in all source files
-  #set(ament_cmake_copyright_FOUND TRUE)
-  # the following line skips cpplint (only works in a git repo)
-  # uncomment the line when this package is not in a git repo
-  #set(ament_cmake_cpplint_FOUND TRUE)
   ament_lint_auto_find_test_dependencies()
+  find_package(ament_cmake_gtest REQUIRED)
+  ament_add_gtest(test_model test/src/test_model.cpp)
+  target_link_libraries(test_model lidar_sim_component)
 endif()
 
-ament_package()
+ament_auto_package()

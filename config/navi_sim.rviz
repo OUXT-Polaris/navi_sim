@@ -10,8 +10,9 @@ Panels:
     Property Tree Widget:
       Expanded:
         - /Status1
+        - /Perception1
       Splitter Ratio: 0.5
-    Tree Height: 1031
+    Tree Height: 1052
   - Class: rviz_common/Tool Properties
     Expanded: ~
     Name: Tool Properties
@@ -55,8 +56,7 @@ Visualization Manager:
       Enabled: true
       Name: HermitePath
       Namespaces:
-        center_line: true
-        polygon: true
+        {}
       Topic:
         Depth: 5
         Durability Policy: Volatile
@@ -68,10 +68,7 @@ Visualization Manager:
       Enabled: true
       Name: PurePursuit
       Namespaces:
-        circle: true
-        current: true
-        target: true
-        target_twist: true
+        {}
       Topic:
         Depth: 5
         Durability Policy: Volatile
@@ -83,7 +80,7 @@ Visualization Manager:
       Enabled: true
       Name: VelocityPlanner
       Namespaces:
-        polygon: true
+        {}
       Topic:
         Depth: 5
         Durability Policy: Volatile
@@ -156,6 +153,10 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
+        front_lidar_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
         left_battery_link:
           Alpha: 1
           Show Axes: false
@@ -166,11 +167,19 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
+        left_lidar_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
         left_propeller_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
+        rear_lidar_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
         right_battery_link:
           Alpha: 1
           Show Axes: false
@@ -181,6 +190,10 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
+        right_lidar_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
         right_propeller_link:
           Alpha: 1
           Show Axes: false
@@ -195,7 +208,7 @@ Visualization Manager:
       Enabled: true
       Name: AvoidPath
       Namespaces:
-        center_line: true
+        {}
       Topic:
         Depth: 5
         Durability Policy: Volatile
@@ -226,8 +239,7 @@ Visualization Manager:
       Enabled: true
       Name: ReferenceVelocity
       Namespaces:
-        reference_velocity: true
-        reference_velocity_text: true
+        {}
       Topic:
         Depth: 5
         Durability Policy: Volatile
@@ -239,7 +251,7 @@ Visualization Manager:
       Enabled: true
       Name: Obstacle
       Namespaces:
-        polygon: true
+        {}
       Topic:
         Depth: 5
         Durability Policy: Volatile
@@ -251,7 +263,7 @@ Visualization Manager:
       Enabled: true
       Name: SimulatedObstacle
       Namespaces:
-        obstacle: true
+        {}
       Topic:
         Depth: 5
         Durability Policy: Volatile
@@ -259,6 +271,311 @@ Visualization Manager:
         Reliability Policy: Reliable
         Value: /navi_sim_node/marker
       Value: true
+    - Class: rviz_common/Group
+      Displays:
+        - Alpha: 0.800000011920929
+          Autocompute Intensity Bounds: true
+          Autocompute Value Bounds:
+            Max Value: 0.66472327709198
+            Min Value: -0.7456226944923401
+            Value: true
+          Axis: Z
+          Channel Name: intensity
+          Class: rviz_default_plugins/PointCloud2
+          Color: 138; 226; 52
+          Color Transformer: FlatColor
+          Decay Time: 0
+          Enabled: true
+          Invert Rainbow: false
+          Max Color: 255; 255; 255
+          Max Intensity: 0
+          Min Color: 0; 0; 0
+          Min Intensity: 0
+          Name: FrontLidar
+          Position Transformer: XYZ
+          Selectable: true
+          Size (Pixels): 3
+          Size (m): 0.03999999910593033
+          Style: Spheres
+          Topic:
+            Depth: 5
+            Durability Policy: Volatile
+            History Policy: Keep Last
+            Reliability Policy: Reliable
+            Value: /sensing/front_lidar/points_raw
+          Use Fixed Frame: true
+          Use rainbow: true
+          Value: true
+        - Alpha: 0.800000011920929
+          Autocompute Intensity Bounds: true
+          Autocompute Value Bounds:
+            Max Value: 0.66472327709198
+            Min Value: -0.7456226944923401
+            Value: true
+          Axis: Z
+          Channel Name: intensity
+          Class: rviz_default_plugins/PointCloud2
+          Color: 204; 0; 0
+          Color Transformer: FlatColor
+          Decay Time: 0
+          Enabled: true
+          Invert Rainbow: false
+          Max Color: 255; 255; 255
+          Max Intensity: 0
+          Min Color: 0; 0; 0
+          Min Intensity: 0
+          Name: RearLidar
+          Position Transformer: XYZ
+          Selectable: true
+          Size (Pixels): 3
+          Size (m): 0.03999999910593033
+          Style: Spheres
+          Topic:
+            Depth: 5
+            Durability Policy: Volatile
+            History Policy: Keep Last
+            Reliability Policy: Reliable
+            Value: /sensing/rear_lidar/points_raw
+          Use Fixed Frame: true
+          Use rainbow: true
+          Value: true
+        - Alpha: 1
+          Autocompute Intensity Bounds: true
+          Autocompute Value Bounds:
+            Max Value: 10
+            Min Value: -10
+            Value: true
+          Axis: Z
+          Channel Name: intensity
+          Class: rviz_default_plugins/PointCloud2
+          Color: 114; 159; 207
+          Color Transformer: FlatColor
+          Decay Time: 0
+          Enabled: true
+          Invert Rainbow: false
+          Max Color: 255; 255; 255
+          Max Intensity: -999999
+          Min Color: 0; 0; 0
+          Min Intensity: 999999
+          Name: RightLidar
+          Position Transformer: XYZ
+          Selectable: true
+          Size (Pixels): 3
+          Size (m): 0.03999999910593033
+          Style: Flat Squares
+          Topic:
+            Depth: 5
+            Durability Policy: Volatile
+            History Policy: Keep Last
+            Reliability Policy: Reliable
+            Value: /sensing/right_lidar/points_raw
+          Use Fixed Frame: true
+          Use rainbow: true
+          Value: true
+        - Alpha: 1
+          Autocompute Intensity Bounds: true
+          Autocompute Value Bounds:
+            Max Value: 10
+            Min Value: -10
+            Value: true
+          Axis: Z
+          Channel Name: intensity
+          Class: rviz_default_plugins/PointCloud2
+          Color: 252; 233; 79
+          Color Transformer: FlatColor
+          Decay Time: 0
+          Enabled: true
+          Invert Rainbow: false
+          Max Color: 255; 255; 255
+          Max Intensity: -999999
+          Min Color: 0; 0; 0
+          Min Intensity: 999999
+          Name: LeftLidar
+          Position Transformer: XYZ
+          Selectable: true
+          Size (Pixels): 3
+          Size (m): 0.03999999910593033
+          Style: Flat Squares
+          Topic:
+            Depth: 5
+            Durability Policy: Volatile
+            History Policy: Keep Last
+            Reliability Policy: Reliable
+            Value: /sensing/left_lidar/points_raw
+          Use Fixed Frame: true
+          Use rainbow: true
+          Value: true
+      Enabled: false
+      Name: Sensing
+    - Class: rviz_common/Group
+      Displays:
+        - Alpha: 0.800000011920929
+          Autocompute Intensity Bounds: true
+          Autocompute Value Bounds:
+            Max Value: 0.66472327709198
+            Min Value: -0.7456226944923401
+            Value: true
+          Axis: Z
+          Channel Name: intensity
+          Class: rviz_default_plugins/PointCloud2
+          Color: 204; 0; 0
+          Color Transformer: FlatColor
+          Decay Time: 0
+          Enabled: true
+          Invert Rainbow: false
+          Max Color: 255; 255; 255
+          Max Intensity: 0
+          Min Color: 0; 0; 0
+          Min Intensity: 0
+          Name: RearLidar
+          Position Transformer: XYZ
+          Selectable: true
+          Size (Pixels): 3
+          Size (m): 0.03999999910593033
+          Style: Spheres
+          Topic:
+            Depth: 5
+            Durability Policy: Volatile
+            History Policy: Keep Last
+            Reliability Policy: Reliable
+            Value: /perception/rear_lidar/points_transform_node/output
+          Use Fixed Frame: true
+          Use rainbow: true
+          Value: true
+        - Alpha: 0.800000011920929
+          Autocompute Intensity Bounds: true
+          Autocompute Value Bounds:
+            Max Value: 0.66472327709198
+            Min Value: -0.7456226944923401
+            Value: true
+          Axis: Z
+          Channel Name: intensity
+          Class: rviz_default_plugins/PointCloud2
+          Color: 138; 226; 52
+          Color Transformer: FlatColor
+          Decay Time: 0
+          Enabled: true
+          Invert Rainbow: false
+          Max Color: 255; 255; 255
+          Max Intensity: 0
+          Min Color: 0; 0; 0
+          Min Intensity: 0
+          Name: FrontLidar
+          Position Transformer: XYZ
+          Selectable: true
+          Size (Pixels): 3
+          Size (m): 0.03999999910593033
+          Style: Spheres
+          Topic:
+            Depth: 5
+            Durability Policy: Volatile
+            History Policy: Keep Last
+            Reliability Policy: Reliable
+            Value: /perception/front_lidar/points_transform_node/output
+          Use Fixed Frame: true
+          Use rainbow: true
+          Value: true
+        - Alpha: 1
+          Autocompute Intensity Bounds: true
+          Autocompute Value Bounds:
+            Max Value: 10
+            Min Value: -10
+            Value: true
+          Axis: Z
+          Channel Name: intensity
+          Class: rviz_default_plugins/PointCloud2
+          Color: 114; 159; 207
+          Color Transformer: FlatColor
+          Decay Time: 0
+          Enabled: true
+          Invert Rainbow: false
+          Max Color: 255; 255; 255
+          Max Intensity: -999999
+          Min Color: 0; 0; 0
+          Min Intensity: 999999
+          Name: RightLidar
+          Position Transformer: XYZ
+          Selectable: true
+          Size (Pixels): 3
+          Size (m): 0.03999999910593033
+          Style: Flat Squares
+          Topic:
+            Depth: 5
+            Durability Policy: Volatile
+            History Policy: Keep Last
+            Reliability Policy: Reliable
+            Value: /perception/right_lidar/points_transform_node/output
+          Use Fixed Frame: true
+          Use rainbow: true
+          Value: true
+        - Alpha: 1
+          Autocompute Intensity Bounds: true
+          Autocompute Value Bounds:
+            Max Value: 10
+            Min Value: -10
+            Value: true
+          Axis: Z
+          Channel Name: intensity
+          Class: rviz_default_plugins/PointCloud2
+          Color: 252; 233; 79
+          Color Transformer: FlatColor
+          Decay Time: 0
+          Enabled: true
+          Invert Rainbow: false
+          Max Color: 255; 255; 255
+          Max Intensity: -999999
+          Min Color: 0; 0; 0
+          Min Intensity: 999999
+          Name: LeftLidar
+          Position Transformer: XYZ
+          Selectable: true
+          Size (Pixels): 3
+          Size (m): 0.03999999910593033
+          Style: Flat Squares
+          Topic:
+            Depth: 5
+            Durability Policy: Volatile
+            History Policy: Keep Last
+            Reliability Policy: Reliable
+            Value: /perception/left_lidar/points_transform_node/output
+          Use Fixed Frame: true
+          Use rainbow: true
+          Value: true
+        - Alpha: 1
+          Autocompute Intensity Bounds: true
+          Autocompute Value Bounds:
+            Max Value: 10
+            Min Value: -10
+            Value: true
+          Axis: Z
+          Channel Name: intensity
+          Class: rviz_default_plugins/PointCloud2
+          Color: 255; 255; 255
+          Color Transformer: ""
+          Decay Time: 0
+          Enabled: false
+          Invert Rainbow: false
+          Max Color: 255; 255; 255
+          Max Intensity: 4096
+          Min Color: 0; 0; 0
+          Min Intensity: 0
+          Name: ConcatenatedPoints
+          Position Transformer: ""
+          Selectable: true
+          Size (Pixels): 3
+          Size (m): 0.10000000149011612
+          Style: Flat Squares
+          Topic:
+            Depth: 5
+            Durability Policy: Volatile
+            History Policy: Keep Last
+            Reliability Policy: Reliable
+            Value: /perception/points_concatenate_node/output
+          Use Fixed Frame: true
+          Use rainbow: true
+          Value: false
+      Enabled: true
+      Name: Perception
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -302,7 +619,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz_default_plugins/ThirdPersonFollower
-      Distance: 20.35828399658203
+      Distance: 13.401351928710938
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -317,22 +634,22 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.4453980624675751
+      Pitch: 0.3797968924045563
       Target Frame: base_link
       Value: ThirdPersonFollower (rviz_default_plugins)
-      Yaw: 2.5153968334198
+      Yaw: 2.940399408340454
     Saved: ~
 Window Geometry:
   Displays:
     collapsed: false
-  Height: 1385
+  Height: 1376
   Hide Left Dock: false
-  Hide Right Dock: false
-  QMainWindow State: 000000ff00000000fd0000000200000000000003ad0000050ffc0200000002fb000000100044006900730070006c006100790073010000003d0000048a000000c900fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007301000004cd0000007f0000005c00ffffff00000001000001cb0000050ffc0200000001fb0000000a00560069006500770073010000003d0000050f000000a400ffffff000007a90000050f00000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  Hide Right Dock: true
+  QMainWindow State: 000000ff00000000fd0000000200000000000003ad00000506fc0200000002fb000000100044006900730070006c006100790073010000003d0000049f000000c900fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007301000004e2000000610000005c00ffffff00000001000001cb00000506fc0200000001fb0000000a00560069006500770073000000003d00000506000000a400ffffff000009750000050600000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   Tool Properties:
     collapsed: false
   Views:
-    collapsed: false
-  Width: 3373
-  X: 67
+    collapsed: true
+  Width: 3368
+  X: 72
   Y: 27
