@@ -72,8 +72,8 @@ def generate_launch_description():
             arguments=['-d', rviz_config_dir],
             output='screen'),
         ComposableNodeContainer(
-            name='preception_bringup_container',
-            namespace='perception',
+            name='navi_sim_bringup_container',
+            namespace='sensing',
             package='rclcpp_components',
             executable='component_container',
             composable_node_descriptions=[
