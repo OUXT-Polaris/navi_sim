@@ -33,6 +33,9 @@ def generate_launch_description():
             PythonLaunchDescriptionSource([hermite_path_planner_launch_dir, '/bringup.launch.py']),
         ),
         IncludeLaunchDescription(
-            PythonLaunchDescriptionSource([perception_bringup_launch_dir, '/perception_bringup.launch.py']),
+            PythonLaunchDescriptionSource(
+                [
+                    perception_bringup_launch_dir, '/perception_bringup.launch.py'
+                ]),
         )
     ])
