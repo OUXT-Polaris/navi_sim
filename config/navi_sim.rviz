@@ -10,7 +10,7 @@ Panels:
     Property Tree Widget:
       Expanded:
         - /Status1
-        - /Perception1
+        - /Perception1/ConcatenatedPoints1/Autocompute Value Bounds1
       Splitter Ratio: 0.5
     Tree Height: 1052
   - Class: rviz_common/Tool Properties
@@ -100,7 +100,7 @@ Visualization Manager:
       Color: 239; 41; 41
       Color Transformer: FlatColor
       Decay Time: 0
-      Enabled: true
+      Enabled: false
       Invert Rainbow: false
       Max Color: 255; 255; 255
       Max Intensity: 4096
@@ -120,7 +120,7 @@ Visualization Manager:
         Value: /obstacle_scan
       Use Fixed Frame: true
       Use rainbow: true
-      Value: true
+      Value: false
     - Alpha: 1
       Class: rviz_default_plugins/RobotModel
       Collision Enabled: false
@@ -421,7 +421,7 @@ Visualization Manager:
           Color: 204; 0; 0
           Color Transformer: FlatColor
           Decay Time: 0
-          Enabled: true
+          Enabled: false
           Invert Rainbow: false
           Max Color: 255; 255; 255
           Max Intensity: 0
@@ -441,7 +441,7 @@ Visualization Manager:
             Value: /perception/rear_lidar/points_transform_node/output
           Use Fixed Frame: true
           Use rainbow: true
-          Value: true
+          Value: false
         - Alpha: 0.800000011920929
           Autocompute Intensity Bounds: true
           Autocompute Value Bounds:
@@ -454,7 +454,7 @@ Visualization Manager:
           Color: 138; 226; 52
           Color Transformer: FlatColor
           Decay Time: 0
-          Enabled: true
+          Enabled: false
           Invert Rainbow: false
           Max Color: 255; 255; 255
           Max Intensity: 0
@@ -474,7 +474,7 @@ Visualization Manager:
             Value: /perception/front_lidar/points_transform_node/output
           Use Fixed Frame: true
           Use rainbow: true
-          Value: true
+          Value: false
         - Alpha: 1
           Autocompute Intensity Bounds: true
           Autocompute Value Bounds:
@@ -487,7 +487,7 @@ Visualization Manager:
           Color: 114; 159; 207
           Color Transformer: FlatColor
           Decay Time: 0
-          Enabled: true
+          Enabled: false
           Invert Rainbow: false
           Max Color: 255; 255; 255
           Max Intensity: -999999
@@ -507,7 +507,7 @@ Visualization Manager:
             Value: /perception/right_lidar/points_transform_node/output
           Use Fixed Frame: true
           Use rainbow: true
-          Value: true
+          Value: false
         - Alpha: 1
           Autocompute Intensity Bounds: true
           Autocompute Value Bounds:
@@ -520,7 +520,7 @@ Visualization Manager:
           Color: 252; 233; 79
           Color Transformer: FlatColor
           Decay Time: 0
-          Enabled: true
+          Enabled: false
           Invert Rainbow: false
           Max Color: 255; 255; 255
           Max Intensity: -999999
@@ -540,6 +540,39 @@ Visualization Manager:
             Value: /perception/left_lidar/points_transform_node/output
           Use Fixed Frame: true
           Use rainbow: true
+          Value: false
+        - Alpha: 1
+          Autocompute Intensity Bounds: true
+          Autocompute Value Bounds:
+            Max Value: 1
+            Min Value: -0.6000000238418579
+            Value: false
+          Axis: Z
+          Channel Name: intensity
+          Class: rviz_default_plugins/PointCloud2
+          Color: 255; 255; 255
+          Color Transformer: AxisColor
+          Decay Time: 0
+          Enabled: true
+          Invert Rainbow: false
+          Max Color: 255; 255; 255
+          Max Intensity: 0
+          Min Color: 0; 0; 0
+          Min Intensity: 0
+          Name: ConcatenatedPoints
+          Position Transformer: XYZ
+          Selectable: true
+          Size (Pixels): 3
+          Size (m): 0.10000000149011612
+          Style: Boxes
+          Topic:
+            Depth: 5
+            Durability Policy: Volatile
+            History Policy: Keep Last
+            Reliability Policy: Reliable
+            Value: /perception/points_concatenate_node/output
+          Use Fixed Frame: true
+          Use rainbow: true
           Value: true
         - Alpha: 1
           Autocompute Intensity Bounds: true
@@ -549,31 +582,31 @@ Visualization Manager:
             Value: true
           Axis: Z
           Channel Name: intensity
-          Class: rviz_default_plugins/PointCloud2
-          Color: 255; 255; 255
-          Color Transformer: ""
+          Class: rviz_default_plugins/LaserScan
+          Color: 114; 159; 207
+          Color Transformer: FlatColor
           Decay Time: 0
-          Enabled: false
+          Enabled: true
           Invert Rainbow: false
           Max Color: 255; 255; 255
           Max Intensity: 4096
           Min Color: 0; 0; 0
           Min Intensity: 0
-          Name: ConcatenatedPoints
-          Position Transformer: ""
+          Name: ObstacleScan
+          Position Transformer: XYZ
           Selectable: true
           Size (Pixels): 3
           Size (m): 0.10000000149011612
-          Style: Flat Squares
+          Style: Tiles
           Topic:
             Depth: 5
             Durability Policy: Volatile
             History Policy: Keep Last
             Reliability Policy: Reliable
-            Value: /perception/points_concatenate_node/output
+            Value: /perception/pointcloud_to_laserscan_node/output
           Use Fixed Frame: true
           Use rainbow: true
-          Value: false
+          Value: true
       Enabled: true
       Name: Perception
   Enabled: true
