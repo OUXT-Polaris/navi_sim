@@ -52,6 +52,8 @@ extern "C" {
 }  // extern "C"
 #endif
 
+#include <navi_sim/raycaster.hpp>
+
 #include <rclcpp/rclcpp.hpp>
 
 #include <sensor_msgs/msg/camera_info.hpp>
@@ -67,9 +69,15 @@ public:
   explicit CameraSimComponent(const rclcpp::NodeOptions & options);
   NAVI_SIM_CAMEAR_SIM_COMPONENT_PUBLIC
   explicit CameraSimComponent(std::string name, const rclcpp::NodeOptions & options);
+  template<typename T, typename ... Ts>
+  void addPrimitive(Ts && ... xs)
+  {
+    raycaster_ptr_->addPrimitive<T>(std::forward<Ts>(xs)...);
+  }
 
 private:
   void initialize();
+  std::unique_ptr<navi_sim::Raycaster> raycaster_ptr_;
   sensor_msgs::msg::CameraInfo camera_info_;
 };
 }
