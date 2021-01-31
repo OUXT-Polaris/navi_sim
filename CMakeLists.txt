@@ -35,12 +35,12 @@ ament_auto_add_library(navi_sim_component SHARED
   src/navi_sim_component.cpp
 )
 target_compile_definitions(navi_sim_component PRIVATE "NAVI_SIM_NAVI_SIM_COMPONENT_BUILDING_DLL")
-target_link_libraries(navi_sim_component ${quaternion_operation_LIBRARIES} ${Boost_LIBRARIES})
+target_link_libraries(navi_sim_component ${Boost_LIBRARIES})
 
 ament_auto_add_executable(navi_sim_node
   src/navi_sim_node.cpp
 )
-target_link_libraries(navi_sim_node navi_sim_component ${quaternion_operation_LIBRARIES})
+target_link_libraries(navi_sim_node navi_sim_component)
 rclcpp_components_register_nodes(navi_sim_component
   "navi_sim::NaviSimComponent")
 
@@ -52,23 +52,37 @@ ament_auto_add_library(lidar_sim_component SHARED
   src/raycaster.cpp
 )
 target_compile_definitions(lidar_sim_component PRIVATE "NAVI_SIM_LIDAR_SIM_COMPONENT_BUILDING_DLL")
-target_link_libraries(lidar_sim_component ${quaternion_operation_LIBRARIES} ${Boost_LIBRARIES} embree3)
+target_link_libraries(lidar_sim_component embree3)
 
 ament_auto_add_executable(lidar_sim_node
   src/lidar_sim_node.cpp
 )
-target_link_libraries(lidar_sim_node ${quaternion_operation_LIBRARIES} ${Boost_LIBRARIES} lidar_sim_component)
+target_link_libraries(lidar_sim_node lidar_sim_component)
 rclcpp_components_register_nodes(lidar_sim_component
   "navi_sim::LidarSimComponent")
+
+ament_auto_add_library(camera_sim_component SHARED
+  src/camera_sim_component.cpp
+)
+target_compile_definitions(camera_sim_component PRIVATE "NAVI_SIM_CAMEAR_SIM_COMPONENT_BUILDING_DLL")
+target_link_libraries(camera_sim_component)
+rclcpp_components_register_nodes(camera_sim_component
+  "navi_sim::CameraSimComponent")
+ament_auto_add_executable(camera_sim_node
+  src/camera_sim_node.cpp
+)
+target_link_libraries(camera_sim_node camera_sim_component)
 
 install(TARGETS
   navi_sim_node
   lidar_sim_node
+  camera_sim_node
   DESTINATION lib/navi_sim
 )
 install(TARGETS
   navi_sim_component
   lidar_sim_component
+  camera_sim_component
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin)
