@@ -12,22 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// Headers in this package
+#include <navi_sim/camera_sim_component.hpp>
+#include <navi_sim/primitives/box.hpp>
 
-#include <navi_sim/lidar_sim_component.hpp>
-
-// Headers in RCLCPP
 #include <rclcpp/rclcpp.hpp>
-
-// Headers in STL
 #include <memory>
 
 int main(int argc, char * argv[])
 {
   rclcpp::init(argc, argv);
   rclcpp::NodeOptions options;
-  auto component = std::make_shared<navi_sim::LidarSimComponent>(options);
-  rclcpp::spin(component);
+  // auto component = std::make_shared<navi_sim::LidarSimComponent>(options);
+  // rclcpp::spin(component);
   rclcpp::shutdown();
   return 0;
 }
