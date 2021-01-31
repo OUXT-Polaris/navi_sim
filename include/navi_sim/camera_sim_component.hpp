@@ -52,4 +52,26 @@ extern "C" {
 }  // extern "C"
 #endif
 
+#include <rclcpp/rclcpp.hpp>
+
+#include <sensor_msgs/msg/camera_info.hpp>
+
+#include <string>
+
+namespace navi_sim
+{
+class CameraSimComponent : public rclcpp::Node
+{
+public:
+  NAVI_SIM_CAMEAR_SIM_COMPONENT_PUBLIC
+  explicit CameraSimComponent(const rclcpp::NodeOptions & options);
+  NAVI_SIM_CAMEAR_SIM_COMPONENT_PUBLIC
+  explicit CameraSimComponent(std::string name, const rclcpp::NodeOptions & options);
+
+private:
+  void initialize();
+  sensor_msgs::msg::CameraInfo camera_info_;
+};
+}
+
 #endif  // NAVI_SIM__CAMERA_SIM_COMPONENT_HPP_
