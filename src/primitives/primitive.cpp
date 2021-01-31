@@ -44,6 +44,35 @@ Vertex Primitive::transform(Vertex v) const
   return ret;
 }
 
+Vertex Primitive::transform(Vertex v, const geometry_msgs::msg::Pose & sensor_pose) const
+{
+  v = transform(v);
+  const auto inv_quat = quaternion_operation::conjugate(sensor_pose.orientation);
+  const auto mat = quaternion_operation::getRotationMatrix(inv_quat);
+  Eigen::VectorXd point(3);
+  point(0) = v.x;
+  point(1) = v.y;
+  point(2) = v.z;
+  point = mat * point;
+  point(0) = point(0) - sensor_pose.position.x;
+  point(1) = point(1) - sensor_pose.position.y;
+  point(2) = point(2) - sensor_pose.position.z;
+  Vertex ret;
+  ret.x = point(0);
+  ret.y = point(1);
+  ret.z = point(2);
+  return ret;
+}
+
+std::vector<Vertex> Primitive::transform(const geometry_msgs::msg::Pose & sensor_pose) const
+{
+  std::vector<Vertex> ret;
+  for (auto & v : vertices_) {
+    ret.emplace_back(transform(v, sensor_pose));
+  }
+  return ret;
+}
+
 std::vector<Vertex> Primitive::transform() const
 {
   std::vector<Vertex> ret;
@@ -56,6 +85,11 @@ std::vector<Vertex> Primitive::transform() const
 std::vector<Vertex> Primitive::getVertex() const
 {
   return transform();
+}
+
+std::vector<Vertex> Primitive::getVertex(const geometry_msgs::msg::Pose & sensor_pose) const
+{
+  return transform(sensor_pose);
 }
 
 std::vector<Triangle> Primitive::getTriangles() const

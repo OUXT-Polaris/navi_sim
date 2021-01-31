@@ -63,9 +63,12 @@ rclcpp_components_register_nodes(lidar_sim_component
 
 ament_auto_add_library(camera_sim_component SHARED
   src/camera_sim_component.cpp
+  src/primitives/box.cpp
+  src/primitives/primitive.cpp
+  src/raycaster.cpp
 )
 target_compile_definitions(camera_sim_component PRIVATE "NAVI_SIM_CAMEAR_SIM_COMPONENT_BUILDING_DLL")
-target_link_libraries(camera_sim_component)
+target_link_libraries(camera_sim_component embree3)
 rclcpp_components_register_nodes(camera_sim_component
   "navi_sim::CameraSimComponent")
 ament_auto_add_executable(camera_sim_node

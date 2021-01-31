@@ -56,6 +56,7 @@ extern "C" {
 
 #include <rclcpp/rclcpp.hpp>
 
+#include <image_geometry/pinhole_camera_model.h>
 #include <sensor_msgs/msg/camera_info.hpp>
 
 #include <string>
@@ -79,6 +80,7 @@ private:
   void initialize();
   std::unique_ptr<navi_sim::Raycaster> raycaster_ptr_;
   sensor_msgs::msg::CameraInfo camera_info_;
+  image_geometry::PinholeCameraModel cam_model_;
 };
 }
 

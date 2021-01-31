@@ -63,6 +63,15 @@ void Raycaster::addPrimitives(nlohmann::json json)
   }
 }
 
+const std::vector<std::string> Raycaster::getPrimitiveNames()
+{
+  std::vector<std::string> ret;
+  for (auto && pair : primitive_ptrs_) {
+    ret.emplace_back(pair.first);
+  }
+  return ret;
+}
+
 nlohmann::json Raycaster::dumpPrimitives() const
 {
   nlohmann::json j;

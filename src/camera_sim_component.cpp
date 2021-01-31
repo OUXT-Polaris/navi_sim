@@ -66,6 +66,7 @@ void CameraSimComponent::initialize()
     0, f, static_cast<double>(vertical_pixels) * 0.5, 0,
     0, 0, 1, 0
   };
+  cam_model_.fromCameraInfo(camera_info_);
 }
 }  // namespace navi_sim
 
