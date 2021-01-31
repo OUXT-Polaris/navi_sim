@@ -54,6 +54,18 @@ void CameraSimComponent::initialize()
     0, f, static_cast<double>(vertical_pixels) * 0.5,
     0, 0, 1
   };
+  camera_info_.r =
+  {
+    1, 0, 0,
+    0, 1, 0,
+    0, 0, 1
+  };
+  camera_info_.p =
+  {
+    f, 0, static_cast<double>(horizontal_pixels) * 0.5, 0,
+    0, f, static_cast<double>(vertical_pixels) * 0.5, 0,
+    0, 0, 1, 0
+  };
 }
 }  // namespace navi_sim
 
