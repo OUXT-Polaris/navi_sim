@@ -59,6 +59,7 @@ extern "C" {
 #include <image_geometry/pinhole_camera_model.h>
 #include <sensor_msgs/msg/camera_info.hpp>
 #include <vision_msgs/msg/vision_info.hpp>
+#include <vision_msgs/msg/detection2_d_array.hpp>
 
 #include <string>
 
@@ -83,6 +84,8 @@ private:
   sensor_msgs::msg::CameraInfo camera_info_;
   image_geometry::PinholeCameraModel cam_model_;
   rclcpp::TimerBase::SharedPtr update_camera_timer_;
+  rclcpp::Publisher<vision_msgs::msg::VisionInfo>::SharedPtr vision_info_pub_;
+  rclcpp::Publisher<vision_msgs::msg::Detection2DArray>::SharedPtr detection_pub_;
 };
 }
 

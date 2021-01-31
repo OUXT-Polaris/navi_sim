@@ -67,6 +67,8 @@ void CameraSimComponent::initialize()
     0, 0, 1, 0
   };
   cam_model_.fromCameraInfo(camera_info_);
+  vision_info_pub_ = create_publisher<vision_msgs::msg::VisionInfo>("vision_info", 1);
+  detection_pub_ = create_publisher<vision_msgs::msg::Detection2DArray>("detection", 1);
 }
 }  // namespace navi_sim
 
