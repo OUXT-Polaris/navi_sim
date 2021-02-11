@@ -70,6 +70,8 @@ public:
     double ghost_ratio = 0.001);
   nlohmann::json dumpPrimitives() const;
   const std::vector<std::string> getPrimitiveNames();
+  const std::string getPrimitiveType(const std::string & name);
+  const std::string getObjectType(const std::string & name);
   const std::vector<Vertex> getVertex(const std::string & name);
 
 private:

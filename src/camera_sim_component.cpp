@@ -39,6 +39,13 @@ CameraSimComponent::CameraSimComponent(std::string name, const rclcpp::NodeOptio
 void CameraSimComponent::update()
 {
   rclcpp::Time now = get_clock()->now();
+  vision_msgs::msg::Detection2DArray detection_array;
+  sensor_msgs::msg::CameraInfo camera_info;
+  camera_info = camera_info_;
+  camera_info.header.frame_id = camera_frame_;
+  camera_info.header.stamp = now;
+  detection_array.header.stamp = now;
+  detection_array.header.frame_id = camera_frame_;
   try {
     geometry_msgs::msg::TransformStamped transform_stamped = buffer_.lookupTransform(
       map_frame_, camera_frame_, rclcpp::Time(0), tf2::durationFromSec(1.0));
@@ -78,10 +85,14 @@ void CameraSimComponent::update()
       detection.bbox.size_x = bx.max_corner().x() - bx.min_corner().x();
       detection.bbox.size_y = bx.max_corner().y() - bx.min_corner().y();
       vision_msgs::msg::ObjectHypothesisWithPose result;
-      // result.id = raycaster_ptr_->
+      result.id = raycaster_ptr_->getObjectType(name);
+      result.score = 1.0;
       detection.results.emplace_back(result);
+      detection_array.detections.emplace_back(detection);
     }
   }
+  detection_pub_->publish(detection_array);
+  camera_info_pub_->publish(camera_info);
 }
 
 void CameraSimComponent::initialize()
@@ -143,6 +154,7 @@ void CameraSimComponent::initialize()
   raycaster_ptr_->addPrimitives(nlohmann::json::parse(json_string));
   // vision_info_pub_ = create_publisher<vision_msgs::msg::VisionInfo>("vision_info", 1);
   detection_pub_ = create_publisher<vision_msgs::msg::Detection2DArray>("detection", 1);
+  camera_info_pub_ = create_publisher<sensor_msgs::msg::CameraInfo>("camera_info", 1);
   using namespace std::chrono_literals;
   timer_ = create_wall_timer(100ms, std::bind(&CameraSimComponent::update, this));
 }

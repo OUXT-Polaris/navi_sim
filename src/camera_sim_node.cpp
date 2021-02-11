@@ -22,8 +22,8 @@ int main(int argc, char * argv[])
 {
   rclcpp::init(argc, argv);
   rclcpp::NodeOptions options;
-  // auto component = std::make_shared<navi_sim::LidarSimComponent>(options);
-  // rclcpp::spin(component);
+  auto component = std::make_shared<navi_sim::CameraSimComponent>(options);
+  rclcpp::spin(component);
   rclcpp::shutdown();
   return 0;
 }

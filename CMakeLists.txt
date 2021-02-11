@@ -71,8 +71,14 @@ target_compile_definitions(camera_sim_component PRIVATE "NAVI_SIM_CAMEAR_SIM_COM
 target_link_libraries(camera_sim_component embree3)
 rclcpp_components_register_nodes(camera_sim_component
   "navi_sim::CameraSimComponent")
+ament_target_dependencies(camera_sim_component
+  vision_msgs
+)
 ament_auto_add_executable(camera_sim_node
   src/camera_sim_node.cpp
+)
+ament_target_dependencies(camera_sim_node
+  vision_msgs
 )
 target_link_libraries(camera_sim_node camera_sim_component)
 

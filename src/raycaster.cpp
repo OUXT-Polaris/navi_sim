@@ -73,6 +73,22 @@ const std::vector<std::string> Raycaster::getPrimitiveNames()
   return ret;
 }
 
+const std::string Raycaster::getPrimitiveType(const std::string & name)
+{
+  if (primitive_ptrs_.count(name) != 0) {
+    primitive_ptrs_[name]->primitive_type;
+  }
+  throw std::runtime_error("primitive " + name + " does not exist.");
+}
+
+const std::string Raycaster::getObjectType(const std::string & name)
+{
+  if (primitive_ptrs_.count(name) != 0) {
+    primitive_ptrs_[name]->object_type;
+  }
+  throw std::runtime_error("primitive " + name + " does not exist.");
+}
+
 const std::vector<Vertex> Raycaster::getVertex(const std::string & name)
 {
   return primitive_ptrs_[name]->getVertex();

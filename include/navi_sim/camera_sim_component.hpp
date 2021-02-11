@@ -90,6 +90,7 @@ private:
   rclcpp::TimerBase::SharedPtr update_camera_timer_;
   // rclcpp::Publisher<vision_msgs::msg::VisionInfo>::SharedPtr vision_info_pub_;
   rclcpp::Publisher<vision_msgs::msg::Detection2DArray>::SharedPtr detection_pub_;
+  rclcpp::Publisher<sensor_msgs::msg::CameraInfo>::SharedPtr camera_info_pub_;
   rclcpp::TimerBase::SharedPtr timer_;
   tf2_ros::Buffer buffer_;
   tf2_ros::TransformListener listener_;
