@@ -1,5 +1,5 @@
 {
-	"box": {
+	"box1": {
 		"depth": 0.5,
 		"height": 1.5,
 		"pose": {
@@ -18,7 +18,7 @@
 		"type": "Box",
 		"width": 0.5
 	},
-	"box1": {
+	"box2": {
 		"depth": 0.5,
 		"height": 1.5,
 		"pose": {
@@ -30,6 +30,44 @@
 			},
 			"position": {
 				"x": 10.0,
+				"y": 10.0,
+				"z": 0.0
+			}
+		},
+		"type": "Box",
+		"width": 0.5
+	},
+	"box3": {
+		"depth": 0.5,
+		"height": 1.5,
+		"pose": {
+			"orientation": {
+				"w": 1.0,
+				"x": 0.0,
+				"y": 0.0,
+				"z": 0.0
+			},
+			"position": {
+				"x": 25.0,
+				"y": 0.0,
+				"z": 0.0
+			}
+		},
+		"type": "Box",
+		"width": 0.5
+	},
+	"box4": {
+		"depth": 0.5,
+		"height": 1.5,
+		"pose": {
+			"orientation": {
+				"w": 1.0,
+				"x": 0.0,
+				"y": 0.0,
+				"z": 0.0
+			},
+			"position": {
+				"x": 25.0,
 				"y": 10.0,
 				"z": 0.0
 			}

@@ -56,6 +56,9 @@ extern "C" {
 
 #include <rclcpp/rclcpp.hpp>
 
+#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
+#include <tf2_ros/transform_broadcaster.h>
+#include <tf2_ros/transform_listener.h>
 #include <image_geometry/pinhole_camera_model.h>
 #include <sensor_msgs/msg/camera_info.hpp>
 #include <vision_msgs/msg/vision_info.hpp>
@@ -79,13 +82,18 @@ public:
   }
 
 private:
+  void update();
   void initialize();
   std::unique_ptr<navi_sim::Raycaster> raycaster_ptr_;
   sensor_msgs::msg::CameraInfo camera_info_;
   image_geometry::PinholeCameraModel cam_model_;
   rclcpp::TimerBase::SharedPtr update_camera_timer_;
-  rclcpp::Publisher<vision_msgs::msg::VisionInfo>::SharedPtr vision_info_pub_;
+  // rclcpp::Publisher<vision_msgs::msg::VisionInfo>::SharedPtr vision_info_pub_;
   rclcpp::Publisher<vision_msgs::msg::Detection2DArray>::SharedPtr detection_pub_;
+  rclcpp::TimerBase::SharedPtr timer_;
+  tf2_ros::Buffer buffer_;
+  tf2_ros::TransformListener listener_;
+  std::string map_frame_, camera_frame_;
 };
 }
 

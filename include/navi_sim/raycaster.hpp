@@ -70,6 +70,7 @@ public:
     double ghost_ratio = 0.001);
   nlohmann::json dumpPrimitives() const;
   const std::vector<std::string> getPrimitiveNames();
+  const std::vector<Vertex> getVertex(const std::string & name);
 
 private:
   std::unordered_map<std::string, std::unique_ptr<Primitive>> primitive_ptrs_;

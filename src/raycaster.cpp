@@ -72,6 +72,11 @@ const std::vector<std::string> Raycaster::getPrimitiveNames()
   return ret;
 }
 
+const std::vector<Vertex> Raycaster::getVertex(const std::string & name)
+{
+  return primitive_ptrs_[name]->getVertex();
+}
+
 nlohmann::json Raycaster::dumpPrimitives() const
 {
   nlohmann::json j;
