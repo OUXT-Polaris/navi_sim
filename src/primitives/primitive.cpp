@@ -23,8 +23,10 @@
 
 namespace navi_sim
 {
-Primitive::Primitive(std::string type, geometry_msgs::msg::Pose pose)
-: type(type), pose(pose) {}
+Primitive::Primitive(
+  std::string primitive_type, std::string object_type,
+  geometry_msgs::msg::Pose pose)
+: primitive_type(primitive_type), object_type(object_type), pose(pose) {}
 
 Vertex Primitive::transform(Vertex v) const
 {
@@ -131,7 +133,10 @@ void to_json(nlohmann::json & j, const Primitive & p)
 {
   auto j_pose = nlohmann::json{};
   to_json(j_pose, p.pose);
-  j = nlohmann::json{{"type", p.type}};
+  j = nlohmann::json{
+    {"primitive_type", p.primitive_type},
+    {"object_type", p.object_type}
+  };
   j["pose"] = j_pose;
 }
 

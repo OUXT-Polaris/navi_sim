@@ -22,10 +22,12 @@ namespace navi_sim
 {
 
 Box::Box()
-: Primitive("Box", geometry_msgs::msg::Pose()), depth(0), width(0), height(0) {}
+: Primitive("Box", "Box", geometry_msgs::msg::Pose()), depth(0), width(0), height(0) {}
 
-Box::Box(float depth, float width, float height, geometry_msgs::msg::Pose pose)
-: Primitive("Box", pose), depth(depth), width(width), height(height)
+Box::Box(
+  std::string object_type, float depth, float width, float height,
+  geometry_msgs::msg::Pose pose)
+: Primitive("Box", object_type, pose), depth(depth), width(width), height(height)
 {
   vertices_ = std::vector<Vertex>(8);
 

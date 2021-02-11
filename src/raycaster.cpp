@@ -52,13 +52,14 @@ Raycaster::~Raycaster()
 void Raycaster::addPrimitives(nlohmann::json json)
 {
   for (const auto item : json.items()) {
-    if (item.value()["type"] == "Box") {
+    if (item.value()["primitive_type"] == "Box") {
+      std::string object_type = item.value()["object_type"];
       float d = item.value()["depth"];
       float w = item.value()["width"];
       float h = item.value()["height"];
       geometry_msgs::msg::Pose pose;
       from_json(item.value()["pose"], pose);
-      addPrimitive<Box>(item.key(), d, w, h, pose);
+      addPrimitive<Box>(item.key(), object_type, d, w, h, pose);
     }
   }
 }

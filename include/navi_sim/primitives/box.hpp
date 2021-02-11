@@ -23,7 +23,9 @@ namespace navi_sim
 class Box : public Primitive
 {
 public:
-  explicit Box(float depth, float width, float height, geometry_msgs::msg::Pose pose);
+  explicit Box(
+    std::string object_type, float depth, float width, float height,
+    geometry_msgs::msg::Pose pose);
   Box();
   ~Box() = default;
   const float depth;

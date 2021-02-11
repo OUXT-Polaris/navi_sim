@@ -67,6 +67,20 @@ void CameraSimComponent::update()
     }
     box bx;
     boost::geometry::envelope(poly, bx);
+    box out;
+    if (boost::geometry::intersection(camera_bbox, bx, out)) {
+      vision_msgs::msg::Detection2D detection;
+      detection.header.frame_id = camera_frame_;
+      detection.header.stamp = now;
+      detection.is_tracking = false;
+      detection.bbox.center.x = (bx.max_corner().x() + bx.min_corner().x()) * 0.5;
+      detection.bbox.center.y = (bx.max_corner().y() + bx.min_corner().y()) * 0.5;
+      detection.bbox.size_x = bx.max_corner().x() - bx.min_corner().x();
+      detection.bbox.size_y = bx.max_corner().y() - bx.min_corner().y();
+      vision_msgs::msg::ObjectHypothesisWithPose result;
+      // result.id = raycaster_ptr_->
+      detection.results.emplace_back(result);
+    }
   }
 }
 
