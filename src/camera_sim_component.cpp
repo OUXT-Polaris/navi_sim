@@ -263,7 +263,7 @@ const visualization_msgs::msg::MarkerArray CameraSimComponent::generateMarker(
   detection_marker.scale.x = 0.01;
   detection_marker.scale.y = 0.01;
   detection_marker.scale.z = 0.01;
-  detection_marker.color = color_names::makeColorMsg(frustum_color_, 1.0);
+  detection_marker.color = color_names::makeColorMsg(detection_color_, 1.0);
   for (const auto & detection : detections) {
     double left_x = (detection.bbox.center.x - detection.bbox.size_x * 0.5) /
       static_cast<double>(horizontal_pixels_);
@@ -297,6 +297,14 @@ const visualization_msgs::msg::MarkerArray CameraSimComponent::generateMarker(
       point_rb_msg,
       right_x,
       bottom_y);
+    detection_marker.points.emplace_back(point_lu_obj);
+    detection_marker.points.emplace_back(point_ru_obj);
+    detection_marker.points.emplace_back(point_ru_obj);
+    detection_marker.points.emplace_back(point_rb_obj);
+    detection_marker.points.emplace_back(point_rb_obj);
+    detection_marker.points.emplace_back(point_lb_obj);
+    detection_marker.points.emplace_back(point_lb_obj);
+    detection_marker.points.emplace_back(point_lu_obj);
   }
   marker.markers.emplace_back(detection_marker);
   return marker;
