@@ -63,6 +63,7 @@ extern "C" {
 #include <sensor_msgs/msg/camera_info.hpp>
 #include <vision_msgs/msg/vision_info.hpp>
 #include <vision_msgs/msg/detection2_d_array.hpp>
+#include <visualization_msgs/msg/marker_array.hpp>
 
 #include <string>
 
@@ -91,10 +92,11 @@ private:
   // rclcpp::Publisher<vision_msgs::msg::VisionInfo>::SharedPtr vision_info_pub_;
   rclcpp::Publisher<vision_msgs::msg::Detection2DArray>::SharedPtr detection_pub_;
   rclcpp::Publisher<sensor_msgs::msg::CameraInfo>::SharedPtr camera_info_pub_;
+  rclcpp::Publisher<visualization_msgs::msg::MarkerArray>::SharedPtr marker_pub_;
   rclcpp::TimerBase::SharedPtr timer_;
   tf2_ros::Buffer buffer_;
   tf2_ros::TransformListener listener_;
-  std::string map_frame_, camera_frame_;
+  std::string map_frame_, camera_optical_frame_, camera_frame_;
 };
 }
 

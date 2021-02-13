@@ -42,13 +42,13 @@ void CameraSimComponent::update()
   vision_msgs::msg::Detection2DArray detection_array;
   sensor_msgs::msg::CameraInfo camera_info;
   camera_info = camera_info_;
-  camera_info.header.frame_id = camera_frame_;
+  camera_info.header.frame_id = camera_optical_frame_;
   camera_info.header.stamp = now;
   detection_array.header.stamp = now;
-  detection_array.header.frame_id = camera_frame_;
+  detection_array.header.frame_id = camera_optical_frame_;
   try {
     geometry_msgs::msg::TransformStamped transform_stamped = buffer_.lookupTransform(
-      map_frame_, camera_frame_, rclcpp::Time(0), tf2::durationFromSec(1.0));
+      map_frame_, camera_optical_frame_, rclcpp::Time(0), tf2::durationFromSec(1.0));
     geometry_msgs::msg::Pose pose;
     pose.position.x = transform_stamped.transform.translation.x;
     pose.position.y = transform_stamped.transform.translation.y;
@@ -77,7 +77,7 @@ void CameraSimComponent::update()
     box out;
     if (boost::geometry::intersection(camera_bbox, bx, out)) {
       vision_msgs::msg::Detection2D detection;
-      detection.header.frame_id = camera_frame_;
+      detection.header.frame_id = camera_optical_frame_;
       detection.header.stamp = now;
       detection.is_tracking = false;
       detection.bbox.center.x = (bx.max_corner().x() + bx.min_corner().x()) * 0.5;
@@ -97,8 +97,16 @@ void CameraSimComponent::update()
 
 void CameraSimComponent::initialize()
 {
+  declare_parameter("embree_config");
+  if (has_parameter("embree_config")) {
+    std::string embree_config;
+    get_parameter("embree_config", embree_config);
+    raycaster_ptr_ = std::make_unique<Raycaster>(embree_config);
+  } else {
+    raycaster_ptr_ = std::make_unique<Raycaster>();
+  }
   double vertical_fov;
-  declare_parameter("vertical_fov", 120.19512195121952);
+  declare_parameter("vertical_fov", 2.0978006228796881594);
   get_parameter("vertical_fov", vertical_fov);
   int horizontal_pixels;
   declare_parameter("horizontal_pixels", 720);
@@ -112,7 +120,7 @@ void CameraSimComponent::initialize()
   camera_info_.distortion_model = "plumb_bob";
   camera_info_.d = {0, 0, 0, 0, 0};
   double f = static_cast<double>(vertical_pixels) * 0.5 /
-    std::tan(vertical_fov * 0.5 / 180.0 * M_PI);
+    std::tan(vertical_fov * 0.5);
   camera_info_.k =
   {
     f, 0, static_cast<double>(horizontal_pixels) * 0.5,
@@ -155,6 +163,7 @@ void CameraSimComponent::initialize()
   // vision_info_pub_ = create_publisher<vision_msgs::msg::VisionInfo>("vision_info", 1);
   detection_pub_ = create_publisher<vision_msgs::msg::Detection2DArray>("detection", 1);
   camera_info_pub_ = create_publisher<sensor_msgs::msg::CameraInfo>("camera_info", 1);
+  marker_pub_ = create_publisher<visualization_msgs::msg::MarkerArray>("marker", 1);
   using namespace std::chrono_literals;
   timer_ = create_wall_timer(100ms, std::bind(&CameraSimComponent::update, this));
 }
