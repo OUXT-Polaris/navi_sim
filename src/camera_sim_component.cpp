@@ -17,6 +17,8 @@
 
 #include <rclcpp_components/register_node_macro.hpp>
 
+#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
+
 #include <color_names/color_names.hpp>
 
 #include <boost/geometry.hpp>
@@ -48,8 +50,9 @@ void CameraSimComponent::update()
   camera_info.header.stamp = now;
   detection_array.header.stamp = now;
   detection_array.header.frame_id = camera_optical_frame_;
+  geometry_msgs::msg::TransformStamped transform_stamped;
   try {
-    geometry_msgs::msg::TransformStamped transform_stamped = buffer_.lookupTransform(
+    transform_stamped = buffer_.lookupTransform(
       map_frame_, camera_optical_frame_, rclcpp::Time(0), tf2::durationFromSec(1.0));
     geometry_msgs::msg::Pose pose;
     pose.position.x = transform_stamped.transform.translation.x;
@@ -71,7 +74,12 @@ void CameraSimComponent::update()
     typedef boost::geometry::ring_type<polygon_type>::type ring_type;
     ring_type & ring = boost::geometry::exterior_ring(poly);
     for (const auto & v : vertex) {
-      cv::Point3d point_3d(v.x, v.y, v.z);
+      geometry_msgs::msg::PointStamped p;
+      p.point.x = v.x;
+      p.point.y = v.y;
+      p.point.z = v.z;
+      tf2::doTransform(p, p, transform_stamped);
+      cv::Point3d point_3d(p.point.x, p.point.y, p.point.z);
       cv::Point2d point_2d = cam_model_.project3dToPixel(point_3d);
       ring.push_back(point(point_2d.x, point_2d.y));
     }
