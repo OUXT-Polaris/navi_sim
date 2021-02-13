@@ -118,8 +118,8 @@ void CameraSimComponent::initialize()
   get_parameter("vertical_pixels", vertical_pixels_);
   declare_parameter("frustum_color", "cyan");
   get_parameter("frustum_color", frustum_color_);
-  declare_parameter("object_frustum_color", "limegreen");
-  get_parameter("object_frustum_color", object_frustum_color_);
+  declare_parameter("detection_color", "limegreen");
+  get_parameter("detection_color", detection_color_);
   declare_parameter("camera_frame", "camera_link");
   get_parameter("camera_frame", camera_frame_);
   declare_parameter("camera_optical_frame", "camera_optical_link");
@@ -178,6 +178,19 @@ void CameraSimComponent::initialize()
   marker_pub_ = create_publisher<visualization_msgs::msg::MarkerArray>("marker", 1);
   using namespace std::chrono_literals;
   timer_ = create_wall_timer(100ms, std::bind(&CameraSimComponent::update, this));
+}
+
+const geometry_msgs::msg::Point CameraSimComponent::internallyDivide(
+  const geometry_msgs::msg::Point & p0,
+  const geometry_msgs::msg::Point & p1,
+  double x_ratio_in_image,
+  double y_ratio_in_image)
+{
+  geometry_msgs::msg::Point p;
+  p.x = p0.x * x_ratio_in_image + p1.x * (1 - x_ratio_in_image);
+  p.y = p0.y * y_ratio_in_image + p1.y * (1 - y_ratio_in_image);
+  p.z = (p0.z + p1.z) * 0.5;
+  return p;
 }
 
 const visualization_msgs::msg::MarkerArray CameraSimComponent::generateMarker(
@@ -240,10 +253,52 @@ const visualization_msgs::msg::MarkerArray CameraSimComponent::generateMarker(
   frustum_marker.points.emplace_back(point_lu_msg);
   frustum_marker.frame_locked = true;
   marker.markers.emplace_back(frustum_marker);
-  /*
-  for (const auto & detection :detections) {
-
-  }*/
+  visualization_msgs::msg::Marker detection_marker;
+  detection_marker.header.stamp = now;
+  detection_marker.header.frame_id = camera_optical_frame_;
+  detection_marker.id = 0;
+  detection_marker.ns = "detection";
+  detection_marker.action = visualization_msgs::msg::Marker::ADD;
+  detection_marker.type = visualization_msgs::msg::Marker::LINE_LIST;
+  detection_marker.scale.x = 0.01;
+  detection_marker.scale.y = 0.01;
+  detection_marker.scale.z = 0.01;
+  detection_marker.color = color_names::makeColorMsg(frustum_color_, 1.0);
+  for (const auto & detection : detections) {
+    double left_x = (detection.bbox.center.x - detection.bbox.size_x * 0.5) /
+      static_cast<double>(horizontal_pixels_);
+    double right_x = (detection.bbox.center.x + detection.bbox.size_x * 0.5) /
+      static_cast<double>(horizontal_pixels_);
+    double upper_y = (detection.bbox.center.y - detection.bbox.size_y * 0.5) /
+      static_cast<double>(vertical_pixels_);
+    double bottom_y = (detection.bbox.center.y + detection.bbox.size_y * 0.5) /
+      static_cast<double>(vertical_pixels_);
+    geometry_msgs::msg::Point point_lu_obj =
+      internallyDivide(
+      point_lu_msg,
+      point_rb_msg,
+      left_x,
+      upper_y);
+    geometry_msgs::msg::Point point_ru_obj =
+      internallyDivide(
+      point_lu_msg,
+      point_rb_msg,
+      right_x,
+      upper_y);
+    geometry_msgs::msg::Point point_lb_obj =
+      internallyDivide(
+      point_lu_msg,
+      point_rb_msg,
+      left_x,
+      bottom_y);
+    geometry_msgs::msg::Point point_rb_obj =
+      internallyDivide(
+      point_lu_msg,
+      point_rb_msg,
+      right_x,
+      bottom_y);
+  }
+  marker.markers.emplace_back(detection_marker);
   return marker;
 }
 }  // namespace navi_sim

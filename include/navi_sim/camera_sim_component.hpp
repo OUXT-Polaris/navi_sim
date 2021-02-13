@@ -99,11 +99,16 @@ private:
   std::string camera_optical_frame_;
   std::string camera_frame_;
   std::string frustum_color_;
-  std::string object_frustum_color_;
+  std::string detection_color_;
   int vertical_pixels_;
   int horizontal_pixels_;
   const visualization_msgs::msg::MarkerArray generateMarker(
     const std::vector<vision_msgs::msg::Detection2D> & detections);
+  const geometry_msgs::msg::Point internallyDivide(
+    const geometry_msgs::msg::Point & p0,
+    const geometry_msgs::msg::Point & p1,
+    double x_ratio_in_image,
+    double y_ratio_in_image);
 };
 }
 
