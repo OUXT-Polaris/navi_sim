@@ -56,6 +56,7 @@ void CameraSimComponent::update()
     pose.orientation = transform_stamped.transform.rotation;
   } catch (tf2::ExtrapolationException & ex) {
     RCLCPP_ERROR(get_logger(), ex.what());
+    return;
   }
   typedef boost::geometry::model::d2::point_xy<double> point;
   typedef boost::geometry::model::polygon<point> polygon_type;
