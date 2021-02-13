@@ -53,7 +53,7 @@ void CameraSimComponent::update()
   geometry_msgs::msg::TransformStamped transform_stamped;
   try {
     transform_stamped = buffer_.lookupTransform(
-      map_frame_, camera_optical_frame_, rclcpp::Time(0), tf2::durationFromSec(1.0));
+      map_frame_, camera_frame_, rclcpp::Time(0), tf2::durationFromSec(1.0));
     geometry_msgs::msg::Pose pose;
     pose.position.x = transform_stamped.transform.translation.x;
     pose.position.y = transform_stamped.transform.translation.y;
@@ -83,8 +83,7 @@ void CameraSimComponent::update()
       cv::Point2d point_2d = cam_model_.project3dToPixel(point_3d);
       ring.push_back(point(point_2d.x, point_2d.y));
     }
-    box bx;
-    boost::geometry::envelope(poly, bx);
+    const box bx = boost::geometry::return_envelope<box>(poly);
     box out;
     if (boost::geometry::intersection(camera_bbox, bx, out)) {
       vision_msgs::msg::Detection2D detection;
@@ -195,8 +194,8 @@ const geometry_msgs::msg::Point CameraSimComponent::internallyDivide(
   double y_ratio_in_image)
 {
   geometry_msgs::msg::Point p;
-  p.x = p0.x * x_ratio_in_image + p1.x * (1 - x_ratio_in_image);
-  p.y = p0.y * y_ratio_in_image + p1.y * (1 - y_ratio_in_image);
+  p.x = p0.x * (1 - x_ratio_in_image) + p1.x * x_ratio_in_image;
+  p.y = p0.y * (1 - y_ratio_in_image) + p1.y * y_ratio_in_image;
   p.z = (p0.z + p1.z) * 0.5;
   return p;
 }
@@ -274,6 +273,47 @@ const visualization_msgs::msg::MarkerArray CameraSimComponent::generateMarker(
   detection_marker.color = color_names::makeColorMsg(detection_color_, 1.0);
   detection_marker.frame_locked = true;
   for (const auto & detection : detections) {
+    cv::Point2d point_lu_obj(
+      detection.bbox.center.x - detection.bbox.size_x * 0.5,
+      detection.bbox.center.y - detection.bbox.size_y * 0.5);
+    cv::Point3d lu_ray = cam_model_.projectPixelTo3dRay(point_lu_obj);
+    geometry_msgs::msg::Point point_lu_obj_msg;
+    point_lu_obj_msg.x = lu_ray.x;
+    point_lu_obj_msg.y = lu_ray.y;
+    point_lu_obj_msg.z = lu_ray.z;
+    cv::Point2d point_ru_point(
+      detection.bbox.center.x + detection.bbox.size_x * 0.5,
+      detection.bbox.center.y - detection.bbox.size_y * 0.5);
+    cv::Point3d ru_ray = cam_model_.projectPixelTo3dRay(point_ru_point);
+    geometry_msgs::msg::Point point_ru_obj_msg;
+    point_ru_obj_msg.x = ru_ray.x;
+    point_ru_obj_msg.y = ru_ray.y;
+    point_ru_obj_msg.z = ru_ray.z;
+    cv::Point2d point_rb_point(
+      detection.bbox.center.x + detection.bbox.size_x * 0.5,
+      detection.bbox.center.y + detection.bbox.size_y * 0.5);
+    cv::Point3d rb_ray = cam_model_.projectPixelTo3dRay(point_rb_point);
+    geometry_msgs::msg::Point point_rb_obj_msg;
+    point_rb_obj_msg.x = rb_ray.x;
+    point_rb_obj_msg.y = rb_ray.y;
+    point_rb_obj_msg.z = rb_ray.z;
+    cv::Point2d point_lb_point(
+      detection.bbox.center.x - detection.bbox.size_x * 0.5,
+      detection.bbox.center.y + detection.bbox.size_y * 0.5);
+    cv::Point3d lb_ray = cam_model_.projectPixelTo3dRay(point_lb_point);
+    geometry_msgs::msg::Point point_lb_obj_msg;
+    point_lb_obj_msg.x = lb_ray.x;
+    point_lb_obj_msg.y = lb_ray.y;
+    point_lb_obj_msg.z = lb_ray.z;
+    detection_marker.points.emplace_back(point_lu_obj_msg);
+    detection_marker.points.emplace_back(point_ru_obj_msg);
+    detection_marker.points.emplace_back(point_ru_obj_msg);
+    detection_marker.points.emplace_back(point_rb_obj_msg);
+    detection_marker.points.emplace_back(point_rb_obj_msg);
+    detection_marker.points.emplace_back(point_lb_obj_msg);
+    detection_marker.points.emplace_back(point_lb_obj_msg);
+    detection_marker.points.emplace_back(point_lu_obj_msg);
+    /*
     double left_x = (detection.bbox.center.x - detection.bbox.size_x * 0.5) /
       static_cast<double>(horizontal_pixels_);
     double right_x = (detection.bbox.center.x + detection.bbox.size_x * 0.5) /
@@ -314,6 +354,7 @@ const visualization_msgs::msg::MarkerArray CameraSimComponent::generateMarker(
     detection_marker.points.emplace_back(point_lb_obj);
     detection_marker.points.emplace_back(point_lb_obj);
     detection_marker.points.emplace_back(point_lu_obj);
+    */
   }
   marker.markers.emplace_back(detection_marker);
   return marker;
