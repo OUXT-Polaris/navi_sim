@@ -73,15 +73,24 @@ void CameraSimComponent::update()
     polygon_type poly;
     typedef boost::geometry::ring_type<polygon_type>::type ring_type;
     ring_type & ring = boost::geometry::exterior_ring(poly);
+    bool is_back = false;
     for (const auto & v : vertex) {
       geometry_msgs::msg::PointStamped p;
       p.point.x = v.x;
       p.point.y = v.y;
       p.point.z = v.z;
       tf2::doTransform(p, p, transform_stamped);
+      if(p.point.z <= 0)
+      {
+        is_back = true;
+      }
       cv::Point3d point_3d(p.point.x, p.point.y, p.point.z);
       cv::Point2d point_2d = cam_model_.project3dToPixel(point_3d);
       ring.push_back(point(point_2d.x, point_2d.y));
+    }
+    if(is_back)
+    {
+      continue;
     }
     const box bx = boost::geometry::return_envelope<box>(poly);
     box out;
