@@ -264,6 +264,7 @@ const visualization_msgs::msg::MarkerArray CameraSimComponent::generateMarker(
   detection_marker.scale.y = 0.01;
   detection_marker.scale.z = 0.01;
   detection_marker.color = color_names::makeColorMsg(detection_color_, 1.0);
+  detection_marker.frame_locked = true;
   for (const auto & detection : detections) {
     double left_x = (detection.bbox.center.x - detection.bbox.size_x * 0.5) /
       static_cast<double>(horizontal_pixels_);
