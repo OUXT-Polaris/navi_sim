@@ -52,15 +52,40 @@ Raycaster::~Raycaster()
 void Raycaster::addPrimitives(nlohmann::json json)
 {
   for (const auto item : json.items()) {
-    if (item.value()["type"] == "Box") {
+    if (item.value()["primitive_type"] == "Box") {
+      std::string object_type = item.value()["object_type"];
       float d = item.value()["depth"];
       float w = item.value()["width"];
       float h = item.value()["height"];
       geometry_msgs::msg::Pose pose;
       from_json(item.value()["pose"], pose);
-      addPrimitive<Box>(item.key(), d, w, h, pose);
+      addPrimitive<Box>(item.key(), object_type, d, w, h, pose);
     }
   }
+}
+
+const std::vector<std::string> Raycaster::getPrimitiveNames()
+{
+  std::vector<std::string> ret;
+  for (auto && pair : primitive_ptrs_) {
+    ret.emplace_back(pair.first);
+  }
+  return ret;
+}
+
+const std::string Raycaster::getPrimitiveType(const std::string & name)
+{
+  return primitive_ptrs_[name]->primitive_type;
+}
+
+const std::string Raycaster::getObjectType(const std::string & name)
+{
+  return primitive_ptrs_[name]->object_type;
+}
+
+const std::vector<Vertex> Raycaster::getVertex(const std::string & name)
+{
+  return primitive_ptrs_[name]->getVertex();
 }
 
 nlohmann::json Raycaster::dumpPrimitives() const

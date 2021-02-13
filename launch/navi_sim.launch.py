@@ -49,6 +49,30 @@ def getLidarSimComponent(lidar_name):
     return component
 
 
+def getCameraSimComponent(camera_name):
+    config_directory = os.path.join(
+        get_package_share_directory('navi_sim'),
+        'config')
+    param_config = os.path.join(config_directory, camera_name+'.yaml')
+    params = {}
+    with open(param_config, 'r') as f:
+        params = yaml.safe_load(f)[camera_name + '_node']['ros__parameters']
+        print(params)
+    object_config_path = os.path.join(
+            get_package_share_directory('navi_sim'),
+            'config',
+            'objects.json')
+    params["objects_path"] = object_config_path
+    component = ComposableNode(
+        package='navi_sim',
+        plugin='navi_sim::CameraSimComponent',
+        namespace='/sensing/'+camera_name,
+        name=camera_name + '_node',
+        remappings=[],
+        parameters=[params])
+    return component
+
+
 def getNaviSimComponent():
     component = ComposableNode(
         package='navi_sim',
@@ -81,7 +105,11 @@ def generate_launch_description():
                 getLidarSimComponent("front_lidar"),
                 getLidarSimComponent("rear_lidar"),
                 getLidarSimComponent("right_lidar"),
-                getLidarSimComponent("left_lidar")
+                getLidarSimComponent("left_lidar"),
+                getCameraSimComponent("front_left_camera"),
+                getCameraSimComponent("front_right_camera"),
+                getCameraSimComponent("rear_left_camera"),
+                getCameraSimComponent("rear_right_camera")
             ],
             output='screen'),
         IncludeLaunchDescription(

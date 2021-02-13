@@ -44,23 +44,27 @@ struct Triangle
 class Primitive
 {
 public:
-  Primitive(std::string type, geometry_msgs::msg::Pose pose);
+  Primitive(std::string primitive_type, std::string object_type, geometry_msgs::msg::Pose pose);
   virtual ~Primitive() = default;
-  const std::string type;
+  const std::string primitive_type;
+  const std::string object_type;
   const geometry_msgs::msg::Pose pose;
   unsigned int addToScene(RTCDevice device, RTCScene scene);
   std::vector<Vertex> getVertex() const;
+  std::vector<Vertex> getVertex(const geometry_msgs::msg::Pose & sensor_pose) const;
   std::vector<Triangle> getTriangles() const;
   virtual nlohmann::json toJson() const {return nlohmann::json{};}
   nlohmann::json toBaseJson() const;
 
 protected:
+  std::vector<Vertex> transform(const geometry_msgs::msg::Pose & sensor_pose) const;
   std::vector<Vertex> transform() const;
   std::vector<Vertex> vertices_;
   std::vector<Triangle> triangles_;
 
 private:
   Vertex transform(Vertex v) const;
+  Vertex transform(Vertex v, const geometry_msgs::msg::Pose & sensor_pose) const;
 };
 
 void to_json(nlohmann::json & j, const Primitive & p);
