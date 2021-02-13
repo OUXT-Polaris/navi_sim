@@ -80,16 +80,14 @@ void CameraSimComponent::update()
       p.point.y = v.y;
       p.point.z = v.z;
       tf2::doTransform(p, p, transform_stamped);
-      if(p.point.z <= 0)
-      {
+      if (p.point.z <= 0) {
         is_back = true;
       }
       cv::Point3d point_3d(p.point.x, p.point.y, p.point.z);
       cv::Point2d point_2d = cam_model_.project3dToPixel(point_3d);
       ring.push_back(point(point_2d.x, point_2d.y));
     }
-    if(is_back)
-    {
+    if (is_back) {
       continue;
     }
     const box bx = boost::geometry::return_envelope<box>(poly);

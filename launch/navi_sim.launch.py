@@ -106,7 +106,10 @@ def generate_launch_description():
                 getLidarSimComponent("rear_lidar"),
                 getLidarSimComponent("right_lidar"),
                 getLidarSimComponent("left_lidar"),
-                getCameraSimComponent("front_left_camera")
+                getCameraSimComponent("front_left_camera"),
+                getCameraSimComponent("front_right_camera"),
+                getCameraSimComponent("rear_left_camera"),
+                getCameraSimComponent("rear_right_camera")
             ],
             output='screen'),
         IncludeLaunchDescription(
