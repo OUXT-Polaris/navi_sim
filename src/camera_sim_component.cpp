@@ -53,7 +53,7 @@ void CameraSimComponent::update()
   geometry_msgs::msg::TransformStamped transform_stamped;
   try {
     transform_stamped = buffer_.lookupTransform(
-      map_frame_, camera_frame_, rclcpp::Time(0), tf2::durationFromSec(1.0));
+      camera_optical_frame_, map_frame_, rclcpp::Time(0), tf2::durationFromSec(1.0));
     geometry_msgs::msg::Pose pose;
     pose.position.x = transform_stamped.transform.translation.x;
     pose.position.y = transform_stamped.transform.translation.y;
@@ -179,7 +179,6 @@ void CameraSimComponent::initialize()
     json_string = json_string + line;
   }
   raycaster_ptr_->addPrimitives(nlohmann::json::parse(json_string));
-  // vision_info_pub_ = create_publisher<vision_msgs::msg::VisionInfo>("vision_info", 1);
   detection_pub_ = create_publisher<vision_msgs::msg::Detection2DArray>("detection", 1);
   camera_info_pub_ = create_publisher<sensor_msgs::msg::CameraInfo>("camera_info", 1);
   marker_pub_ = create_publisher<visualization_msgs::msg::MarkerArray>("marker", 1);
@@ -313,48 +312,6 @@ const visualization_msgs::msg::MarkerArray CameraSimComponent::generateMarker(
     detection_marker.points.emplace_back(point_lb_obj_msg);
     detection_marker.points.emplace_back(point_lb_obj_msg);
     detection_marker.points.emplace_back(point_lu_obj_msg);
-    /*
-    double left_x = (detection.bbox.center.x - detection.bbox.size_x * 0.5) /
-      static_cast<double>(horizontal_pixels_);
-    double right_x = (detection.bbox.center.x + detection.bbox.size_x * 0.5) /
-      static_cast<double>(horizontal_pixels_);
-    double upper_y = (detection.bbox.center.y - detection.bbox.size_y * 0.5) /
-      static_cast<double>(vertical_pixels_);
-    double bottom_y = (detection.bbox.center.y + detection.bbox.size_y * 0.5) /
-      static_cast<double>(vertical_pixels_);
-    geometry_msgs::msg::Point point_lu_obj =
-      internallyDivide(
-      point_lu_msg,
-      point_rb_msg,
-      left_x,
-      upper_y);
-    geometry_msgs::msg::Point point_ru_obj =
-      internallyDivide(
-      point_lu_msg,
-      point_rb_msg,
-      right_x,
-      upper_y);
-    geometry_msgs::msg::Point point_lb_obj =
-      internallyDivide(
-      point_lu_msg,
-      point_rb_msg,
-      left_x,
-      bottom_y);
-    geometry_msgs::msg::Point point_rb_obj =
-      internallyDivide(
-      point_lu_msg,
-      point_rb_msg,
-      right_x,
-      bottom_y);
-    detection_marker.points.emplace_back(point_lu_obj);
-    detection_marker.points.emplace_back(point_ru_obj);
-    detection_marker.points.emplace_back(point_ru_obj);
-    detection_marker.points.emplace_back(point_rb_obj);
-    detection_marker.points.emplace_back(point_rb_obj);
-    detection_marker.points.emplace_back(point_lb_obj);
-    detection_marker.points.emplace_back(point_lb_obj);
-    detection_marker.points.emplace_back(point_lu_obj);
-    */
   }
   marker.markers.emplace_back(detection_marker);
   return marker;
