@@ -26,6 +26,10 @@
 #include <boost/geometry/geometries/polygon.hpp>
 #include <boost/geometry/geometries/box.hpp>
 
+#include <vector>
+#include <memory>
+#include <string>
+
 namespace navi_sim
 {
 CameraSimComponent::CameraSimComponent(const rclcpp::NodeOptions & options)

@@ -65,7 +65,10 @@ extern "C" {
 #include <vision_msgs/msg/detection2_d_array.hpp>
 #include <visualization_msgs/msg/marker_array.hpp>
 
+#include <utility>
 #include <string>
+#include <memory>
+#include <vector>
 
 namespace navi_sim
 {
@@ -110,6 +113,6 @@ private:
     double x_ratio_in_image,
     double y_ratio_in_image);
 };
-}
+}  // namespace navi_sim
 
 #endif  // NAVI_SIM__CAMERA_SIM_COMPONENT_HPP_

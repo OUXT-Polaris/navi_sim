@@ -18,6 +18,8 @@
 #include <navi_sim/primitives/primitive.hpp>
 #include <nlohmann/json.hpp>
 
+#include <string>
+
 namespace navi_sim
 {
 class Box : public Primitive
