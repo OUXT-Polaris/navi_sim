@@ -30,6 +30,7 @@
   <depend>nlohmann-json-dev</depend>
   <depend>vision_msgs</depend>
   <depend>embree</depend>
+  <depend>color_names</depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>

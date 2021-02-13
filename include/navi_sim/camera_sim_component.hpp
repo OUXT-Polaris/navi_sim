@@ -89,14 +89,21 @@ private:
   sensor_msgs::msg::CameraInfo camera_info_;
   image_geometry::PinholeCameraModel cam_model_;
   rclcpp::TimerBase::SharedPtr update_camera_timer_;
-  // rclcpp::Publisher<vision_msgs::msg::VisionInfo>::SharedPtr vision_info_pub_;
   rclcpp::Publisher<vision_msgs::msg::Detection2DArray>::SharedPtr detection_pub_;
   rclcpp::Publisher<sensor_msgs::msg::CameraInfo>::SharedPtr camera_info_pub_;
   rclcpp::Publisher<visualization_msgs::msg::MarkerArray>::SharedPtr marker_pub_;
   rclcpp::TimerBase::SharedPtr timer_;
   tf2_ros::Buffer buffer_;
   tf2_ros::TransformListener listener_;
-  std::string map_frame_, camera_optical_frame_, camera_frame_;
+  std::string map_frame_;
+  std::string camera_optical_frame_;
+  std::string camera_frame_;
+  std::string frustum_color_;
+  std::string object_frustum_color_;
+  int vertical_pixels_;
+  int horizontal_pixels_;
+  const visualization_msgs::msg::MarkerArray generateMarker(
+    const std::vector<vision_msgs::msg::Detection2D> & detections);
 };
 }
 

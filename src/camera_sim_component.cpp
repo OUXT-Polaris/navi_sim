@@ -17,6 +17,8 @@
 
 #include <rclcpp_components/register_node_macro.hpp>
 
+#include <color_names/color_names.hpp>
+
 #include <boost/geometry.hpp>
 #include <boost/geometry/geometries/point_xy.hpp>
 #include <boost/geometry/geometries/polygon.hpp>
@@ -94,6 +96,7 @@ void CameraSimComponent::update()
   }
   detection_pub_->publish(detection_array);
   camera_info_pub_->publish(camera_info);
+  marker_pub_->publish(generateMarker(detection_array.detections));
 }
 
 void CameraSimComponent::initialize()
@@ -109,23 +112,31 @@ void CameraSimComponent::initialize()
   double vertical_fov;
   declare_parameter("vertical_fov", 2.0978006228796881594);
   get_parameter("vertical_fov", vertical_fov);
-  int horizontal_pixels;
   declare_parameter("horizontal_pixels", 720);
-  get_parameter("horizontal_pixels", horizontal_pixels);
-  int vertical_pixels;
+  get_parameter("horizontal_pixels", horizontal_pixels_);
   declare_parameter("vertical_pixels", 540);
-  get_parameter("vertical_pixels", vertical_pixels);
+  get_parameter("vertical_pixels", vertical_pixels_);
+  declare_parameter("frustum_color", "cyan");
+  get_parameter("frustum_color", frustum_color_);
+  declare_parameter("object_frustum_color", "limegreen");
+  get_parameter("object_frustum_color", object_frustum_color_);
+  declare_parameter("camera_frame", "camera_link");
+  get_parameter("camera_frame", camera_frame_);
+  declare_parameter("camera_optical_frame", "camera_optical_link");
+  get_parameter("camera_optical_frame", camera_optical_frame_);
+  declare_parameter("map_frame", "map");
+  get_parameter("map_frame", map_frame_);
   camera_info_ = sensor_msgs::msg::CameraInfo();
-  camera_info_.height = vertical_pixels;
-  camera_info_.width = vertical_pixels;
+  camera_info_.height = vertical_pixels_;
+  camera_info_.width = horizontal_pixels_;
   camera_info_.distortion_model = "plumb_bob";
   camera_info_.d = {0, 0, 0, 0, 0};
-  double f = static_cast<double>(vertical_pixels) * 0.5 /
+  double f = static_cast<double>(vertical_pixels_) * 0.5 /
     std::tan(vertical_fov * 0.5);
   camera_info_.k =
   {
-    f, 0, static_cast<double>(horizontal_pixels) * 0.5,
-    0, f, static_cast<double>(vertical_pixels) * 0.5,
+    f, 0, static_cast<double>(horizontal_pixels_) * 0.5,
+    0, f, static_cast<double>(vertical_pixels_) * 0.5,
     0, 0, 1
   };
   camera_info_.r =
@@ -136,8 +147,8 @@ void CameraSimComponent::initialize()
   };
   camera_info_.p =
   {
-    f, 0, static_cast<double>(horizontal_pixels) * 0.5, 0,
-    0, f, static_cast<double>(vertical_pixels) * 0.5, 0,
+    f, 0, static_cast<double>(horizontal_pixels_) * 0.5, 0,
+    0, f, static_cast<double>(vertical_pixels_) * 0.5, 0,
     0, 0, 1, 0
   };
   cam_model_.fromCameraInfo(camera_info_);
@@ -167,6 +178,73 @@ void CameraSimComponent::initialize()
   marker_pub_ = create_publisher<visualization_msgs::msg::MarkerArray>("marker", 1);
   using namespace std::chrono_literals;
   timer_ = create_wall_timer(100ms, std::bind(&CameraSimComponent::update, this));
+}
+
+const visualization_msgs::msg::MarkerArray CameraSimComponent::generateMarker(
+  const std::vector<vision_msgs::msg::Detection2D> & detections)
+{
+  const auto now = get_clock()->now();
+  visualization_msgs::msg::MarkerArray marker;
+  visualization_msgs::msg::Marker frustum_marker;
+  frustum_marker.header.stamp = now;
+  frustum_marker.header.frame_id = camera_optical_frame_;
+  frustum_marker.id = 0;
+  frustum_marker.ns = "frustum";
+  frustum_marker.action = visualization_msgs::msg::Marker::ADD;
+  frustum_marker.type = visualization_msgs::msg::Marker::LINE_LIST;
+  frustum_marker.scale.x = 0.01;
+  frustum_marker.scale.y = 0.01;
+  frustum_marker.scale.z = 0.01;
+  frustum_marker.color = color_names::makeColorMsg(frustum_color_, 1.0);
+  geometry_msgs::msg::Point point_origin;
+  point_origin.x = 0;
+  point_origin.y = 0;
+  point_origin.z = 0;
+  cv::Point3d point_lu = cam_model_.projectPixelTo3dRay(cv::Point2d(0, 0));
+  geometry_msgs::msg::Point point_lu_msg;
+  point_lu_msg.x = point_lu.x;
+  point_lu_msg.y = point_lu.y;
+  point_lu_msg.z = point_lu.z;
+  frustum_marker.points.emplace_back(point_origin);
+  frustum_marker.points.emplace_back(point_lu_msg);
+  cv::Point3d point_ru = cam_model_.projectPixelTo3dRay(cv::Point2d(horizontal_pixels_, 0));
+  geometry_msgs::msg::Point point_ru_msg;
+  point_ru_msg.x = point_ru.x;
+  point_ru_msg.y = point_ru.y;
+  point_ru_msg.z = point_ru.z;
+  frustum_marker.points.emplace_back(point_origin);
+  frustum_marker.points.emplace_back(point_ru_msg);
+  cv::Point3d point_lb = cam_model_.projectPixelTo3dRay(cv::Point2d(0, vertical_pixels_));
+  geometry_msgs::msg::Point point_lb_msg;
+  point_lb_msg.x = point_lb.x;
+  point_lb_msg.y = point_lb.y;
+  point_lb_msg.z = point_lb.z;
+  frustum_marker.points.emplace_back(point_origin);
+  frustum_marker.points.emplace_back(point_lb_msg);
+  cv::Point3d point_rb =
+    cam_model_.projectPixelTo3dRay(cv::Point2d(horizontal_pixels_, vertical_pixels_));
+  geometry_msgs::msg::Point point_rb_msg;
+  point_rb_msg.x = point_rb.x;
+  point_rb_msg.y = point_rb.y;
+  point_rb_msg.z = point_rb.z;
+  frustum_marker.points.emplace_back(point_origin);
+  frustum_marker.points.emplace_back(point_rb_msg);
+  // markers for edge
+  frustum_marker.points.emplace_back(point_lu_msg);
+  frustum_marker.points.emplace_back(point_ru_msg);
+  frustum_marker.points.emplace_back(point_ru_msg);
+  frustum_marker.points.emplace_back(point_rb_msg);
+  frustum_marker.points.emplace_back(point_rb_msg);
+  frustum_marker.points.emplace_back(point_lb_msg);
+  frustum_marker.points.emplace_back(point_lb_msg);
+  frustum_marker.points.emplace_back(point_lu_msg);
+  frustum_marker.frame_locked = true;
+  marker.markers.emplace_back(frustum_marker);
+  /*
+  for (const auto & detection :detections) {
+
+  }*/
+  return marker;
 }
 }  // namespace navi_sim
 
