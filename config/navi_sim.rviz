@@ -10,6 +10,7 @@ Panels:
     Property Tree Widget:
       Expanded:
         - /Status1
+        - /Sensing1
         - /Perception1/ConcatenatedPoints1/Autocompute Value Bounds1
       Splitter Ratio: 0.5
     Tree Height: 1057
@@ -302,53 +303,57 @@ Visualization Manager:
           Use rainbow: true
           Value: false
         - Class: rviz_default_plugins/MarkerArray
-          Enabled: false
+          Enabled: true
           Name: FrontRightCamera
           Namespaces:
-            {}
+            detection: true
+            frustum: true
           Topic:
             Depth: 5
             Durability Policy: Volatile
             History Policy: Keep Last
             Reliability Policy: Reliable
             Value: /sensing/front_right_camera/marker
-          Value: false
+          Value: true
         - Class: rviz_default_plugins/MarkerArray
-          Enabled: false
+          Enabled: true
           Name: FrontLeftCamera
           Namespaces:
-            {}
+            detection: true
+            frustum: true
           Topic:
             Depth: 5
             Durability Policy: Volatile
             History Policy: Keep Last
             Reliability Policy: Reliable
             Value: /sensing/front_left_camera/marker
-          Value: false
+          Value: true
         - Class: rviz_default_plugins/MarkerArray
-          Enabled: false
+          Enabled: true
           Name: RearLeftCamera
           Namespaces:
-            {}
+            detection: true
+            frustum: true
           Topic:
             Depth: 5
             Durability Policy: Volatile
             History Policy: Keep Last
             Reliability Policy: Reliable
             Value: /sensing/rear_left_camera/marker
-          Value: false
+          Value: true
         - Class: rviz_default_plugins/MarkerArray
-          Enabled: false
+          Enabled: true
           Name: RearRightCamera
           Namespaces:
-            {}
+            detection: true
+            frustum: true
           Topic:
             Depth: 5
             Durability Policy: Volatile
             History Policy: Keep Last
             Reliability Policy: Reliable
             Value: /sensing/rear_right_camera/marker
-          Value: false
+          Value: true
       Enabled: true
       Name: Sensing
     - Class: rviz_common/Group
@@ -571,7 +576,7 @@ Visualization Manager:
           Enabled: true
           Name: AvoidPath
           Namespaces:
-            center_line: true
+            {}
           Topic:
             Depth: 5
             Durability Policy: Volatile
@@ -708,7 +713,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz_default_plugins/ThirdPersonFollower
-      Distance: 16.599233627319336
+      Distance: 7.93763542175293
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -723,10 +728,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.6347960829734802
+      Pitch: 0.49979597330093384
       Target Frame: base_link
       Value: ThirdPersonFollower (rviz_default_plugins)
-      Yaw: 3.025397300720215
+      Yaw: 2.625398635864258
     Saved: ~
 Window Geometry:
   Displays:
