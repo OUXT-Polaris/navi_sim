@@ -10,6 +10,7 @@ Panels:
     Property Tree Widget:
       Expanded:
         - /Status1
+        - /Sensing1
         - /Perception1/ConcatenatedPoints1/Autocompute Value Bounds1
       Splitter Ratio: 0.5
     Tree Height: 1057
@@ -606,7 +607,8 @@ Visualization Manager:
           Enabled: true
           Name: ReferenceVelocity
           Namespaces:
-            {}
+            reference_velocity: true
+            reference_velocity_text: true
           Topic:
             Depth: 5
             Durability Policy: Volatile
@@ -630,7 +632,8 @@ Visualization Manager:
           Enabled: true
           Name: HermitePath
           Namespaces:
-            {}
+            center_line: true
+            polygon: true
           Topic:
             Depth: 5
             Durability Policy: Volatile
@@ -642,7 +645,10 @@ Visualization Manager:
           Enabled: true
           Name: PurePursuit
           Namespaces:
-            {}
+            circle: true
+            current: true
+            target: true
+            target_twist: true
           Topic:
             Depth: 5
             Durability Policy: Volatile
@@ -654,7 +660,7 @@ Visualization Manager:
           Enabled: true
           Name: VelocityPlanner
           Namespaces:
-            {}
+            polygon: true
           Topic:
             Depth: 5
             Durability Policy: Volatile
@@ -707,7 +713,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz_default_plugins/ThirdPersonFollower
-      Distance: 13.401351928710938
+      Distance: 7.93763542175293
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -722,10 +728,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.3797968924045563
+      Pitch: 0.49979597330093384
       Target Frame: base_link
       Value: ThirdPersonFollower (rviz_default_plugins)
-      Yaw: 2.940399408340454
+      Yaw: 2.625398635864258
     Saved: ~
 Window Geometry:
   Displays:
