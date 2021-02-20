@@ -109,7 +109,9 @@ def generate_launch_description():
                 getCameraSimComponent("front_left_camera"),
                 getCameraSimComponent("front_right_camera"),
                 getCameraSimComponent("rear_left_camera"),
-                getCameraSimComponent("rear_right_camera")
+                getCameraSimComponent("rear_right_camera"),
+                getCameraSimComponent("left_camera"),
+                getCameraSimComponent("right_camera")
             ],
             output='screen'),
         IncludeLaunchDescription(

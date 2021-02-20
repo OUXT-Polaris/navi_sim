@@ -10,7 +10,6 @@ Panels:
     Property Tree Widget:
       Expanded:
         - /Status1
-        - /Sensing1
         - /Perception1/ConcatenatedPoints1/Autocompute Value Bounds1
       Splitter Ratio: 0.5
     Tree Height: 1057
@@ -110,6 +109,14 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
+        left_camera_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        left_camera_optical_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
         left_engine_link:
           Alpha: 1
           Show Axes: false
@@ -149,6 +156,14 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
+        right_camera_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        right_camera_optical_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
         right_engine_link:
           Alpha: 1
           Show Axes: false
@@ -353,6 +368,30 @@ Visualization Manager:
             History Policy: Keep Last
             Reliability Policy: Reliable
             Value: /sensing/rear_right_camera/marker
+          Value: true
+        - Class: rviz_default_plugins/MarkerArray
+          Enabled: true
+          Name: RightCamera
+          Namespaces:
+            {}
+          Topic:
+            Depth: 5
+            Durability Policy: Volatile
+            History Policy: Keep Last
+            Reliability Policy: Reliable
+            Value: /sensing/right_camera/marker
+          Value: true
+        - Class: rviz_default_plugins/MarkerArray
+          Enabled: true
+          Name: LeftCamera
+          Namespaces:
+            {}
+          Topic:
+            Depth: 5
+            Durability Policy: Volatile
+            History Policy: Keep Last
+            Reliability Policy: Reliable
+            Value: /sensing/left_camera/marker
           Value: true
       Enabled: true
       Name: Sensing
@@ -607,8 +646,7 @@ Visualization Manager:
           Enabled: true
           Name: ReferenceVelocity
           Namespaces:
-            reference_velocity: true
-            reference_velocity_text: true
+            {}
           Topic:
             Depth: 5
             Durability Policy: Volatile
@@ -632,8 +670,7 @@ Visualization Manager:
           Enabled: true
           Name: HermitePath
           Namespaces:
-            center_line: true
-            polygon: true
+            {}
           Topic:
             Depth: 5
             Durability Policy: Volatile
@@ -645,10 +682,7 @@ Visualization Manager:
           Enabled: true
           Name: PurePursuit
           Namespaces:
-            circle: true
-            current: true
-            target: true
-            target_twist: true
+            {}
           Topic:
             Depth: 5
             Durability Policy: Volatile
@@ -660,7 +694,7 @@ Visualization Manager:
           Enabled: true
           Name: VelocityPlanner
           Namespaces:
-            polygon: true
+            {}
           Topic:
             Depth: 5
             Durability Policy: Volatile
