@@ -1,0 +1,7 @@
+right_camera_node:
+  ros__parameters:
+    camera_frame: right_camera_link
+    camera_optical_frame: right_camera_optical_link
+    vertical_fov: 1.41372
+    vertical_pixels: 540
+    horizontal_pixels: 720
