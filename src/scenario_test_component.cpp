@@ -15,6 +15,14 @@
 #include <navi_sim/scenario_test_component.hpp>
 #include <ament_index_cpp/get_package_share_directory.hpp>
 #include <rclcpp_components/register_node_macro.hpp>
+
+#include <boost/assert.hpp>
+#include <boost/assign/list_of.hpp>
+#include <boost/geometry.hpp>
+#include <boost/geometry/algorithms/disjoint.hpp>
+#include <boost/geometry/geometries/linestring.hpp>
+#include <boost/geometry/geometries/point_xy.hpp>
+
 #include <string>
 
 namespace navi_sim
@@ -45,7 +53,7 @@ void ScenarioTestComponent::initialize()
   get_parameter("bbox_width", bbox_width_);
   declare_parameter("bbox_height", 0.0);
   get_parameter("bbox_height", bbox_height_);
-  
+
   declare_parameter("objects_filename", "objects.json");
   std::string objects_filename;
   get_parameter("objects_filename", objects_filename);
@@ -66,6 +74,32 @@ void ScenarioTestComponent::initialize()
     json_string = json_string + line;
   }
   raycaster_ptr_->addPrimitives(nlohmann::json::parse(json_string));
+}
+
+bool ScenarioTestComponent::checkCollision(
+  const std::vector<geometry_msgs::msg::Point> & poly0,
+  const std::vector<geometry_msgs::msg::Point> & poly1)
+{
+  namespace bg = boost::geometry;
+  typedef bg::model::d2::point_xy<double> bg_point;
+  bg::model::polygon<bg_point> poly0_bg;
+  for (const auto & p : poly0) {
+    poly0_bg.outer().push_back(bg_point(p.x, p.y));
+  }
+  bg::model::polygon<bg_point> poly1_bg;
+  for (const auto & p : poly1) {
+    poly1_bg.outer().push_back(bg_point(p.x, p.y));
+  }
+  if (bg::intersects(poly0_bg, poly1_bg)) {
+    return true;
+  }
+  if (bg::intersects(poly1_bg, poly0_bg)) {
+    return true;
+  }
+  if (bg::disjoint(poly0_bg, poly1_bg)) {
+    return false;
+  }
+  return true;
 }
 }  // namespace navi_sim
 

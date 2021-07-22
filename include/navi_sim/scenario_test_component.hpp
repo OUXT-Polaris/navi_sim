@@ -84,6 +84,9 @@ public:
   }
 
 private:
+  bool checkCollision(
+    const std::vector<geometry_msgs::msg::Point> & poly0,
+    const std::vector<geometry_msgs::msg::Point> & poly1);
   void initialize();
   std::unique_ptr<navi_sim::Raycaster> raycaster_ptr_;
   double bbox_center_x_;
