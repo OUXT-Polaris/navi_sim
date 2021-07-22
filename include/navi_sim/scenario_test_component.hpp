@@ -86,6 +86,12 @@ public:
 private:
   void initialize();
   std::unique_ptr<navi_sim::Raycaster> raycaster_ptr_;
+  double bbox_center_x_;
+  double bbox_center_y_;
+  double bbox_center_z_;
+  double bbox_length_;
+  double bbox_width_;
+  double bbox_height_;
 };
 }  // namespace navi_sim
 

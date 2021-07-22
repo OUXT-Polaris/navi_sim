@@ -34,6 +34,19 @@ ScenarioTestComponent::ScenarioTestComponent(std::string name, const rclcpp::Nod
 
 void ScenarioTestComponent::initialize()
 {
+  declare_parameter("bbox_center_x", 0.0);
+  get_parameter("bbox_center_x", bbox_center_x_);
+  declare_parameter("bbox_center_y", 0.0);
+  get_parameter("bbox_center_y", bbox_center_y_);
+  declare_parameter("bbox_center_z", 0.0);
+  get_parameter("bbox_center_z", bbox_center_z_);
+  declare_parameter("bbox_length", 0.0);
+  get_parameter("bbox_length", bbox_length_);
+  declare_parameter("bbox_width", 0.0);
+  get_parameter("bbox_width", bbox_width_);
+  declare_parameter("bbox_height", 0.0);
+  get_parameter("bbox_height", bbox_height_);
+  
   declare_parameter("objects_filename", "objects.json");
   std::string objects_filename;
   get_parameter("objects_filename", objects_filename);

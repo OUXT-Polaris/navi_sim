@@ -40,7 +40,6 @@ std::vector<geometry_msgs::msg::Point> Primitive::to2Dpolygon() const
 
   typedef bg::model::d2::point_xy<double> point;
   typedef bg::model::polygon<point> polygon;
-  typedef bg::model::box<point> box;
 
   std::vector<geometry_msgs::msg::Point> ret;
   polygon poly;
