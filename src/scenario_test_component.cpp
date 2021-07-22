@@ -78,7 +78,9 @@ void ScenarioTestComponent::initialize()
 
 bool ScenarioTestComponent::checkCollision()
 {
-
+  for(const auto & name : raycaster_ptr_->getPrimitiveNames()) {
+    raycaster_ptr_->get2DPolygon(name);
+  }
 }
 
 bool ScenarioTestComponent::checkCollision(
