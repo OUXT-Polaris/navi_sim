@@ -34,7 +34,7 @@ Primitive::Primitive(
   geometry_msgs::msg::Pose pose)
 : primitive_type(primitive_type), object_type(object_type), pose(pose) {}
 
-std::vector<geometry_msgs::msg::Point> Primitive::to2Dpolygon() const
+std::vector<geometry_msgs::msg::Point> Primitive::get2DPolygon() const
 {
   namespace bg = boost::geometry;
 

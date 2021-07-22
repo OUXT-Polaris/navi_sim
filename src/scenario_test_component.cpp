@@ -76,6 +76,11 @@ void ScenarioTestComponent::initialize()
   raycaster_ptr_->addPrimitives(nlohmann::json::parse(json_string));
 }
 
+bool ScenarioTestComponent::checkCollision()
+{
+
+}
+
 bool ScenarioTestComponent::checkCollision(
   const std::vector<geometry_msgs::msg::Point> & poly0,
   const std::vector<geometry_msgs::msg::Point> & poly1)

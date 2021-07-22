@@ -84,6 +84,7 @@ public:
   }
 
 private:
+  bool checkCollision();
   bool checkCollision(
     const std::vector<geometry_msgs::msg::Point> & poly0,
     const std::vector<geometry_msgs::msg::Point> & poly1);
