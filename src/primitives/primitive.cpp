@@ -14,6 +14,12 @@
 
 #include <navi_sim/primitives/primitive.hpp>
 
+#include <boost/geometry.hpp>
+#include <boost/geometry/geometries/point_xy.hpp>
+#include <boost/geometry/geometries/polygon.hpp>
+#include <boost/geometry/geometries/box.hpp>
+#include <boost/assign/list_of.hpp>
+
 #include <quaternion_operation/quaternion_operation.h>
 
 #include <algorithm>
@@ -27,6 +33,32 @@ Primitive::Primitive(
   std::string primitive_type, std::string object_type,
   geometry_msgs::msg::Pose pose)
 : primitive_type(primitive_type), object_type(object_type), pose(pose) {}
+
+std::vector<geometry_msgs::msg::Point> Primitive::to2Dpolygon() const
+{
+  namespace bg = boost::geometry;
+
+  typedef bg::model::d2::point_xy<double> point;
+  typedef bg::model::polygon<point> polygon;
+  typedef bg::model::box<point> box;
+
+  std::vector<geometry_msgs::msg::Point> ret;
+  polygon poly;
+  std::vector<point> points;
+  for (auto & v : vertices_) {
+    points.emplace_back(point(v.x, v.y));
+  }
+  polygon hull;
+  bg::convex_hull(poly, hull);
+  for (const auto & p : hull.outer()) {
+    geometry_msgs::msg::Point point;
+    point.x = p.x();
+    point.y = p.y();
+    point.z = 0;
+    ret.emplace_back(point);
+  }
+  return ret;
+}
 
 Vertex Primitive::transform(Vertex v) const
 {

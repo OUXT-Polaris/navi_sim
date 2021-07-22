@@ -55,6 +55,7 @@ public:
   std::vector<Triangle> getTriangles() const;
   virtual nlohmann::json toJson() const {return nlohmann::json{};}
   nlohmann::json toBaseJson() const;
+  std::vector<geometry_msgs::msg::Point> to2Dpolygon() const;
 
 protected:
   std::vector<Vertex> transform(const geometry_msgs::msg::Pose & sensor_pose) const;
