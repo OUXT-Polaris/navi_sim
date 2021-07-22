@@ -13,9 +13,8 @@
 // limitations under the License.
 
 #include <navi_sim/scenario_test_component.hpp>
-
 #include <ament_index_cpp/get_package_share_directory.hpp>
-
+#include <rclcpp_components/register_node_macro.hpp>
 #include <string>
 
 namespace navi_sim
@@ -69,3 +68,5 @@ void ScenarioTestComponent::initialize()
   raycaster_ptr_->addPrimitives(nlohmann::json::parse(json_string));
 }
 }  // namespace navi_sim
+
+RCLCPP_COMPONENTS_REGISTER_NODE(navi_sim::ScenarioTestComponent)
