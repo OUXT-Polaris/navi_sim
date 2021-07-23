@@ -61,7 +61,6 @@ void ScenarioTestComponent::initialize()
   get_parameter("scenario_filename", scenario_filename_);
   std::string scenario_path = ament_index_cpp::get_package_share_directory("navi_sim") +
     "/scenarios/" + scenario_filename_;
-  interpreter_ = std::make_unique<navi_sim::Interpreter>(scenario_path);
   declare_parameter("objects_filename", "objects.json");
   std::string objects_filename;
   get_parameter("objects_filename", objects_filename);
@@ -86,6 +85,7 @@ void ScenarioTestComponent::initialize()
   collision_marker_pub_ = this->create_publisher<visualization_msgs::msg::MarkerArray>(
     "collision",
     1);
+  interpreter_ = std::make_unique<navi_sim::Interpreter>(scenario_path);
   goal_pub_ = this->create_publisher<geometry_msgs::msg::PoseStamped>("/move_base_simple/goal", 1);
   interpreter_->setValueToBlackBoard<rclcpp::Publisher<geometry_msgs::msg::PoseStamped>::SharedPtr>(
     "goal_publisher", goal_pub_);
@@ -157,6 +157,8 @@ const visualization_msgs::msg::MarkerArray ScenarioTestComponent::getCollisionMa
 
 void ScenarioTestComponent::update()
 {
+  interpreter_->setValueToBlackBoard("ego_pose", getEgoPose());
+  interpreter_->evaluate();
   const auto collision = checkCollision();
   collision_marker_pub_->publish(getCollisionMarker(collision));
 }
@@ -175,7 +177,7 @@ bool ScenarioTestComponent::checkCollision()
   return false;
 }
 
-const std::vector<geometry_msgs::msg::Point> ScenarioTestComponent::getBboxPolygon()
+const boost::optional<geometry_msgs::msg::Pose> ScenarioTestComponent::getEgoPose()
 {
   geometry_msgs::msg::TransformStamped transform_stamped;
   try {
@@ -186,6 +188,20 @@ const std::vector<geometry_msgs::msg::Point> ScenarioTestComponent::getBboxPolyg
     pose.position.y = transform_stamped.transform.translation.y;
     pose.position.z = transform_stamped.transform.translation.z;
     pose.orientation = transform_stamped.transform.rotation;
+    return pose;
+  } catch (tf2::ExtrapolationException & ex) {
+    RCLCPP_ERROR(get_logger(), ex.what());
+    return boost::none;
+  }
+  return boost::none;
+}
+
+const std::vector<geometry_msgs::msg::Point> ScenarioTestComponent::getBboxPolygon()
+{
+  geometry_msgs::msg::TransformStamped transform_stamped;
+  try {
+    transform_stamped = buffer_.lookupTransform(
+      map_frame_, "base_link", rclcpp::Time(0), tf2::durationFromSec(1.0));
   } catch (tf2::ExtrapolationException & ex) {
     RCLCPP_ERROR(get_logger(), ex.what());
     return {};

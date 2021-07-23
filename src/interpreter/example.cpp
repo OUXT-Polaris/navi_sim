@@ -14,6 +14,7 @@
 
 #include <navi_sim/interpreter/interpreter.hpp>
 #include <ament_index_cpp/get_package_share_directory.hpp>
+#include <boost/optional.hpp>
 #include <yaml-cpp/yaml.h>
 #include <string>
 #include <iostream>
@@ -27,7 +28,9 @@ int main()
   ego_pose.position.x = 10;
   ego_pose.position.y = 5.0;
   ego_pose.position.z = 0.0;
-  interpreter.setValueToBlackBoard("ego_pose", ego_pose);
+  boost::optional<geometry_msgs::msg::Pose> pose_val;
+  pose_val = ego_pose;
+  interpreter.setValueToBlackBoard("ego_pose", pose_val);
   YAML::Node debug_yaml;
   interpreter.getDebugString(debug_yaml);
   std::cout << debug_yaml << std::endl;

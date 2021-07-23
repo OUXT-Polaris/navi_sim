@@ -64,6 +64,8 @@ extern "C" {
 #include <visualization_msgs/msg/marker_array.hpp>
 #include <navi_sim/interpreter/interpreter.hpp>
 
+#include <boost/optional.hpp>
+
 #include <memory>
 #include <string>
 #include <utility>
@@ -112,6 +114,7 @@ private:
   const visualization_msgs::msg::MarkerArray getCollisionMarker(bool collision);
   std::unique_ptr<navi_sim::Interpreter> interpreter_;
   std::string scenario_filename_;
+  const boost::optional<geometry_msgs::msg::Pose> getEgoPose();
 };
 }  // namespace navi_sim
 
