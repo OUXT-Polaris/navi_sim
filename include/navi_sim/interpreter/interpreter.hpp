@@ -16,6 +16,7 @@
 #define NAVI_SIM__INTERPRETER__INTERPRETER_HPP_
 
 #include <navi_sim/interpreter/reach_position_event.hpp>
+#include <navi_sim/interpreter/send_goal_action.hpp>
 
 #include <yaml-cpp/yaml.h>
 #include <string>
@@ -43,10 +44,16 @@ private:
   BlackBoard black_board_;
   const YAML::Node scenario_;
   std::vector<std::unique_ptr<events::EventBase>> events_;
+  std::vector<std::unique_ptr<actions::ActionBase>> actions_;
   template<typename T>
   void addEvent(const std::string & name, const YAML::Node & yaml)
   {
     events_.emplace_back(std::make_unique<T>(name, yaml));
+  }
+  template<typename T>
+  void addAction(const std::string & name, const YAML::Node & yaml)
+  {
+    actions_.emplace_back(std::make_unique<T>(name, yaml));
   }
 };
 }  // namespace navi_sim

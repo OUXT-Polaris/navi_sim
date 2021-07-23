@@ -39,6 +39,16 @@ Interpreter::Interpreter(const std::string & path)
         break;
     }
   }
+  const auto action_tree = scenario_["scenario"]["actions"];
+  for (YAML::const_iterator it = action_tree.begin(); it != action_tree.end(); it++) {
+    const std::string name = it->first.as<std::string>();
+    const auto action = action_tree[name];
+    switch (actions::toActionTypeEnum(action["type"].as<std::string>())) {
+      case actions::ActionType::SEND_GOAL:
+        addAction<actions::SendGoalAction>(name, action);
+        break;
+    }
+  }
   black_board_.set<rclcpp::Publisher<geometry_msgs::msg::PoseStamped>::SharedPtr>(
     "goal_publisher",
     nullptr);
