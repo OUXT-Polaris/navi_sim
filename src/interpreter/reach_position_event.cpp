@@ -17,6 +17,7 @@
 
 #include <string>
 #include <iostream>
+#include <cmath>
 
 namespace navi_sim
 {
@@ -34,8 +35,17 @@ void ReachPositionEvent::getDebugString(YAML::Node & yaml)
   EventBase::getDebugString(yaml);
 }
 
-EventState ReachPositionEvent::onUpdate()
+EventState ReachPositionEvent::onUpdate(const BlackBoard & black_board)
 {
+  const auto ego_pose = black_board.get<geometry_msgs::msg::Pose>("ego_pose");
+  double distance =
+    std::sqrt(
+    std::pow(ego_pose.position.x - goal_.pose.position.x, 2) +
+    std::pow(ego_pose.position.y - goal_.pose.position.y, 2) +
+    std::pow(ego_pose.position.z - goal_.pose.position.z, 2) );
+  if (distance <= radius_) {
+    return EventState::FINISHED;
+  }
   return EventState::ACTIVE;
 }
 }  // namespace events

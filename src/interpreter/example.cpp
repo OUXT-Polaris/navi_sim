@@ -23,7 +23,15 @@ int main()
   std::string path = ament_index_cpp::get_package_share_directory("navi_sim") +
     "/scenarios/go_straight.yaml";
   navi_sim::Interpreter interpreter(path);
+  geometry_msgs::msg::Pose ego_pose;
+  ego_pose.position.x = 10;
+  ego_pose.position.y = 5.0;
+  ego_pose.position.z = 0.0;
+  interpreter.setValueToBlackBoard("ego_pose", ego_pose);
   YAML::Node debug_yaml;
+  interpreter.getDebugString(debug_yaml);
+  std::cout << debug_yaml << std::endl;
+  interpreter.evaluate();
   interpreter.getDebugString(debug_yaml);
   std::cout << debug_yaml << std::endl;
   return 0;

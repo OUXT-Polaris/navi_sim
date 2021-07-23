@@ -88,16 +88,30 @@ void EventBase::getDebugString(YAML::Node & yaml)
   yaml["events"][name]["state"] = toEventStateString(state_);
 }
 
-void EventBase::updateState()
+void EventBase::updateState(const BlackBoard & black_board)
 {
+  const auto activated_events = black_board.get<std::vector<std::string>>("activated_events");
   switch (state_) {
     case EventState::ACTIVE:
       {
-        const auto state = onUpdate();
+        const auto state = onUpdate(black_board);
         state_ = state;
         break;
       }
-    default:
+    case EventState::INACTIVE:
+      {
+        if (trigger == "always") {
+          state_ = EventState::ACTIVE;
+          updateState(black_board);
+        }
+        if (std::find(
+            activated_events.begin(),
+            activated_events.end(), trigger) != activated_events.end())
+        {
+        }
+        break;
+      }
+    case EventState::FINISHED:
       {
         break;
       }

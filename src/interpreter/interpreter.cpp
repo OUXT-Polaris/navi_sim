@@ -36,6 +36,13 @@ Interpreter::Interpreter(const std::string & path)
   }
 }
 
+void Interpreter::evaluate()
+{
+  for (const auto & event : events_) {
+    event->updateState(black_board_);
+  }
+}
+
 void Interpreter::getDebugString(YAML::Node & yaml)
 {
   for (const auto & event : events_) {

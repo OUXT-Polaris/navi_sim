@@ -32,8 +32,15 @@ public:
   explicit Interpreter(const std::string & path);
   size_t getEventIndex(const std::string & name) const;
   void getDebugString(YAML::Node & yaml);
+  template<typename T>
+  void setValueToBlackBoard(const std::string & key, const T & value)
+  {
+    black_board_.set(key, value);
+  }
+  void evaluate();
 
 private:
+  BlackBoard black_board_;
   const YAML::Node scenario_;
   std::vector<std::unique_ptr<events::EventBase>> events_;
   template<typename T>

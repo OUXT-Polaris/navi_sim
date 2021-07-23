@@ -30,7 +30,7 @@ class ReachPositionEvent : public EventBase
 public:
   explicit ReachPositionEvent(const std::string & name, const YAML::Node & yaml);
   void getDebugString(YAML::Node & yaml) override;
-  EventState onUpdate();
+  EventState onUpdate(const BlackBoard & black_board) override;
 
 private:
   geometry_msgs::msg::PoseStamped goal_;

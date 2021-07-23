@@ -15,6 +15,8 @@
 #ifndef NAVI_SIM__INTERPRETER__EVENT_BASE_HPP_
 #define NAVI_SIM__INTERPRETER__EVENT_BASE_HPP_
 
+#include <navi_sim/interpreter/black_board.hpp>
+
 #include <geometry_msgs/msg/pose.hpp>
 #include <geometry_msgs/msg/twist.hpp>
 #include <yaml-cpp/yaml.h>
@@ -50,15 +52,15 @@ public:
   const std::string trigger;
   const std::string next_action;
   const EventType type;
-  virtual EventState onUpdate() = 0;
+  void updateState(const BlackBoard & black_board);
   void activate();
   EventState getState() const;
   virtual void getDebugString(YAML::Node & yaml);
 
 private:
+  virtual EventState onUpdate(const BlackBoard & black_board) = 0;
   std::function<EventState(void)> func_;
   EventState state_;
-  void updateState();
 };
 }  // namespace events
 }  // namespace navi_sim
