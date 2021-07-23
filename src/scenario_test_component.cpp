@@ -26,6 +26,8 @@
 #include <quaternion_operation/quaternion_operation.h>
 
 #include <string>
+#include <vector>
+#include <memory>
 
 namespace navi_sim
 {
@@ -77,7 +79,9 @@ void ScenarioTestComponent::initialize()
   }
   raycaster_ptr_ = std::make_unique<Raycaster>();
   raycaster_ptr_->addPrimitives(nlohmann::json::parse(json_string));
-  collision_marker_pub_ = this->create_publisher<visualization_msgs::msg::MarkerArray>("collision", 1);
+  collision_marker_pub_ = this->create_publisher<visualization_msgs::msg::MarkerArray>(
+    "collision",
+    1);
   using namespace std::chrono_literals;
   timer_ = create_wall_timer(50ms, std::bind(&ScenarioTestComponent::update, this));
 }
@@ -87,17 +91,16 @@ const visualization_msgs::msg::MarkerArray ScenarioTestComponent::getCollisionMa
   const auto stamp = get_clock()->now();
   visualization_msgs::msg::MarkerArray markers;
   const auto bbox_polygon = getBboxPolygon();
-  if(bbox_polygon.empty()) {
+  if (bbox_polygon.empty()) {
     return markers;
   }
   std_msgs::msg::ColorRGBA color_ego_collision_marker;
-  if(collision) {
+  if (collision) {
     color_ego_collision_marker.r = 1.0;
     color_ego_collision_marker.g = 0.0;
     color_ego_collision_marker.b = 0.0;
     color_ego_collision_marker.a = 0.9999;
-  }
-  else {
+  } else {
     color_ego_collision_marker.r = 0.0;
     color_ego_collision_marker.g = 1.0;
     color_ego_collision_marker.b = 0.0;
@@ -118,15 +121,14 @@ const visualization_msgs::msg::MarkerArray ScenarioTestComponent::getCollisionMa
   ego_collision_marker.type = ego_collision_marker.LINE_STRIP;
   markers.markers.emplace_back(ego_collision_marker);
   size_t index = 0;
-  for (const auto & name : raycaster_ptr_->getPrimitiveNames())
-  {
+  for (const auto & name : raycaster_ptr_->getPrimitiveNames()) {
     visualization_msgs::msg::Marker marker;
     marker.header.stamp = stamp;
     marker.header.frame_id = map_frame_;
     marker.ns = "obstacle";
     marker.id = index;
     marker.points = raycaster_ptr_->get2DPolygon(name);
-    if(marker.points.empty()) {
+    if (marker.points.empty()) {
       continue;
     }
     marker.points.emplace_back(marker.points[0]);
@@ -154,7 +156,7 @@ void ScenarioTestComponent::update()
 bool ScenarioTestComponent::checkCollision()
 {
   const auto bbox_polygon = getBboxPolygon();
-  if(bbox_polygon.empty()) {
+  if (bbox_polygon.empty()) {
     return false;
   }
   for (const auto & name : raycaster_ptr_->getPrimitiveNames()) {
@@ -234,7 +236,7 @@ bool ScenarioTestComponent::checkCollision(
   const std::vector<geometry_msgs::msg::Point> & poly0,
   const std::vector<geometry_msgs::msg::Point> & poly1)
 {
-  if(poly0.empty() || poly1.empty()) {
+  if (poly0.empty() || poly1.empty()) {
     return false;
   }
   namespace bg = boost::geometry;

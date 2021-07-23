@@ -41,16 +41,16 @@ scenario:
       reach_position:
         target: *first_goal
         radius: 0.5
-        activate: always
-        trigger: goto_second_goal
+        next_action: goto_second_goal
+        trigger: always
     reach_second_goal:
       reach_position:
         target: *second_goal
         radius: 0.5
-        activate: success
+        next_action: success
         trigger: goto_first_goal
     timeout:
-      compare:
+      check_time:
         value: *timeout
         greater: true
-        activate: fail
+        next_action: fail

@@ -83,25 +83,24 @@ ament_target_dependencies(camera_sim_node
 target_link_libraries(camera_sim_node camera_sim_component)
 
 ament_auto_add_library(scenario_test_component SHARED
+  src/interpreter/interpreter.cpp
+  src/interpreter/reach_position_event.cpp
   src/scenario_test_component.cpp
   src/primitives/box.cpp
   src/primitives/primitive.cpp
   src/raycaster.cpp
 )
 target_compile_definitions(scenario_test_component PRIVATE "NAVI_SIM_SCENARIO_TEST_COMPONENT_BUILDING_DLL")
-target_link_libraries(scenario_test_component embree3)
+target_link_libraries(scenario_test_component embree3 yaml-cpp)
 rclcpp_components_register_nodes(scenario_test_component
   "navi_sim::ScenarioTestComponent")
-ament_target_dependencies(scenario_test_component
-  vision_msgs
-)
 ament_auto_add_executable(scenario_test_node
   src/scenario_test_node.cpp
 )
-ament_target_dependencies(scenario_test_node
-  vision_msgs
+target_link_libraries(scenario_test_node
+  yaml-cpp
+  scenario_test_component
 )
-target_link_libraries(scenario_test_node scenario_test_component)
 
 install(TARGETS
   navi_sim_node
@@ -137,6 +136,8 @@ if(BUILD_TESTING)
   find_package(ament_cmake_gtest REQUIRED)
   ament_add_gtest(test_model test/src/test_model.cpp)
   target_link_libraries(test_model lidar_sim_component)
+  ament_add_gtest(test_interpreter test/src/test_interpreter.cpp)
+  target_link_libraries(test_interpreter scenario_test_component)
 endif()
 
 ament_auto_package()
