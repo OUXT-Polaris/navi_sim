@@ -44,17 +44,11 @@ class EventBase
 {
 public:
   explicit EventBase(const std::string & name, const YAML::Node & yaml);
-  explicit EventBase(
-    const std::string & name,
-    const std::string & trigger,
-    const std::string & next_action,
-    const EventType & type);
   const std::string name;
   const std::string trigger;
   const std::string next_action;
   const EventType type;
-  void registerFunction(const std::function<EventState(void)> & func);
-  void update();
+  virtual EventState onUpdate() = 0;
   void activate();
   EventState getState() const;
   virtual void getDebugString(YAML::Node & yaml);
@@ -62,6 +56,7 @@ public:
 private:
   std::function<EventState(void)> func_;
   EventState state_;
+  void updateState();
 };
 }  // namespace events
 }  // namespace navi_sim

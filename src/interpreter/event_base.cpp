@@ -74,11 +74,6 @@ EventBase::EventBase(const std::string & name, const YAML::Node & yaml)
   state_ = EventState::INACTIVE;
 }
 
-void EventBase::registerFunction(const std::function<EventState(void)> & func)
-{
-  func_ = func;
-}
-
 void EventBase::activate()
 {
   state_ = EventState::ACTIVE;
@@ -95,15 +90,12 @@ void EventBase::getDebugString(YAML::Node & yaml)
   yaml["events"][name]["state"] = toEventStateString(state_);
 }
 
-void EventBase::update()
+void EventBase::updateState()
 {
-  if (!func_) {
-    throw std::runtime_error("function does not registered.");
-  }
   switch (state_) {
     case EventState::ACTIVE:
       {
-        const auto state = func_();
+        const auto state = onUpdate();
         state_ = state;
         break;
       }

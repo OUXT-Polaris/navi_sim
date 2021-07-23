@@ -36,11 +36,10 @@ public:
 private:
   const YAML::Node scenario_;
   std::vector<std::unique_ptr<events::EventBase>> events_;
-  void addEvent(const std::string & name, const YAML::Node & yaml);
-  template<typename T, typename ... Ts>
-  void addEvent(Ts && ... xs)
+  template<typename T>
+  void addEvent(const std::string & name, const YAML::Node & yaml)
   {
-    events_.emplace_back(std::make_unique<T>(std::forward<Ts>(xs)...));
+    events_.emplace_back(std::make_unique<T>(name, yaml));
   }
 };
 }  // namespace navi_sim

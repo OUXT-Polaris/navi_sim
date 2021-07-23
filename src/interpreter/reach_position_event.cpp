@@ -13,8 +13,10 @@
 // limitations under the License.
 
 #include <navi_sim/interpreter/reach_position_event.hpp>
+#include <navi_sim/interpreter/data_type.hpp>
 
 #include <string>
+#include <iostream>
 
 namespace navi_sim
 {
@@ -23,11 +25,18 @@ namespace events
 ReachPositionEvent::ReachPositionEvent(const std::string & name, const YAML::Node & yaml)
 : EventBase(name, yaml)
 {
+  parse(yaml["target"], goal_);
+  radius_ = yaml["radius"].as<double>();
 }
 
 void ReachPositionEvent::getDebugString(YAML::Node & yaml)
 {
   EventBase::getDebugString(yaml);
+}
+
+EventState ReachPositionEvent::onUpdate()
+{
+  return EventState::ACTIVE;
 }
 }  // namespace events
 }  // namespace navi_sim
