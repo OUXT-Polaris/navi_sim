@@ -83,6 +83,7 @@ ament_target_dependencies(camera_sim_node
 target_link_libraries(camera_sim_node camera_sim_component)
 
 ament_auto_add_library(scenario_test_component SHARED
+  src/interpreter/send_goal_action.cpp
   src/interpreter/action_base.cpp
   src/interpreter/black_board.cpp
   src/interpreter/data_types.cpp
@@ -107,6 +108,7 @@ target_link_libraries(scenario_test_node
 )
 
 ament_auto_add_executable(example
+  src/interpreter/send_goal_action.cpp
   src/interpreter/action_base.cpp
   src/interpreter/black_board.cpp
   src/interpreter/data_types.cpp

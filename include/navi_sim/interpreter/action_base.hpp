@@ -36,12 +36,18 @@ enum class ActionType
 
 ActionType toActionTypeEnum(const std::string string_val);
 std::string toActionTypeString(const ActionType & enum_val);
+std::string toActionSateString(const ActionState & enum_val);
 
 class ActionBase
 {
 public:
   explicit ActionBase(const std::string & name, const YAML::Node & yaml);
+  const std::string name;
   const ActionType type;
+  virtual void getDebugString(YAML::Node & yaml);
+  ActionState getState() const;
+private:
+  ActionState state_;
 };
 }  // namespace actions
 }  // namespace navi_sim

@@ -42,6 +42,7 @@ Interpreter::Interpreter(const std::string & path)
   black_board_.set<rclcpp::Publisher<geometry_msgs::msg::PoseStamped>::SharedPtr>(
     "goal_publisher",
     nullptr);
+  black_board_.set<rclcpp::Clock::SharedPtr>("clock", nullptr);
   black_board_.set<std::vector<std::string>>("activated_events", {});
 }
 

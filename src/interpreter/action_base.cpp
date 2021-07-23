@@ -39,9 +39,37 @@ std::string toActionTypeString(const ActionType & enum_val)
   return ret;
 }
 
-ActionBase::ActionBase(const std::string & name, const YAML::Node & yaml)
-: type(toActionTypeEnum(yaml["type"].as<std::string>()))
+std::string toActionSateString(const ActionState & enum_val)
 {
+  std::string ret;
+  switch (enum_val) {
+    case ActionState::INACTIVE:
+      ret = "inactive";
+      break;
+    case ActionState::ACTIVE:
+      ret = "active";
+      break;
+    case ActionState::FINISHED:
+      ret = "finished";
+      break;
+  }
+  return ret;
+}
+
+ActionBase::ActionBase(const std::string & name, const YAML::Node & yaml)
+: name(name), type(toActionTypeEnum(yaml["type"].as<std::string>()))
+{
+}
+
+ActionState ActionBase::getState() const
+{
+  return state_;
+}
+
+void ActionBase::getDebugString(YAML::Node & yaml)
+{
+  yaml["events"][name]["type"] = toActionTypeString(type);
+  yaml["events"][name]["state"] = toActionSateString(state_);
 }
 }  // namespace actions
 }  // namespace navi_sim

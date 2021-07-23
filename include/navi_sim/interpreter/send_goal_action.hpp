@@ -15,4 +15,21 @@
 #ifndef NAVI_SIM__INTERPRETER__SEND_GOAL_ACTION_HPP_
 #define NAVI_SIM__INTERPRETER__SEND_GOAL_ACTION_HPP_
 
+#include <navi_sim/interpreter/action_base.hpp>
+#include <geometry_msgs/msg/pose_stamped.hpp>
+
+namespace navi_sim
+{
+namespace actions
+{
+class SendGoalAction : public ActionBase
+{
+public:
+  explicit SendGoalAction(const std::string & name, const YAML::Node & yaml);
+private:
+  geometry_msgs::msg::PoseStamped goal_;
+};
+}  // namespace actions
+}  // namespace navi_sim
+
 #endif  // NAVI_SIM__INTERPRETER__SEND_GOAL_ACTION_HPP_
