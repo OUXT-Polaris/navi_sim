@@ -103,6 +103,7 @@ private:
   std::vector<geometry_msgs::msg::Point> transformPoints(
     const geometry_msgs::msg::TransformStamped & pose,
     const std::vector<geometry_msgs::msg::Point> & points);
+  rclcpp::Publisher<visualization_msgs::msg::MarkerArray>::SharedPtr collision_marker_;
 };
 }  // namespace navi_sim
 

@@ -107,17 +107,22 @@ install(TARGETS
   navi_sim_node
   lidar_sim_node
   camera_sim_node
+  scenario_test_node
   DESTINATION lib/navi_sim
 )
 install(TARGETS
   navi_sim_component
   lidar_sim_component
   camera_sim_component
+  scenario_test_component
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin)
 ament_export_libraries(navi_sim_component)
 ament_export_libraries(lidar_sim_component)
+ament_export_libraries(camera_sim_component)
+ament_export_libraries(scenario_test_component)
+
 
 #############
 ## Install ##

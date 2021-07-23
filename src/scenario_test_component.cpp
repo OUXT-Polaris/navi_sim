@@ -30,7 +30,7 @@
 namespace navi_sim
 {
 ScenarioTestComponent::ScenarioTestComponent(const rclcpp::NodeOptions & options)
-: Node("camera_sim", options), buffer_(get_clock()), listener_(buffer_)
+: Node("scenario_test", options), buffer_(get_clock()), listener_(buffer_)
 {
   initialize();
 }
@@ -54,7 +54,7 @@ void ScenarioTestComponent::initialize()
   declare_parameter("bbox_width", 0.0);
   get_parameter("bbox_width", bbox_width_);
   declare_parameter("map_frame", "map");
-  declare_parameter("map_frame", map_frame_);
+  get_parameter("map_frame", map_frame_);
 
   declare_parameter("objects_filename", "objects.json");
   std::string objects_filename;
@@ -75,12 +75,17 @@ void ScenarioTestComponent::initialize()
   while (std::getline(fin, line)) {
     json_string = json_string + line;
   }
+  raycaster_ptr_ = std::make_unique<Raycaster>();
   raycaster_ptr_->addPrimitives(nlohmann::json::parse(json_string));
+  // this->create_publisher<visualization_msgs::msg::MarkerArray>("collision", 1);
 }
 
 bool ScenarioTestComponent::checkCollision()
 {
   const auto bbox_polygon = getBboxPolygon();
+  if(bbox_polygon.empty()) {
+    return false;
+  }
   for (const auto & name : raycaster_ptr_->getPrimitiveNames()) {
     if (checkCollision(bbox_polygon, raycaster_ptr_->get2DPolygon(name))) {
       return true;
