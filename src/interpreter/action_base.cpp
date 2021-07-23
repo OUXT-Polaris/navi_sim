@@ -62,6 +62,34 @@ ActionBase::ActionBase(const std::string & name, const YAML::Node & yaml)
   state_ = ActionState::INACTIVE;
 }
 
+void ActionBase::update(const BlackBoard & black_board)
+{
+  const auto triggerd_actions = black_board.get<std::vector<std::string>>("triggerd_actions");
+  switch (state_) {
+    case ActionState::ACTIVE:
+      {
+        const auto state = onUpdate(black_board);
+        state_ = state;
+        break;
+      }
+    case ActionState::INACTIVE:
+      {
+        if (std::find(
+            triggerd_actions.begin(),
+            triggerd_actions.end(), name) != triggerd_actions.end())
+        {
+          state_ = ActionState::ACTIVE;
+          update(black_board);
+        }
+        break;
+      }
+    case ActionState::FINISHED:
+      {
+        break;
+      }
+  }
+}
+
 ActionState ActionBase::getState() const
 {
   return state_;

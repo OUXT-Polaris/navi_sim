@@ -46,4 +46,4 @@ scenario:
       target: *second_goal
       radius: 0.5
       next_action: success
-      trigger: goto_first_goal
+      trigger: always

@@ -54,11 +54,13 @@ Interpreter::Interpreter(const std::string & path)
     nullptr);
   black_board_.set<rclcpp::Clock::SharedPtr>("clock", nullptr);
   black_board_.set<std::vector<std::string>>("activated_events", {});
+  black_board_.set<std::vector<std::string>>("triggerd_actions", {});
 }
 
 void Interpreter::evaluate()
 {
   std::vector<std::string> activated_events;
+  std::vector<std::string> triggerd_actions;
   for (const auto & event : events_) {
     if (event->getState() != events::EventState::INACTIVE) {
       activated_events.emplace_back(event->name);
@@ -67,7 +69,11 @@ void Interpreter::evaluate()
   black_board_.set("activated_events", activated_events);
   for (const auto & event : events_) {
     event->updateState(black_board_);
+    if(event->getState() == events::EventState::FINISHED) {
+      triggerd_actions.emplace_back(event->next_action);
+    }
   }
+  black_board_.set("triggerd_actions", triggerd_actions);
 }
 
 void Interpreter::getDebugString(YAML::Node & yaml)
