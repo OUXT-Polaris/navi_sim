@@ -117,6 +117,31 @@ const visualization_msgs::msg::MarkerArray ScenarioTestComponent::getCollisionMa
   ego_collision_marker.color = color_ego_collision_marker;
   ego_collision_marker.type = ego_collision_marker.LINE_STRIP;
   markers.markers.emplace_back(ego_collision_marker);
+  size_t index = 0;
+  for (const auto & name : raycaster_ptr_->getPrimitiveNames())
+  {
+    visualization_msgs::msg::Marker marker;
+    marker.header.stamp = stamp;
+    marker.header.frame_id = map_frame_;
+    marker.ns = "obstacle";
+    marker.id = index;
+    marker.points = raycaster_ptr_->get2DPolygon(name);
+    if(marker.points.empty()) {
+      continue;
+    }
+    marker.points.emplace_back(marker.points[0]);
+    marker.scale.x = 0.03;
+    marker.scale.y = 0.03;
+    marker.scale.z = 0.03;
+    marker.action = marker.ADD;
+    marker.color.r = 1.0;
+    marker.color.g = 1.0;
+    marker.color.b = 1.0;
+    marker.color.a = 0.9999;
+    marker.type = marker.LINE_STRIP;
+    markers.markers.emplace_back(marker);
+    index = index + 1;
+  }
   return markers;
 }
 
@@ -209,6 +234,9 @@ bool ScenarioTestComponent::checkCollision(
   const std::vector<geometry_msgs::msg::Point> & poly0,
   const std::vector<geometry_msgs::msg::Point> & poly1)
 {
+  if(poly0.empty() || poly1.empty()) {
+    return false;
+  }
   namespace bg = boost::geometry;
   typedef bg::model::d2::point_xy<double> bg_point;
   bg::model::polygon<bg_point> poly0_bg;

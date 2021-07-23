@@ -43,9 +43,8 @@ std::vector<geometry_msgs::msg::Point> Primitive::get2DPolygon() const
 
   std::vector<geometry_msgs::msg::Point> ret;
   polygon poly;
-  std::vector<point> points;
   for (auto & v : vertices_) {
-    points.emplace_back(point(v.x, v.y));
+    bg::append(poly.outer(), point(v.x, v.y));
   }
   polygon hull;
   bg::convex_hull(poly, hull);
