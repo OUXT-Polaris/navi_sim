@@ -170,7 +170,7 @@ const std::vector<geometry_msgs::msg::Point> ScenarioTestComponent::getBboxPolyg
   geometry_msgs::msg::TransformStamped transform_stamped;
   try {
     transform_stamped = buffer_.lookupTransform(
-      "base_link", map_frame_, rclcpp::Time(0), tf2::durationFromSec(1.0));
+      map_frame_, "base_link", rclcpp::Time(0), tf2::durationFromSec(1.0));
     geometry_msgs::msg::Pose pose;
     pose.position.x = transform_stamped.transform.translation.x;
     pose.position.y = transform_stamped.transform.translation.y;
