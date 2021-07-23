@@ -95,12 +95,11 @@ private:
   double bbox_center_z_;
   double bbox_length_;
   double bbox_width_;
-  double bbox_height_;
   std::string map_frame_;
   tf2_ros::Buffer buffer_;
   tf2_ros::TransformListener listener_;
-  std::vector<geometry_msgs::msg::Point> getBboxPoints();
-  const geometry_msgs::msg::Point getCornerPoint(bool x_dir, bool y_dir, bool z_dir) const;
+  const std::vector<geometry_msgs::msg::Point> getBboxPolygon();
+  const geometry_msgs::msg::Point getCornerPoint(bool x_dir, bool y_dir) const;
   std::vector<geometry_msgs::msg::Point> transformPoints(
     const geometry_msgs::msg::TransformStamped & pose,
     const std::vector<geometry_msgs::msg::Point> & points);

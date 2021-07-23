@@ -53,8 +53,6 @@ void ScenarioTestComponent::initialize()
   get_parameter("bbox_length", bbox_length_);
   declare_parameter("bbox_width", 0.0);
   get_parameter("bbox_width", bbox_width_);
-  declare_parameter("bbox_height", 0.0);
-  get_parameter("bbox_height", bbox_height_);
   declare_parameter("map_frame", "map");
   declare_parameter("map_frame", map_frame_);
 
@@ -82,12 +80,16 @@ void ScenarioTestComponent::initialize()
 
 bool ScenarioTestComponent::checkCollision()
 {
+  const auto bbox_polygon = getBboxPolygon();
   for (const auto & name : raycaster_ptr_->getPrimitiveNames()) {
-    raycaster_ptr_->get2DPolygon(name);
+    if (checkCollision(bbox_polygon, raycaster_ptr_->get2DPolygon(name))) {
+      return true;
+    }
   }
+  return false;
 }
 
-std::vector<geometry_msgs::msg::Point> ScenarioTestComponent::getBboxPoints()
+const std::vector<geometry_msgs::msg::Point> ScenarioTestComponent::getBboxPolygon()
 {
   geometry_msgs::msg::TransformStamped transform_stamped;
   try {
@@ -103,20 +105,15 @@ std::vector<geometry_msgs::msg::Point> ScenarioTestComponent::getBboxPoints()
     return {};
   }
   std::vector<geometry_msgs::msg::Point> points;
-  points.emplace_back(getCornerPoint(true, true, true));
-  points.emplace_back(getCornerPoint(true, false, true));
-  points.emplace_back(getCornerPoint(false, false, true));
-  points.emplace_back(getCornerPoint(false, true, true));
-  points.emplace_back(getCornerPoint(true, true, false));
-  points.emplace_back(getCornerPoint(true, false, false));
-  points.emplace_back(getCornerPoint(false, false, false));
-  points.emplace_back(getCornerPoint(false, true, false));
+  points.emplace_back(getCornerPoint(true, true));
+  points.emplace_back(getCornerPoint(true, false));
+  points.emplace_back(getCornerPoint(false, false));
+  points.emplace_back(getCornerPoint(false, true));
   return transformPoints(transform_stamped, points);
 }
 
 const geometry_msgs::msg::Point ScenarioTestComponent::getCornerPoint(
-  bool x_dir, bool y_dir,
-  bool z_dir) const
+  bool x_dir, bool y_dir) const
 {
   geometry_msgs::msg::Point p;
   if (x_dir) {
@@ -129,11 +126,7 @@ const geometry_msgs::msg::Point ScenarioTestComponent::getCornerPoint(
   } else {
     p.y = bbox_center_y_ - bbox_width_ * 0.5;
   }
-  if (z_dir) {
-    p.z = bbox_center_z_ + bbox_height_ * 0.5;
-  } else {
-    p.z = bbox_center_z_ - bbox_height_ * 0.5;
-  }
+  p.z = bbox_center_z_;
   return p;
 }
 
