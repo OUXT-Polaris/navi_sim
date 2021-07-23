@@ -3,6 +3,6 @@ scenario_test_node:
     bbox_center_x: 0.0
     bbox_center_y: 0.0
     bbox_center_z: 0.0
-    bbox_length: 5.0
+    bbox_length: 10.0
     bbox_width : 2.5
     map_frame: map

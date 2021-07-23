@@ -90,6 +90,19 @@ const visualization_msgs::msg::MarkerArray ScenarioTestComponent::getCollisionMa
   if(bbox_polygon.empty()) {
     return markers;
   }
+  std_msgs::msg::ColorRGBA color_ego_collision_marker;
+  if(collision) {
+    color_ego_collision_marker.r = 1.0;
+    color_ego_collision_marker.g = 0.0;
+    color_ego_collision_marker.b = 0.0;
+    color_ego_collision_marker.a = 0.9999;
+  }
+  else {
+    color_ego_collision_marker.r = 0.0;
+    color_ego_collision_marker.g = 1.0;
+    color_ego_collision_marker.b = 0.0;
+    color_ego_collision_marker.a = 0.9999;
+  }
   visualization_msgs::msg::Marker ego_collision_marker;
   ego_collision_marker.header.stamp = stamp;
   ego_collision_marker.header.frame_id = map_frame_;
@@ -97,14 +110,11 @@ const visualization_msgs::msg::MarkerArray ScenarioTestComponent::getCollisionMa
   ego_collision_marker.ns = "ego_collision";
   ego_collision_marker.points = bbox_polygon;
   ego_collision_marker.points.emplace_back(bbox_polygon[0]);
-  ego_collision_marker.scale.x = 0.1;
-  ego_collision_marker.scale.y = 0.1;
-  ego_collision_marker.scale.z = 0.1;
+  ego_collision_marker.scale.x = 0.03;
+  ego_collision_marker.scale.y = 0.03;
+  ego_collision_marker.scale.z = 0.03;
   ego_collision_marker.action = ego_collision_marker.ADD;
-  ego_collision_marker.color.r = 0.0;
-  ego_collision_marker.color.g = 1.0;
-  ego_collision_marker.color.b = 0.0;
-  ego_collision_marker.color.a = 0.9999;
+  ego_collision_marker.color = color_ego_collision_marker;
   ego_collision_marker.type = ego_collision_marker.LINE_STRIP;
   markers.markers.emplace_back(ego_collision_marker);
   return markers;
