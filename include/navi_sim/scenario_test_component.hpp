@@ -62,6 +62,7 @@ extern "C" {
 
 #include <sensor_msgs/msg/point_cloud2.hpp>
 #include <visualization_msgs/msg/marker_array.hpp>
+#include <navi_sim/interpreter/interpreter.hpp>
 
 #include <memory>
 #include <string>
@@ -105,9 +106,12 @@ private:
     const geometry_msgs::msg::TransformStamped & pose,
     const std::vector<geometry_msgs::msg::Point> & points);
   rclcpp::Publisher<visualization_msgs::msg::MarkerArray>::SharedPtr collision_marker_pub_;
+  rclcpp::Publisher<geometry_msgs::msg::PoseStamped>::SharedPtr goal_pub_;
   rclcpp::TimerBase::SharedPtr timer_;
   void update();
   const visualization_msgs::msg::MarkerArray getCollisionMarker(bool collision);
+  std::unique_ptr<navi_sim::Interpreter> interpreter_;
+  std::string scenario_filename_;
 };
 }  // namespace navi_sim
 

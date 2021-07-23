@@ -57,7 +57,11 @@ void ScenarioTestComponent::initialize()
   get_parameter("bbox_width", bbox_width_);
   declare_parameter("map_frame", "map");
   get_parameter("map_frame", map_frame_);
-
+  declare_parameter("scenario_filename", "");
+  get_parameter("scenario_filename", scenario_filename_);
+  std::string scenario_path = ament_index_cpp::get_package_share_directory("navi_sim") +
+    "/scenarios/" + scenario_filename_;
+  interpreter_ = std::make_unique<navi_sim::Interpreter>(scenario_path);
   declare_parameter("objects_filename", "objects.json");
   std::string objects_filename;
   get_parameter("objects_filename", objects_filename);
@@ -82,6 +86,10 @@ void ScenarioTestComponent::initialize()
   collision_marker_pub_ = this->create_publisher<visualization_msgs::msg::MarkerArray>(
     "collision",
     1);
+  goal_pub_ = this->create_publisher<geometry_msgs::msg::PoseStamped>("/move_base_simple/goal", 1);
+  interpreter_->setValueToBlackBoard<rclcpp::Publisher<geometry_msgs::msg::PoseStamped>::SharedPtr>(
+    "goal_publisher", goal_pub_);
+  interpreter_->setValueToBlackBoard<rclcpp::Clock::SharedPtr>("clock", get_clock());
   using namespace std::chrono_literals;
   timer_ = create_wall_timer(50ms, std::bind(&ScenarioTestComponent::update, this));
 }
