@@ -1,0 +1,56 @@
+first_goal: &first_goal
+  frame: map
+  pose:
+    position:
+      x: 10.0
+      y: 5.0
+      z: 0.0
+    orientation:
+      x: 0.0
+      y: 0.0
+      z: 0.0
+      w: 1.0
+
+second_goal: &second_goal
+  frame: map
+  pose:
+    position:
+      x: 25.0
+      y: 5.0
+      z: 0.0
+    orientation:
+      x: 0.0
+      y: 0.0
+      z: 0.0
+      w: 1.0
+
+timeout: &timeout
+  30
+
+scenario:
+  actions:
+    send_goal:
+      goal: *first_goal
+      name: goto_first_goal
+    second_goal:
+      name: goto_second_goal
+      goal: *second_goal
+
+  events:
+    reach_first_goal:
+      reach_position:
+        target: *first_goal
+        radius: 0.5
+        activate: always
+        trigger: goto_second_goal
+    reach_second_goal:
+      reach_position:
+        target: *second_goal
+        radius: 0.5
+        activate: success
+        trigger: goto_first_goal
+    timeout:
+      compare:
+        value: *timeout
+        greater: true
+        activate: fail
