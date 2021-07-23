@@ -89,6 +89,7 @@ void ScenarioTestComponent::initialize()
   goal_pub_ = this->create_publisher<geometry_msgs::msg::PoseStamped>("/move_base_simple/goal", 1);
   interpreter_->setValueToBlackBoard<rclcpp::Publisher<geometry_msgs::msg::PoseStamped>::SharedPtr>(
     "goal_publisher", goal_pub_);
+  context_pub_ = this->create_publisher<std_msgs::msg::String>("context", 1);
   interpreter_->setValueToBlackBoard<rclcpp::Clock::SharedPtr>("clock", get_clock());
   using namespace std::chrono_literals;
   timer_ = create_wall_timer(50ms, std::bind(&ScenarioTestComponent::update, this));
@@ -159,6 +160,13 @@ void ScenarioTestComponent::update()
 {
   interpreter_->setValueToBlackBoard("ego_pose", getEgoPose());
   interpreter_->evaluate();
+  std::stringstream ss;
+  YAML::Node context;
+  interpreter_->getDebugString(context);
+  ss << context;
+  std_msgs::msg::String string_data;
+  string_data.data = ss.str();
+  context_pub_->publish(string_data);
   const auto collision = checkCollision();
   collision_marker_pub_->publish(getCollisionMarker(collision));
 }

@@ -63,6 +63,7 @@ extern "C" {
 #include <sensor_msgs/msg/point_cloud2.hpp>
 #include <visualization_msgs/msg/marker_array.hpp>
 #include <navi_sim/interpreter/interpreter.hpp>
+#include <std_msgs/msg/string.hpp>
 
 #include <boost/optional.hpp>
 
@@ -115,6 +116,7 @@ private:
   std::unique_ptr<navi_sim::Interpreter> interpreter_;
   std::string scenario_filename_;
   const boost::optional<geometry_msgs::msg::Pose> getEgoPose();
+  rclcpp::Publisher<std_msgs::msg::String>::SharedPtr context_pub_;
 };
 }  // namespace navi_sim
 
