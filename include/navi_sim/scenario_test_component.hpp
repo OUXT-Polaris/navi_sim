@@ -95,6 +95,7 @@ private:
   double bbox_center_z_;
   double bbox_length_;
   double bbox_width_;
+  double update_rate_;
   std::string map_frame_;
   tf2_ros::Buffer buffer_;
   tf2_ros::TransformListener listener_;
@@ -103,7 +104,10 @@ private:
   std::vector<geometry_msgs::msg::Point> transformPoints(
     const geometry_msgs::msg::TransformStamped & pose,
     const std::vector<geometry_msgs::msg::Point> & points);
-  rclcpp::Publisher<visualization_msgs::msg::MarkerArray>::SharedPtr collision_marker_;
+  rclcpp::Publisher<visualization_msgs::msg::MarkerArray>::SharedPtr collision_marker_pub_;
+  rclcpp::TimerBase::SharedPtr timer_;
+  void update();
+  const visualization_msgs::msg::MarkerArray getCollisionMarker(bool collision);
 };
 }  // namespace navi_sim
 

@@ -77,7 +77,43 @@ void ScenarioTestComponent::initialize()
   }
   raycaster_ptr_ = std::make_unique<Raycaster>();
   raycaster_ptr_->addPrimitives(nlohmann::json::parse(json_string));
-  // this->create_publisher<visualization_msgs::msg::MarkerArray>("collision", 1);
+  collision_marker_pub_ = this->create_publisher<visualization_msgs::msg::MarkerArray>("collision", 1);
+  using namespace std::chrono_literals;
+  timer_ = create_wall_timer(50ms, std::bind(&ScenarioTestComponent::update, this));
+}
+
+const visualization_msgs::msg::MarkerArray ScenarioTestComponent::getCollisionMarker(bool collision)
+{
+  const auto stamp = get_clock()->now();
+  visualization_msgs::msg::MarkerArray markers;
+  const auto bbox_polygon = getBboxPolygon();
+  if(bbox_polygon.empty()) {
+    return markers;
+  }
+  visualization_msgs::msg::Marker ego_collision_marker;
+  ego_collision_marker.header.stamp = stamp;
+  ego_collision_marker.header.frame_id = map_frame_;
+  ego_collision_marker.id = 0;
+  ego_collision_marker.ns = "ego_collision";
+  ego_collision_marker.points = bbox_polygon;
+  ego_collision_marker.points.emplace_back(bbox_polygon[0]);
+  ego_collision_marker.scale.x = 0.1;
+  ego_collision_marker.scale.y = 0.1;
+  ego_collision_marker.scale.z = 0.1;
+  ego_collision_marker.action = ego_collision_marker.ADD;
+  ego_collision_marker.color.r = 0.0;
+  ego_collision_marker.color.g = 1.0;
+  ego_collision_marker.color.b = 0.0;
+  ego_collision_marker.color.a = 0.9999;
+  ego_collision_marker.type = ego_collision_marker.LINE_STRIP;
+  markers.markers.emplace_back(ego_collision_marker);
+  return markers;
+}
+
+void ScenarioTestComponent::update()
+{
+  const auto collision = checkCollision();
+  collision_marker_pub_->publish(getCollisionMarker(collision));
 }
 
 bool ScenarioTestComponent::checkCollision()
