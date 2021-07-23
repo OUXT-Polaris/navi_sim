@@ -49,6 +49,8 @@ public:
   const EventType type;
   void registerFunction(const std::function<EventState(void)> & func);
   void update();
+  void activate();
+  EventState getState() const;
 
 private:
   std::function<EventState(void)> func_;

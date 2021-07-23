@@ -17,6 +17,8 @@
 
 #include <navi_sim/interpreter/event_base.hpp>
 
+#include <string>
+
 namespace navi_sim
 {
 namespace events

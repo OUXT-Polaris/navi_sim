@@ -22,5 +22,6 @@ namespace navi_sim
 Interpreter::Interpreter(const std::string & path)
 : scenario_(YAML::LoadFile(path))
 {
+  const auto event_tree = scenario_["scenario"]["events"];
 }
 }  // namespace navi_sim

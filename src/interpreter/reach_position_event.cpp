@@ -14,6 +14,8 @@
 
 #include <navi_sim/interpreter/reach_position_event.hpp>
 
+#include <string>
+
 namespace navi_sim
 {
 namespace events
@@ -24,7 +26,6 @@ ReachPositionEvent::ReachPositionEvent(
   const std::string & next_action)
 : EventBase(name, trigger, next_action, EventType::REACH_POSITION)
 {
-
 }
 }  // namespace events
 }  // namespace navi_sim

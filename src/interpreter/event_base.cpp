@@ -38,6 +38,16 @@ void EventBase::registerFunction(const std::function<EventState(void)> & func)
   func_ = func;
 }
 
+void EventBase::activate()
+{
+  state_ = EventState::ACTIVE;
+}
+
+EventState EventBase::getState() const
+{
+  return state_;
+}
+
 void EventBase::update()
 {
   if (!func_) {
@@ -56,5 +66,5 @@ void EventBase::update()
       }
   }
 }
-}
+}  // namespace events
 }  // namespace navi_sim

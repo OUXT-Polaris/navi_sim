@@ -24,10 +24,8 @@ second_goal: &second_goal
       z: 0.0
       w: 1.0
 
-timeout: &timeout
-  30
-
 scenario:
+  timeout: 30
   actions:
     send_goal:
       goal: *first_goal
@@ -49,8 +47,3 @@ scenario:
         radius: 0.5
         next_action: success
         trigger: goto_first_goal
-    timeout:
-      check_time:
-        value: *timeout
-        greater: true
-        next_action: fail
