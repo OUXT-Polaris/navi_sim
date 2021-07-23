@@ -136,7 +136,7 @@ const visualization_msgs::msg::MarkerArray ScenarioTestComponent::getCollisionMa
     marker.action = marker.ADD;
     marker.color.r = 1.0;
     marker.color.g = 1.0;
-    marker.color.b = 1.0;
+    marker.color.b = 0.0;
     marker.color.a = 0.9999;
     marker.type = marker.LINE_STRIP;
     markers.markers.emplace_back(marker);

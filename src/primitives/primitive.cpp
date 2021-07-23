@@ -44,7 +44,8 @@ std::vector<geometry_msgs::msg::Point> Primitive::get2DPolygon() const
   std::vector<geometry_msgs::msg::Point> ret;
   polygon poly;
   for (auto & v : vertices_) {
-    bg::append(poly.outer(), point(v.x, v.y));
+    const auto v_transformed = transform(v);
+    bg::append(poly.outer(), point(v_transformed.x, v_transformed.y));
   }
   polygon hull;
   bg::convex_hull(poly, hull);
