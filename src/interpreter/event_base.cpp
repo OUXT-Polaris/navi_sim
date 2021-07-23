@@ -108,6 +108,8 @@ void EventBase::updateState(const BlackBoard & black_board)
             activated_events.begin(),
             activated_events.end(), trigger) != activated_events.end())
         {
+          state_ = EventState::ACTIVE;
+          updateState(black_board);
         }
         break;
       }
