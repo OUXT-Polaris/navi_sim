@@ -30,6 +30,7 @@ class Interpreter
 public:
   Interpreter() = delete;
   explicit Interpreter(const std::string & path);
+  size_t getEventIndex(const std::string & name) const;
 
 private:
   const YAML::Node scenario_;

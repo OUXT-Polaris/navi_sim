@@ -31,9 +31,10 @@ enum class EventState
 
 enum class EventType
 {
-  REACH_POSITION = 0,
-  TIMEOUT = 1
+  REACH_POSITION = 0
 };
+
+void toEnum(const std::string string_val, EventType & enum_val);
 
 class EventBase
 {

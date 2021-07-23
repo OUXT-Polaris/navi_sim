@@ -1,4 +1,4 @@
-// Copyright (c) 2020 OUXT Polaris
+// Copyright (c) 2021 OUXT Polaris
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,24 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <gtest/gtest.h>
-
 #include <navi_sim/interpreter/interpreter.hpp>
 #include <ament_index_cpp/get_package_share_directory.hpp>
 
-#include <string>
-
-TEST(Interpreter, load)
+int main()
 {
   std::string path = ament_index_cpp::get_package_share_directory("navi_sim") +
     "/scenarios/go_straight.yaml";
   navi_sim::Interpreter interpreter(path);
-  ASSERT_EQ(interpreter.getEventIndex("reach_first_goal"), 0);
-  ASSERT_EQ(interpreter.getEventIndex("reach_second_goal"), 1);
-}
-
-int main(int argc, char ** argv)
-{
-  testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();
+  return 0;
 }

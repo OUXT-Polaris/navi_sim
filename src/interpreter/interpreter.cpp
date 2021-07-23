@@ -13,9 +13,11 @@
 // limitations under the License.
 
 #include <navi_sim/interpreter/interpreter.hpp>
+#include <navi_sim/interpreter/reach_position_event.hpp>
 
 #include <fstream>
 #include <string>
+#include <iostream>
 
 namespace navi_sim
 {
@@ -23,5 +25,30 @@ Interpreter::Interpreter(const std::string & path)
 : scenario_(YAML::LoadFile(path))
 {
   const auto event_tree = scenario_["scenario"]["events"];
+  for (YAML::const_iterator it = event_tree.begin(); it != event_tree.end(); it++) {
+    const std::string name = it->first.as<std::string>();
+    const auto event = event_tree[name];
+    events::EventType type;
+    events::toEnum(event["type"].as<std::string>(), type);
+    const std::string trigger = event["trigger"].as<std::string>();
+    const std::string next_action = event["next_action"].as<std::string>();
+    switch (type) {
+      case events::EventType::REACH_POSITION:
+        addEvent<events::ReachPositionEvent>(name, trigger, next_action);
+        break;
+    }
+  }
+}
+
+size_t Interpreter::getEventIndex(const std::string & name) const
+{
+  size_t index = 0;
+  for (const auto & event : events_) {
+    if (event->name == name) {
+      return index;
+    }
+    index++;
+  }
+  throw std::runtime_error("event : " + name + " does not exist.");
 }
 }  // namespace navi_sim

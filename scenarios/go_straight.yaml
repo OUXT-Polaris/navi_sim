@@ -27,23 +27,23 @@ second_goal: &second_goal
 scenario:
   timeout: 30
   actions:
-    send_goal:
+    goto_first_goal:
+      type: send_goal
       goal: *first_goal
-      name: goto_first_goal
-    second_goal:
-      name: goto_second_goal
+    goto_second_goal:
+      type: send_goal
       goal: *second_goal
 
   events:
     reach_first_goal:
-      reach_position:
-        target: *first_goal
-        radius: 0.5
-        next_action: goto_second_goal
-        trigger: always
+      type: reach_position
+      target: *first_goal
+      radius: 0.5
+      next_action: goto_second_goal
+      trigger: always
     reach_second_goal:
-      reach_position:
-        target: *second_goal
-        radius: 0.5
-        next_action: success
-        trigger: goto_first_goal
+      type : reach_position
+      target: *second_goal
+      radius: 0.5
+      next_action: success
+      trigger: goto_first_goal

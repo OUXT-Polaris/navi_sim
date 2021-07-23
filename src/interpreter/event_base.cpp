@@ -21,6 +21,15 @@ namespace navi_sim
 {
 namespace events
 {
+void toEnum(const std::string string_val, EventType & enum_val)
+{
+  if (string_val == "reach_position") {
+    enum_val = EventType::REACH_POSITION;
+  } else {
+    throw std::runtime_error("invalid event name : " + string_val);
+  }
+}
+
 EventBase::EventBase(
   const std::string & name,
   const std::string & trigger,

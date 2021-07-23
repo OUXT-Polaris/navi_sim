@@ -103,11 +103,22 @@ target_link_libraries(scenario_test_node
   scenario_test_component
 )
 
+ament_auto_add_executable(example
+  src/interpreter/interpreter.cpp
+  src/interpreter/reach_position_event.cpp
+  src/interpreter/event_base.cpp
+  src/interpreter/example.cpp
+)
+target_link_libraries(example
+  yaml-cpp
+)
+
 install(TARGETS
   navi_sim_node
   lidar_sim_node
   camera_sim_node
   scenario_test_node
+  example
   DESTINATION lib/navi_sim
 )
 install(TARGETS
@@ -127,7 +138,7 @@ ament_export_libraries(scenario_test_component)
 #############
 ## Install ##
 #############
-install(DIRECTORY launch config
+install(DIRECTORY launch config scenarios
   DESTINATION share/${PROJECT_NAME}
 )
 
