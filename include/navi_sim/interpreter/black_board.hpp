@@ -36,7 +36,7 @@ public:
   }
 
 private:
-  boost::any getValue(const std::string & key);
+  boost::any getValue(const std::string & key) const;
   std::unordered_map<std::string, boost::any> data_;
 };
 }  // namespace navi_sim

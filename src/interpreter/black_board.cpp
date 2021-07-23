@@ -17,7 +17,7 @@
 
 namespace navi_sim
 {
-boost::any BlackBoard::getValue(const std::string & key)
+boost::any BlackBoard::getValue(const std::string & key) const
 {
   if (data_.find(key) == data_.end()) {
     throw std::runtime_error("key : " + key + " does not exist.");

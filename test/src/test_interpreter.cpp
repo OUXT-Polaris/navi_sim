@@ -15,6 +15,7 @@
 #include <gtest/gtest.h>
 
 #include <navi_sim/interpreter/interpreter.hpp>
+#include <navi_sim/interpreter/black_board.hpp>
 #include <ament_index_cpp/get_package_share_directory.hpp>
 
 #include <string>
@@ -26,6 +27,22 @@ TEST(Interpreter, load)
   navi_sim::Interpreter interpreter(path);
   ASSERT_EQ(interpreter.getEventIndex("reach_first_goal"), static_cast<size_t>(0));
   ASSERT_EQ(interpreter.getEventIndex("reach_second_goal"), static_cast<size_t>(1));
+}
+
+TEST(BlackBoard, string)
+{
+  navi_sim::BlackBoard board;
+  std::string value = "hi";
+  board.set("val", value);
+  ASSERT_STREQ(value.c_str(), board.get<std::string>("val").c_str());
+}
+
+TEST(BlackBoard, float)
+{
+  navi_sim::BlackBoard board;
+  float value = 0.1;
+  board.set("val", value);
+  ASSERT_FLOAT_EQ(value, board.get<float>("val"));
 }
 
 int main(int argc, char ** argv)
