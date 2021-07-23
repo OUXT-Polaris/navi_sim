@@ -38,11 +38,10 @@ EventType toEventTypeEnum(const std::string string_val)
 std::string toEventTypeString(const EventType & enum_val)
 {
   std::string ret;
-  switch (enum_val)
-  {
-  case EventType::REACH_POSITION:
-    ret = "reach_position";
-    break;
+  switch (enum_val) {
+    case EventType::REACH_POSITION:
+      ret = "reach_position";
+      break;
   }
   return ret;
 }
@@ -50,17 +49,16 @@ std::string toEventTypeString(const EventType & enum_val)
 std::string toEventStateString(const EventState & enum_val)
 {
   std::string ret;
-  switch (enum_val)
-  {
-  case EventState::INACTIVE:
-    ret = "inactive";
-    break;
-  case EventState::ACTIVE:
-    ret = "active";
-    break;
-  case EventState::FINISHED:
-    ret = "finished";
-    break;
+  switch (enum_val) {
+    case EventState::INACTIVE:
+      ret = "inactive";
+      break;
+    case EventState::ACTIVE:
+      ret = "active";
+      break;
+    case EventState::FINISHED:
+      ret = "finished";
+      break;
   }
   return ret;
 }

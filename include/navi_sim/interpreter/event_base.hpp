@@ -15,6 +15,8 @@
 #ifndef NAVI_SIM__INTERPRETER__EVENT_BASE_HPP_
 #define NAVI_SIM__INTERPRETER__EVENT_BASE_HPP_
 
+#include <geometry_msgs/msg/pose.hpp>
+#include <geometry_msgs/msg/twist.hpp>
 #include <yaml-cpp/yaml.h>
 #include <string>
 #include <functional>

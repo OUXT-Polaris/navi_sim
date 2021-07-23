@@ -12,31 +12,33 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NAVI_SIM__INTERPRETER__REACH_POSITION_EVENT_HPP_
-#define NAVI_SIM__INTERPRETER__REACH_POSITION_EVENT_HPP_
+#ifndef NAVI_SIM__INTERPRETER__BLACK_BOARD_HPP_
+#define NAVI_SIM__INTERPRETER__BLACK_BOARD_HPP_
 
-#include <yaml-cpp/yaml.h>
-#include <navi_sim/interpreter/event_base.hpp>
-#include <geometry_msgs/msg/pose_stamped.hpp>
-
+#include <boost/any.hpp>
+#include <unordered_map>
 #include <string>
 
 namespace navi_sim
 {
-namespace events
-{
-class ReachPositionEvent : public EventBase
+class BlackBoard
 {
 public:
-  explicit ReachPositionEvent(const std::string & name, const YAML::Node & yaml);
-  void getDebugString(YAML::Node & yaml) override;
-  EventState onUpdate();
+  template<typename T>
+  void set(const std::string & key, const T & value)
+  {
+    data_[key] = boost::any_cast<T>(value);
+  }
+  template<typename T>
+  const T get(const std::string & key) const
+  {
+    return boost::any_cast<T>(getValue(key));
+  }
 
 private:
-  geometry_msgs::msg::PoseStamped goal_;
-  double radius_;
+  boost::any getValue(const std::string & key);
+  std::unordered_map<std::string, boost::any> data_;
 };
-}  // namespace events
 }  // namespace navi_sim
 
-#endif  // NAVI_SIM__INTERPRETER__REACH_POSITION_EVENT_HPP_
+#endif  // NAVI_SIM__INTERPRETER__BLACK_BOARD_HPP_

@@ -12,31 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NAVI_SIM__INTERPRETER__REACH_POSITION_EVENT_HPP_
-#define NAVI_SIM__INTERPRETER__REACH_POSITION_EVENT_HPP_
-
-#include <yaml-cpp/yaml.h>
-#include <navi_sim/interpreter/event_base.hpp>
-#include <geometry_msgs/msg/pose_stamped.hpp>
-
+#include <navi_sim/interpreter/black_board.hpp>
 #include <string>
 
 namespace navi_sim
 {
-namespace events
+boost::any BlackBoard::getValue(const std::string & key)
 {
-class ReachPositionEvent : public EventBase
-{
-public:
-  explicit ReachPositionEvent(const std::string & name, const YAML::Node & yaml);
-  void getDebugString(YAML::Node & yaml) override;
-  EventState onUpdate();
-
-private:
-  geometry_msgs::msg::PoseStamped goal_;
-  double radius_;
-};
-}  // namespace events
+  if (data_.find(key) == data_.end()) {
+    throw std::runtime_error("key : " + key + " does not exist.");
+  }
+  return data_.at(key);
+}
 }  // namespace navi_sim
-
-#endif  // NAVI_SIM__INTERPRETER__REACH_POSITION_EVENT_HPP_
