@@ -28,15 +28,18 @@ Interpreter::Interpreter(const std::string & path)
   for (YAML::const_iterator it = event_tree.begin(); it != event_tree.end(); it++) {
     const std::string name = it->first.as<std::string>();
     const auto event = event_tree[name];
-    events::EventType type;
-    events::toEnum(event["type"].as<std::string>(), type);
-    const std::string trigger = event["trigger"].as<std::string>();
-    const std::string next_action = event["next_action"].as<std::string>();
-    switch (type) {
+    switch (events::toEventTypeEnum(event["type"].as<std::string>())) {
       case events::EventType::REACH_POSITION:
-        addEvent<events::ReachPositionEvent>(name, trigger, next_action);
+        addEvent<events::ReachPositionEvent>(name, event);
         break;
     }
+  }
+}
+
+void Interpreter::getDebugString(YAML::Node & yaml)
+{
+  for (const auto & event : events_) {
+    event->getDebugString(yaml);
   }
 }
 

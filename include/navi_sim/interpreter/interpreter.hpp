@@ -31,10 +31,12 @@ public:
   Interpreter() = delete;
   explicit Interpreter(const std::string & path);
   size_t getEventIndex(const std::string & name) const;
+  void getDebugString(YAML::Node & yaml);
 
 private:
   const YAML::Node scenario_;
   std::vector<std::unique_ptr<events::EventBase>> events_;
+  void addEvent(const std::string & name, const YAML::Node & yaml);
   template<typename T, typename ... Ts>
   void addEvent(Ts && ... xs)
   {

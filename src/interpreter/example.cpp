@@ -14,12 +14,17 @@
 
 #include <navi_sim/interpreter/interpreter.hpp>
 #include <ament_index_cpp/get_package_share_directory.hpp>
+#include <yaml-cpp/yaml.h>
 #include <string>
+#include <iostream>
 
 int main()
 {
   std::string path = ament_index_cpp::get_package_share_directory("navi_sim") +
     "/scenarios/go_straight.yaml";
   navi_sim::Interpreter interpreter(path);
+  YAML::Node debug_yaml;
+  interpreter.getDebugString(debug_yaml);
+  std::cout << debug_yaml << std::endl;
   return 0;
 }

@@ -15,6 +15,7 @@
 #ifndef NAVI_SIM__INTERPRETER__REACH_POSITION_EVENT_HPP_
 #define NAVI_SIM__INTERPRETER__REACH_POSITION_EVENT_HPP_
 
+#include <yaml-cpp/yaml.h>
 #include <navi_sim/interpreter/event_base.hpp>
 
 #include <string>
@@ -26,10 +27,8 @@ namespace events
 class ReachPositionEvent : public EventBase
 {
 public:
-  explicit ReachPositionEvent(
-    const std::string & name,
-    const std::string & trigger,
-    const std::string & next_action);
+  explicit ReachPositionEvent(const std::string & name, const YAML::Node & yaml);
+  void getDebugString(YAML::Node & yaml) override;
 };
 }  // namespace events
 }  // namespace navi_sim

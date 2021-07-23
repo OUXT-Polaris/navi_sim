@@ -15,6 +15,7 @@
 #ifndef NAVI_SIM__INTERPRETER__EVENT_BASE_HPP_
 #define NAVI_SIM__INTERPRETER__EVENT_BASE_HPP_
 
+#include <yaml-cpp/yaml.h>
 #include <string>
 #include <functional>
 
@@ -35,10 +36,14 @@ enum class EventType
 };
 
 void toEnum(const std::string string_val, EventType & enum_val);
+EventType toEventTypeEnum(const std::string string_val);
+std::string toEventTypeString(const EventType & enum_val);
+std::string toEventStateString(const EventState & enum_val);
 
 class EventBase
 {
 public:
+  explicit EventBase(const std::string & name, const YAML::Node & yaml);
   explicit EventBase(
     const std::string & name,
     const std::string & trigger,
@@ -52,6 +57,7 @@ public:
   void update();
   void activate();
   EventState getState() const;
+  virtual void getDebugString(YAML::Node & yaml);
 
 private:
   std::function<EventState(void)> func_;

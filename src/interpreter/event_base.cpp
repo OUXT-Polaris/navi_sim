@@ -23,23 +23,55 @@ namespace events
 {
 void toEnum(const std::string string_val, EventType & enum_val)
 {
+  enum_val = toEventTypeEnum(string_val);
+}
+
+EventType toEventTypeEnum(const std::string string_val)
+{
   if (string_val == "reach_position") {
-    enum_val = EventType::REACH_POSITION;
+    return EventType::REACH_POSITION;
   } else {
     throw std::runtime_error("invalid event name : " + string_val);
   }
 }
 
-EventBase::EventBase(
-  const std::string & name,
-  const std::string & trigger,
-  const std::string & next_action,
-  const EventType & type)
-: name(name),
-  trigger(trigger),
-  next_action(next_action),
-  type(type)
+std::string toEventTypeString(const EventType & enum_val)
 {
+  std::string ret;
+  switch (enum_val)
+  {
+  case EventType::REACH_POSITION:
+    ret = "reach_position";
+    break;
+  }
+  return ret;
+}
+
+std::string toEventStateString(const EventState & enum_val)
+{
+  std::string ret;
+  switch (enum_val)
+  {
+  case EventState::INACTIVE:
+    ret = "inactive";
+    break;
+  case EventState::ACTIVE:
+    ret = "active";
+    break;
+  case EventState::FINISHED:
+    ret = "finished";
+    break;
+  }
+  return ret;
+}
+
+EventBase::EventBase(const std::string & name, const YAML::Node & yaml)
+: name(name),
+  trigger(yaml["trigger"].as<std::string>()),
+  next_action(yaml["next_action"].as<std::string>()),
+  type(toEventTypeEnum(yaml["type"].as<std::string>()))
+{
+  state_ = EventState::INACTIVE;
 }
 
 void EventBase::registerFunction(const std::function<EventState(void)> & func)
@@ -55,6 +87,12 @@ void EventBase::activate()
 EventState EventBase::getState() const
 {
   return state_;
+}
+
+void EventBase::getDebugString(YAML::Node & yaml)
+{
+  yaml["events"][name]["type"] = toEventTypeString(type);
+  yaml["events"][name]["state"] = toEventStateString(state_);
 }
 
 void EventBase::update()

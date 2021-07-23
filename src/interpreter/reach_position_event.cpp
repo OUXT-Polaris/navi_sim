@@ -20,12 +20,14 @@ namespace navi_sim
 {
 namespace events
 {
-ReachPositionEvent::ReachPositionEvent(
-  const std::string & name,
-  const std::string & trigger,
-  const std::string & next_action)
-: EventBase(name, trigger, next_action, EventType::REACH_POSITION)
+ReachPositionEvent::ReachPositionEvent(const std::string & name, const YAML::Node & yaml)
+: EventBase(name, yaml)
 {
+}
+
+void ReachPositionEvent::getDebugString(YAML::Node & yaml)
+{
+  EventBase::getDebugString(yaml);
 }
 }  // namespace events
 }  // namespace navi_sim
