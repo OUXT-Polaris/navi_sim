@@ -83,6 +83,7 @@ ament_target_dependencies(camera_sim_node
 target_link_libraries(camera_sim_node camera_sim_component)
 
 ament_auto_add_library(scenario_test_component SHARED
+  src/interpreter/data_types.cpp
   src/interpreter/interpreter.cpp
   src/interpreter/reach_position_event.cpp
   src/interpreter/event_base.cpp
@@ -104,6 +105,7 @@ target_link_libraries(scenario_test_node
 )
 
 ament_auto_add_executable(example
+  src/interpreter/data_types.cpp
   src/interpreter/interpreter.cpp
   src/interpreter/reach_position_event.cpp
   src/interpreter/event_base.cpp
