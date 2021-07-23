@@ -23,18 +23,20 @@
 #include <boost/geometry/geometries/linestring.hpp>
 #include <boost/geometry/geometries/point_xy.hpp>
 
+#include <quaternion_operation/quaternion_operation.h>
+
 #include <string>
 
 namespace navi_sim
 {
 ScenarioTestComponent::ScenarioTestComponent(const rclcpp::NodeOptions & options)
-: Node("camera_sim", options)
+: Node("camera_sim", options), buffer_(get_clock()), listener_(buffer_)
 {
   initialize();
 }
 
 ScenarioTestComponent::ScenarioTestComponent(std::string name, const rclcpp::NodeOptions & options)
-: Node(name, options)
+: Node(name, options), buffer_(get_clock()), listener_(buffer_)
 {
   initialize();
 }
@@ -53,6 +55,8 @@ void ScenarioTestComponent::initialize()
   get_parameter("bbox_width", bbox_width_);
   declare_parameter("bbox_height", 0.0);
   get_parameter("bbox_height", bbox_height_);
+  declare_parameter("map_frame", "map");
+  declare_parameter("map_frame", map_frame_);
 
   declare_parameter("objects_filename", "objects.json");
   std::string objects_filename;
@@ -78,9 +82,83 @@ void ScenarioTestComponent::initialize()
 
 bool ScenarioTestComponent::checkCollision()
 {
-  for(const auto & name : raycaster_ptr_->getPrimitiveNames()) {
+  for (const auto & name : raycaster_ptr_->getPrimitiveNames()) {
     raycaster_ptr_->get2DPolygon(name);
   }
+}
+
+std::vector<geometry_msgs::msg::Point> ScenarioTestComponent::getBboxPoints()
+{
+  geometry_msgs::msg::TransformStamped transform_stamped;
+  try {
+    transform_stamped = buffer_.lookupTransform(
+      "base_link", map_frame_, rclcpp::Time(0), tf2::durationFromSec(1.0));
+    geometry_msgs::msg::Pose pose;
+    pose.position.x = transform_stamped.transform.translation.x;
+    pose.position.y = transform_stamped.transform.translation.y;
+    pose.position.z = transform_stamped.transform.translation.z;
+    pose.orientation = transform_stamped.transform.rotation;
+  } catch (tf2::ExtrapolationException & ex) {
+    RCLCPP_ERROR(get_logger(), ex.what());
+    return {};
+  }
+  std::vector<geometry_msgs::msg::Point> points;
+  points.emplace_back(getCornerPoint(true, true, true));
+  points.emplace_back(getCornerPoint(true, false, true));
+  points.emplace_back(getCornerPoint(false, false, true));
+  points.emplace_back(getCornerPoint(false, true, true));
+  points.emplace_back(getCornerPoint(true, true, false));
+  points.emplace_back(getCornerPoint(true, false, false));
+  points.emplace_back(getCornerPoint(false, false, false));
+  points.emplace_back(getCornerPoint(false, true, false));
+  return transformPoints(transform_stamped, points);
+}
+
+const geometry_msgs::msg::Point ScenarioTestComponent::getCornerPoint(
+  bool x_dir, bool y_dir,
+  bool z_dir) const
+{
+  geometry_msgs::msg::Point p;
+  if (x_dir) {
+    p.x = bbox_center_x_ + bbox_length_ * 0.5;
+  } else {
+    p.x = bbox_center_x_ - bbox_length_ * 0.5;
+  }
+  if (y_dir) {
+    p.y = bbox_center_y_ + bbox_width_ * 0.5;
+  } else {
+    p.y = bbox_center_y_ - bbox_width_ * 0.5;
+  }
+  if (z_dir) {
+    p.z = bbox_center_z_ + bbox_height_ * 0.5;
+  } else {
+    p.z = bbox_center_z_ - bbox_height_ * 0.5;
+  }
+  return p;
+}
+
+std::vector<geometry_msgs::msg::Point> ScenarioTestComponent::transformPoints(
+  const geometry_msgs::msg::TransformStamped & pose,
+  const std::vector<geometry_msgs::msg::Point> & points)
+{
+  auto mat = quaternion_operation::getRotationMatrix(pose.transform.rotation);
+  std::vector<geometry_msgs::msg::Point> ret;
+  for (const auto & point : points) {
+    Eigen::VectorXd v(3);
+    v(0) = point.x;
+    v(1) = point.y;
+    v(2) = point.z;
+    v = mat * v;
+    v(0) = v(0) + pose.transform.translation.x;
+    v(1) = v(1) + pose.transform.translation.y;
+    v(2) = v(2) + pose.transform.translation.z;
+    geometry_msgs::msg::Point transformed;
+    transformed.x = v(0);
+    transformed.y = v(1);
+    transformed.z = v(2);
+    ret.emplace_back(transformed);
+  }
+  return ret;
 }
 
 bool ScenarioTestComponent::checkCollision(
