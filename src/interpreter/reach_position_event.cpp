@@ -11,3 +11,20 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
+#include <navi_sim/interpreter/reach_position_event.hpp>
+
+namespace navi_sim
+{
+namespace events
+{
+ReachPositionEvent::ReachPositionEvent(
+  const std::string & name,
+  const std::string & trigger,
+  const std::string & next_action)
+: EventBase(name, trigger, next_action, EventType::REACH_POSITION)
+{
+
+}
+}  // namespace events
+}  // namespace navi_sim

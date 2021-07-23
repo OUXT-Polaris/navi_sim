@@ -15,8 +15,11 @@
 #ifndef NAVI_SIM__INTERPRETER__INTERPRETER_HPP_
 #define NAVI_SIM__INTERPRETER__INTERPRETER_HPP_
 
+#include <navi_sim/interpreter/reach_position_event.hpp>
+
 #include <yaml-cpp/yaml.h>
 #include <string>
+#include <memory>
 
 namespace navi_sim
 {
@@ -28,6 +31,12 @@ public:
 
 private:
   const YAML::Node scenario_;
+  std::vector<std::unique_ptr<events::EventBase>> events_;
+  template<typename T, typename ... Ts>
+  void addEvent(Ts && ... xs)
+  {
+    events_.emplace_back(std::make_unique<T>(std::forward<Ts>(xs)...));
+  }
 };
 }  // namespace navi_sim
 

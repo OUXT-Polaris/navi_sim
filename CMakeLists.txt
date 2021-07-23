@@ -85,6 +85,7 @@ target_link_libraries(camera_sim_node camera_sim_component)
 ament_auto_add_library(scenario_test_component SHARED
   src/interpreter/interpreter.cpp
   src/interpreter/reach_position_event.cpp
+  src/interpreter/event_base.cpp
   src/scenario_test_component.cpp
   src/primitives/box.cpp
   src/primitives/primitive.cpp

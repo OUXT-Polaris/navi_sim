@@ -24,11 +24,37 @@ namespace events
 EventBase::EventBase(
   const std::string & name,
   const std::string & trigger,
-  const std::string & next_action)
+  const std::string & next_action,
+  const EventType & type)
 : name(name),
   trigger(trigger),
-  next_action(next_action)
+  next_action(next_action),
+  type(type)
 {
+}
+
+void EventBase::registerFunction(const std::function<EventState(void)> & func)
+{
+  func_ = func;
+}
+
+void EventBase::update()
+{
+  if (!func_) {
+    throw std::runtime_error("function does not registered.");
+  }
+  switch (state_) {
+    case EventState::ACTIVE:
+      {
+        const auto state = func_();
+        state_ = state;
+        break;
+      }
+    default:
+      {
+        break;
+      }
+  }
 }
 }
 }  // namespace navi_sim

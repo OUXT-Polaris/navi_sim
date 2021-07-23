@@ -15,13 +15,20 @@
 #ifndef NAVI_SIM__INTERPRETER__REACH_POSITION_EVENT_HPP_
 #define NAVI_SIM__INTERPRETER__REACH_POSITION_EVENT_HPP_
 
-#include <navi_sim/interpreter/reach_position_event.hpp>
+#include <navi_sim/interpreter/event_base.hpp>
 
 namespace navi_sim
 {
 namespace events
 {
-
+class ReachPositionEvent : public EventBase
+{
+public:
+  explicit ReachPositionEvent(
+    const std::string & name,
+    const std::string & trigger,
+    const std::string & next_action);
+};
 }  // namespace events
 }  // namespace navi_sim
 

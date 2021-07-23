@@ -16,6 +16,7 @@
 #define NAVI_SIM__INTERPRETER__EVENT_BASE_HPP_
 
 #include <string>
+#include <functional>
 
 namespace navi_sim
 {
@@ -28,15 +29,30 @@ enum class EventState
   FINISHED = 2
 };
 
+enum class EventType
+{
+  REACH_POSITION = 0,
+  TIMEOUT = 1
+};
+
 class EventBase
 {
 public:
   explicit EventBase(
-    const std::string & name, const std::string & trigger,
-    const std::string & next_action);
+    const std::string & name,
+    const std::string & trigger,
+    const std::string & next_action,
+    const EventType & type);
   const std::string name;
   const std::string trigger;
   const std::string next_action;
+  const EventType type;
+  void registerFunction(const std::function<EventState(void)> & func);
+  void update();
+
+private:
+  std::function<EventState(void)> func_;
+  EventState state_;
 };
 }  // namespace events
 }  // namespace navi_sim
