@@ -34,10 +34,18 @@ Interpreter::Interpreter(const std::string & path)
         break;
     }
   }
+  black_board_.set<std::vector<std::string>>("activated_events", {});
 }
 
 void Interpreter::evaluate()
 {
+  std::vector<std::string> activated_events;
+  for (const auto & event : events_) {
+    if(event->getState() != events::EventState::INACTIVE) {
+      activated_events.emplace_back(event->name);
+    }
+  }
+  black_board_.set("activated_events", activated_events);
   for (const auto & event : events_) {
     event->updateState(black_board_);
   }
