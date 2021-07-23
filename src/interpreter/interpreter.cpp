@@ -15,9 +15,14 @@
 #include <navi_sim/interpreter/interpreter.hpp>
 #include <navi_sim/interpreter/reach_position_event.hpp>
 
+#include <rclcpp/rclcpp.hpp>
+#include <geometry_msgs/msg/pose_stamped.hpp>
+
 #include <fstream>
 #include <string>
 #include <iostream>
+#include <set>
+#include <vector>
 
 namespace navi_sim
 {
@@ -34,6 +39,9 @@ Interpreter::Interpreter(const std::string & path)
         break;
     }
   }
+  black_board_.set<rclcpp::Publisher<geometry_msgs::msg::PoseStamped>::SharedPtr>(
+    "goal_publisher",
+    nullptr);
   black_board_.set<std::vector<std::string>>("activated_events", {});
 }
 
@@ -41,7 +49,7 @@ void Interpreter::evaluate()
 {
   std::vector<std::string> activated_events;
   for (const auto & event : events_) {
-    if(event->getState() != events::EventState::INACTIVE) {
+    if (event->getState() != events::EventState::INACTIVE) {
       activated_events.emplace_back(event->name);
     }
   }

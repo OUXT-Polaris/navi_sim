@@ -16,6 +16,7 @@
 
 #include <fstream>
 #include <string>
+#include <vector>
 
 namespace navi_sim
 {
@@ -31,7 +32,7 @@ EventType toEventTypeEnum(const std::string string_val)
   if (string_val == "reach_position") {
     return EventType::REACH_POSITION;
   } else {
-    throw std::runtime_error("invalid event name : " + string_val);
+    throw std::runtime_error("invalid event type : " + string_val);
   }
 }
 
