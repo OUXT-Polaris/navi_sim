@@ -53,7 +53,6 @@ public:
   const std::string next_action;
   const EventType type;
   void updateState(const BlackBoard & black_board);
-  void activate();
   EventState getState() const;
   virtual void getDebugString(YAML::Node & yaml);
 

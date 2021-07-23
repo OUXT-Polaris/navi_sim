@@ -73,11 +73,6 @@ EventBase::EventBase(const std::string & name, const YAML::Node & yaml)
   state_ = EventState::INACTIVE;
 }
 
-void EventBase::activate()
-{
-  state_ = EventState::ACTIVE;
-}
-
 EventState EventBase::getState() const
 {
   return state_;

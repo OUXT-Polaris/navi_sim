@@ -15,6 +15,7 @@
 #ifndef NAVI_SIM__INTERPRETER__ACTION_BASE_HPP_
 #define NAVI_SIM__INTERPRETER__ACTION_BASE_HPP_
 
+#include <navi_sim/interpreter/black_board.hpp>
 #include <yaml-cpp/yaml.h>
 #include <string>
 
@@ -46,7 +47,10 @@ public:
   const ActionType type;
   virtual void getDebugString(YAML::Node & yaml);
   ActionState getState() const;
+  void update(const BlackBoard & black_board);
+
 private:
+  virtual ActionState onUpdate(const BlackBoard & black_board) = 0;
   ActionState state_;
 };
 }  // namespace actions

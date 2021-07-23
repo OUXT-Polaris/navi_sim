@@ -68,8 +68,8 @@ ActionState ActionBase::getState() const
 
 void ActionBase::getDebugString(YAML::Node & yaml)
 {
-  yaml["events"][name]["type"] = toActionTypeString(type);
-  yaml["events"][name]["state"] = toActionSateString(state_);
+  yaml["actions"][name]["type"] = toActionTypeString(type);
+  yaml["actions"][name]["state"] = toActionSateString(state_);
 }
 }  // namespace actions
 }  // namespace navi_sim

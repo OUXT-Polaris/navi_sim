@@ -16,7 +16,9 @@
 #define NAVI_SIM__INTERPRETER__SEND_GOAL_ACTION_HPP_
 
 #include <navi_sim/interpreter/action_base.hpp>
+#include <navi_sim/interpreter/black_board.hpp>
 #include <geometry_msgs/msg/pose_stamped.hpp>
+#include <string>
 
 namespace navi_sim
 {
@@ -26,8 +28,11 @@ class SendGoalAction : public ActionBase
 {
 public:
   explicit SendGoalAction(const std::string & name, const YAML::Node & yaml);
+  void getDebugString(YAML::Node & yaml) override;
+
 private:
   geometry_msgs::msg::PoseStamped goal_;
+  ActionState onUpdate(const BlackBoard & black_board) override;
 };
 }  // namespace actions
 }  // namespace navi_sim

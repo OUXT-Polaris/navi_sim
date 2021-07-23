@@ -14,6 +14,9 @@
 
 #include <navi_sim/interpreter/send_goal_action.hpp>
 #include <navi_sim/interpreter/data_type.hpp>
+#include <rclcpp/rclcpp.hpp>
+#include <geometry_msgs/msg/pose_stamped.hpp>
+#include <string>
 
 namespace navi_sim
 {
@@ -23,6 +26,28 @@ SendGoalAction::SendGoalAction(const std::string & name, const YAML::Node & yaml
 : ActionBase(name, yaml)
 {
   parse(yaml["target"], goal_);
+}
+
+void SendGoalAction::getDebugString(YAML::Node & yaml)
+{
+  ActionBase::getDebugString(yaml);
+}
+
+ActionState SendGoalAction::onUpdate(const BlackBoard & black_board)
+{
+  auto pub = black_board.get<rclcpp::Publisher<geometry_msgs::msg::PoseStamped>::SharedPtr>(
+    "goal_publisher");
+  auto clock = black_board.get<rclcpp::Clock::SharedPtr>("clock");
+  if (pub == nullptr) {
+    RCLCPP_ERROR_STREAM(rclcpp::get_logger("interpreter"), "goal publisher is uninitialized.");
+  }
+  if (clock == nullptr) {
+    RCLCPP_ERROR_STREAM(rclcpp::get_logger("interpreter"), "clock is uninitialized.");
+  } else {
+    goal_.header.stamp = clock->now();
+    pub->publish(goal_);
+  }
+  return ActionState::FINISHED;
 }
 }  // namespace actions
 }  // namespace navi_sim
