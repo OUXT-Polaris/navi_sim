@@ -59,6 +59,7 @@ std::string toActionSateString(const ActionState & enum_val)
 ActionBase::ActionBase(const std::string & name, const YAML::Node & yaml)
 : name(name), type(toActionTypeEnum(yaml["type"].as<std::string>()))
 {
+  state_ = ActionState::INACTIVE;
 }
 
 ActionState ActionBase::getState() const

@@ -25,7 +25,7 @@ namespace actions
 SendGoalAction::SendGoalAction(const std::string & name, const YAML::Node & yaml)
 : ActionBase(name, yaml)
 {
-  parse(yaml["target"], goal_);
+  parse(yaml["goal"], goal_);
 }
 
 void SendGoalAction::getDebugString(YAML::Node & yaml)

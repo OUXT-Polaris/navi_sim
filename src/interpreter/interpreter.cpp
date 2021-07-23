@@ -72,6 +72,9 @@ void Interpreter::evaluate()
 
 void Interpreter::getDebugString(YAML::Node & yaml)
 {
+  for (const auto & action : actions_) {
+    action->getDebugString(yaml);
+  }
   for (const auto & event : events_) {
     event->getDebugString(yaml);
   }
