@@ -36,10 +36,10 @@ void SimulationTimeEvent::getDebugString(YAML::Node & yaml)
 EventState SimulationTimeEvent::onUpdate(const BlackBoard & black_board)
 {
   double simulation_time = black_board.get<double>("simulation_time");
-  if (grater_ && value_ >= simulation_time) {
+  if (grater_ && value_ <= simulation_time) {
     return EventState::FINISHED;
   }
-  if (!grater_ && value_ <= simulation_time) {
+  if (!grater_ && value_ >= simulation_time) {
     return EventState::FINISHED;
   }
   return EventState::ACTIVE;

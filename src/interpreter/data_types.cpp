@@ -20,6 +20,7 @@ namespace navi_sim
 void parse(const YAML::Node & yaml, geometry_msgs::msg::PoseStamped & pose)
 {
   pose.header.frame_id = yaml["frame"].as<std::string>();
+  parse(yaml["pose"], pose.pose);
 }
 
 void parse(const YAML::Node & yaml, geometry_msgs::msg::Pose & pose)

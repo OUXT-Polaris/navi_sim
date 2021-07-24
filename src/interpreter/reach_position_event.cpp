@@ -17,6 +17,8 @@
 
 #include <boost/optional.hpp>
 
+#include <rclcpp/rclcpp.hpp>
+
 #include <string>
 #include <iostream>
 #include <cmath>
