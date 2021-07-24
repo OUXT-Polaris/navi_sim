@@ -39,7 +39,7 @@ scenario:
       type: simulation_time
       next_action: goto_first_goal
       grater: true
-      value: 10.0
+      value: 5.0
       trigger: always
     reach_first_goal:
       type: reach_position

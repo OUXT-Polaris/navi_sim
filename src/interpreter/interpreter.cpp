@@ -78,6 +78,9 @@ void Interpreter::evaluate()
     }
   }
   black_board_.set("triggerd_actions", triggerd_actions);
+  for (const auto & action : actions_) {
+    action->update(black_board_);
+  }
 }
 
 void Interpreter::getDebugString(YAML::Node & yaml)
