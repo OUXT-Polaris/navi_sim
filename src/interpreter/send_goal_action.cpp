@@ -46,6 +46,7 @@ ActionState SendGoalAction::onUpdate(const BlackBoard & black_board)
   } else {
     goal_.header.stamp = clock->now();
     pub->publish(goal_);
+    RCLCPP_INFO_STREAM(rclcpp::get_logger("interpreter"), "goal published.");
   }
   return ActionState::FINISHED;
 }

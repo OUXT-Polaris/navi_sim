@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include <navi_sim/interpreter/action_base.hpp>
+#include <rclcpp/rclcpp.hpp>
 #include <string>
 #include <vector>
 #include <iostream>
