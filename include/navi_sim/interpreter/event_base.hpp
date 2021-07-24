@@ -36,7 +36,8 @@ enum class EventState
 
 enum class EventType
 {
-  REACH_POSITION = 0
+  REACH_POSITION = 0,
+  SIMULATION_TIME = 1
 };
 
 void toEnum(const std::string string_val, EventType & enum_val);

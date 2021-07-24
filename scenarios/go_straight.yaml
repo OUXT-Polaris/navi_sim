@@ -35,6 +35,12 @@ scenario:
       goal: *second_goal
 
   events:
+    start_ego:
+      type: simulation_time
+      next_action: goto_first_goal
+      grater: true
+      value: 10.0
+      trigger: always
     reach_first_goal:
       type: reach_position
       target: *first_goal

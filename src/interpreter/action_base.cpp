@@ -14,6 +14,7 @@
 
 #include <navi_sim/interpreter/action_base.hpp>
 #include <string>
+#include <vector>
 
 namespace navi_sim
 {

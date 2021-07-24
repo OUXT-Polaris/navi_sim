@@ -117,6 +117,7 @@ private:
   std::string scenario_filename_;
   const boost::optional<geometry_msgs::msg::Pose> getEgoPose();
   rclcpp::Publisher<std_msgs::msg::String>::SharedPtr context_pub_;
+  rclcpp::Time start_time_;
 };
 }  // namespace navi_sim
 

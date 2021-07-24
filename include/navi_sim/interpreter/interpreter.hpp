@@ -16,6 +16,7 @@
 #define NAVI_SIM__INTERPRETER__INTERPRETER_HPP_
 
 #include <navi_sim/interpreter/reach_position_event.hpp>
+#include <navi_sim/interpreter/simulation_time_event.hpp>
 #include <navi_sim/interpreter/send_goal_action.hpp>
 
 #include <yaml-cpp/yaml.h>

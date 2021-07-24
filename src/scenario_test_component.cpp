@@ -91,6 +91,7 @@ void ScenarioTestComponent::initialize()
     "goal_publisher", goal_pub_);
   context_pub_ = this->create_publisher<std_msgs::msg::String>("context", 1);
   interpreter_->setValueToBlackBoard<rclcpp::Clock::SharedPtr>("clock", get_clock());
+  start_time_ = get_clock()->now();
   using namespace std::chrono_literals;
   timer_ = create_wall_timer(50ms, std::bind(&ScenarioTestComponent::update, this));
 }
@@ -158,6 +159,9 @@ const visualization_msgs::msg::MarkerArray ScenarioTestComponent::getCollisionMa
 
 void ScenarioTestComponent::update()
 {
+  interpreter_->setValueToBlackBoard(
+    "simulation_time",
+    (get_clock()->now() - start_time_).seconds());
   interpreter_->setValueToBlackBoard("ego_pose", getEgoPose());
   interpreter_->evaluate();
   std::stringstream ss;

@@ -13,10 +13,12 @@
 // limitations under the License.
 
 #include <navi_sim/interpreter/event_base.hpp>
+#include <rclcpp/rclcpp.hpp>
 
 #include <fstream>
 #include <string>
 #include <vector>
+#include <iostream>
 
 namespace navi_sim
 {
@@ -31,6 +33,8 @@ EventType toEventTypeEnum(const std::string string_val)
 {
   if (string_val == "reach_position") {
     return EventType::REACH_POSITION;
+  } else if (string_val == "simulation_time") {
+    return EventType::SIMULATION_TIME;
   } else {
     throw std::runtime_error("invalid event type : " + string_val);
   }
@@ -42,6 +46,9 @@ std::string toEventTypeString(const EventType & enum_val)
   switch (enum_val) {
     case EventType::REACH_POSITION:
       ret = "reach_position";
+      break;
+    case EventType::SIMULATION_TIME:
+      ret = "simulation_time";
       break;
   }
   return ret;

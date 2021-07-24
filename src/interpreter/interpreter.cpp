@@ -37,6 +37,9 @@ Interpreter::Interpreter(const std::string & path)
       case events::EventType::REACH_POSITION:
         addEvent<events::ReachPositionEvent>(name, event);
         break;
+      case events::EventType::SIMULATION_TIME:
+        addEvent<events::SimulationTimeEvent>(name, event);
+        break;
     }
   }
   const auto action_tree = scenario_["scenario"]["actions"];
@@ -52,6 +55,7 @@ Interpreter::Interpreter(const std::string & path)
   black_board_.set<rclcpp::Publisher<geometry_msgs::msg::PoseStamped>::SharedPtr>(
     "goal_publisher",
     nullptr);
+  black_board_.set<double>("simulation_time", 0);
   black_board_.set<rclcpp::Clock::SharedPtr>("clock", nullptr);
   black_board_.set<std::vector<std::string>>("activated_events", {});
   black_board_.set<std::vector<std::string>>("triggerd_actions", {});
@@ -69,7 +73,7 @@ void Interpreter::evaluate()
   black_board_.set("activated_events", activated_events);
   for (const auto & event : events_) {
     event->updateState(black_board_);
-    if(event->getState() == events::EventState::FINISHED) {
+    if (event->getState() == events::EventState::FINISHED) {
       triggerd_actions.emplace_back(event->next_action);
     }
   }
