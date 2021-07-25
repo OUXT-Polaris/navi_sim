@@ -18,9 +18,11 @@ from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch_ros.actions import Node
 from launch.actions import IncludeLaunchDescription
+from launch.actions.declare_launch_argument import DeclareLaunchArgument
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch_ros.actions import ComposableNodeContainer
 from launch_ros.descriptions import ComposableNode
+from launch.substitutions.launch_configuration import LaunchConfiguration
 
 import yaml
 
@@ -33,7 +35,6 @@ def getLidarSimComponent(lidar_name):
     params = {}
     with open(param_config, 'r') as f:
         params = yaml.safe_load(f)[lidar_name + '_node']['ros__parameters']
-        print(params)
     object_config_path = os.path.join(
             get_package_share_directory('navi_sim'),
             'config',
@@ -57,7 +58,6 @@ def getCameraSimComponent(camera_name):
     params = {}
     with open(param_config, 'r') as f:
         params = yaml.safe_load(f)[camera_name + '_node']['ros__parameters']
-        print(params)
     object_config_path = os.path.join(
             get_package_share_directory('navi_sim'),
             'config',
@@ -68,6 +68,30 @@ def getCameraSimComponent(camera_name):
         plugin='navi_sim::CameraSimComponent',
         namespace='/sensing/'+camera_name,
         name=camera_name + '_node',
+        remappings=[],
+        parameters=[params])
+    return component
+
+
+def getScenarioTestComponent(scenario_filename):
+    config_directory = os.path.join(
+        get_package_share_directory('navi_sim'),
+        'config')
+    param_config = os.path.join(config_directory, 'scenario_test.yaml')
+    params = {}
+    with open(param_config, 'r') as f:
+        params = yaml.safe_load(f)['scenario_test_node']['ros__parameters']
+    object_config_path = os.path.join(
+            get_package_share_directory('navi_sim'),
+            'config',
+            'objects.json')
+    params["objects_path"] = object_config_path
+    params["scenario_filename"] = scenario_filename
+    component = ComposableNode(
+        package='navi_sim',
+        plugin='navi_sim::ScenarioTestComponent',
+        name='scenario_test_node',
+        namespace='simulation',
         remappings=[],
         parameters=[params])
     return component
@@ -88,7 +112,12 @@ def generate_launch_description():
             'navi_sim.rviz')
     description_dir = os.path.join(
             get_package_share_directory('wamv_description'), 'launch')
+    scenario_filename = LaunchConfiguration("scenario_filename", default="go_straight.yaml")
     description = LaunchDescription([
+        DeclareLaunchArgument(
+            "scenario_filename",
+            default_value=scenario_filename,
+            description="filename of the scenario yaml file."),
         Node(
             package='rviz2',
             executable='rviz2',
@@ -102,6 +131,7 @@ def generate_launch_description():
             executable='component_container',
             composable_node_descriptions=[
                 getNaviSimComponent(),
+                getScenarioTestComponent(scenario_filename),
                 getLidarSimComponent("front_lidar"),
                 getLidarSimComponent("rear_lidar"),
                 getLidarSimComponent("right_lidar"),

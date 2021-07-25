@@ -64,6 +64,11 @@ void Raycaster::addPrimitives(nlohmann::json json)
   }
 }
 
+const std::vector<geometry_msgs::msg::Point> Raycaster::get2DPolygon(const std::string & name)
+{
+  return primitive_ptrs_[name]->get2DPolygon();
+}
+
 const std::vector<std::string> Raycaster::getPrimitiveNames()
 {
   std::vector<std::string> ret;

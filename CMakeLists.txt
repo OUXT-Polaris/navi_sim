@@ -82,26 +82,73 @@ ament_target_dependencies(camera_sim_node
 )
 target_link_libraries(camera_sim_node camera_sim_component)
 
+ament_auto_add_library(scenario_test_component SHARED
+  src/interpreter/action_base.cpp
+  src/interpreter/black_board.cpp
+  src/interpreter/data_types.cpp
+  src/interpreter/event_base.cpp
+  src/interpreter/interpreter.cpp
+  src/interpreter/reach_position_event.cpp
+  src/interpreter/send_goal_action.cpp
+  src/interpreter/simulation_time_event.cpp
+  src/primitives/box.cpp
+  src/primitives/primitive.cpp
+  src/raycaster.cpp
+  src/scenario_test_component.cpp
+)
+target_compile_definitions(scenario_test_component PRIVATE "NAVI_SIM_SCENARIO_TEST_COMPONENT_BUILDING_DLL")
+target_link_libraries(scenario_test_component embree3 yaml-cpp)
+rclcpp_components_register_nodes(scenario_test_component
+  "navi_sim::ScenarioTestComponent")
+ament_auto_add_executable(scenario_test_node
+  src/scenario_test_node.cpp
+)
+target_link_libraries(scenario_test_node
+  yaml-cpp
+  scenario_test_component
+)
+
+ament_auto_add_executable(example
+  src/interpreter/action_base.cpp
+  src/interpreter/black_board.cpp
+  src/interpreter/data_types.cpp
+  src/interpreter/event_base.cpp
+  src/interpreter/example.cpp
+  src/interpreter/interpreter.cpp
+  src/interpreter/reach_position_event.cpp
+  src/interpreter/send_goal_action.cpp
+  src/interpreter/simulation_time_event.cpp
+)
+target_link_libraries(example
+  yaml-cpp
+)
+
 install(TARGETS
   navi_sim_node
   lidar_sim_node
   camera_sim_node
+  scenario_test_node
+  example
   DESTINATION lib/navi_sim
 )
 install(TARGETS
   navi_sim_component
   lidar_sim_component
   camera_sim_component
+  scenario_test_component
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin)
 ament_export_libraries(navi_sim_component)
 ament_export_libraries(lidar_sim_component)
+ament_export_libraries(camera_sim_component)
+ament_export_libraries(scenario_test_component)
+
 
 #############
 ## Install ##
 #############
-install(DIRECTORY launch config
+install(DIRECTORY launch config scenarios
   DESTINATION share/${PROJECT_NAME}
 )
 
@@ -111,6 +158,8 @@ if(BUILD_TESTING)
   find_package(ament_cmake_gtest REQUIRED)
   ament_add_gtest(test_model test/src/test_model.cpp)
   target_link_libraries(test_model lidar_sim_component)
+  ament_add_gtest(test_interpreter test/src/test_interpreter.cpp)
+  target_link_libraries(test_interpreter scenario_test_component)
 endif()
 
 ament_auto_package()
