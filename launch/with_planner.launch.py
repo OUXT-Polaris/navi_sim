@@ -17,6 +17,8 @@ from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
+from launch.actions.declare_launch_argument import DeclareLaunchArgument
+from launch.substitutions.launch_configuration import LaunchConfiguration
 
 
 def generate_launch_description():
@@ -25,17 +27,22 @@ def generate_launch_description():
     hermite_path_planner_launch_dir = os.path.join(hermite_path_planner_package_path, 'launch')
     perception_bringup_package_path = get_package_share_directory('perception_bringup')
     perception_bringup_launch_dir = os.path.join(perception_bringup_package_path, 'launch')
+    scenario_filename = LaunchConfiguration("scenario_filename", default="go_straight.yaml")
     return LaunchDescription([
+        DeclareLaunchArgument(
+            "scenario_filename",
+            default_value=scenario_filename,
+            description="filename of the scenario yaml file."),
         IncludeLaunchDescription(
-            PythonLaunchDescriptionSource([navi_sim_launch_file_dir, '/navi_sim.launch.py']),
-        ),
-        IncludeLaunchDescription(
-            PythonLaunchDescriptionSource([hermite_path_planner_launch_dir, '/bringup.launch.py']),
+            PythonLaunchDescriptionSource(
+                [navi_sim_launch_file_dir, '/navi_sim.launch.py']), launch_arguments = {'scenario_filename': scenario_filename}.items()
         ),
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(
-                [
-                    perception_bringup_launch_dir, '/perception_bringup.launch.py'
-                ]),
+                [hermite_path_planner_launch_dir, '/bringup.launch.py']),
+        ),
+        IncludeLaunchDescription(
+            PythonLaunchDescriptionSource(
+                [perception_bringup_launch_dir, '/perception_bringup.launch.py']),
         )
     ])

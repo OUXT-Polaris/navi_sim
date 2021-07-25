@@ -18,9 +18,11 @@ from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch_ros.actions import Node
 from launch.actions import IncludeLaunchDescription
+from launch.actions.declare_launch_argument import DeclareLaunchArgument
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch_ros.actions import ComposableNodeContainer
 from launch_ros.descriptions import ComposableNode
+from launch.substitutions.launch_configuration import LaunchConfiguration
 
 import yaml
 
@@ -33,7 +35,6 @@ def getLidarSimComponent(lidar_name):
     params = {}
     with open(param_config, 'r') as f:
         params = yaml.safe_load(f)[lidar_name + '_node']['ros__parameters']
-        print(params)
     object_config_path = os.path.join(
             get_package_share_directory('navi_sim'),
             'config',
@@ -57,7 +58,6 @@ def getCameraSimComponent(camera_name):
     params = {}
     with open(param_config, 'r') as f:
         params = yaml.safe_load(f)[camera_name + '_node']['ros__parameters']
-        print(params)
     object_config_path = os.path.join(
             get_package_share_directory('navi_sim'),
             'config',
@@ -81,7 +81,6 @@ def getScenarioTestComponent():
     params = {}
     with open(param_config, 'r') as f:
         params = yaml.safe_load(f)['scenario_test_node']['ros__parameters']
-        print(params)
     object_config_path = os.path.join(
             get_package_share_directory('navi_sim'),
             'config',
@@ -112,7 +111,12 @@ def generate_launch_description():
             'navi_sim.rviz')
     description_dir = os.path.join(
             get_package_share_directory('wamv_description'), 'launch')
+    scenario_filename = LaunchConfiguration("scenario_filename", default="go_straight.yaml")
     description = LaunchDescription([
+        DeclareLaunchArgument(
+            "scenario_filename",
+            default_value=scenario_filename,
+            description="filename of the scenario yaml file."),
         Node(
             package='rviz2',
             executable='rviz2',
