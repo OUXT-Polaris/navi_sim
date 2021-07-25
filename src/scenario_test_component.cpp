@@ -224,6 +224,7 @@ const std::vector<geometry_msgs::msg::Point> ScenarioTestComponent::getBboxPolyg
   points.emplace_back(getCornerPoint(true, false));
   points.emplace_back(getCornerPoint(false, false));
   points.emplace_back(getCornerPoint(false, true));
+  points.emplace_back(getCornerPoint(true, true));
   return transformPoints(transform_stamped, points);
 }
 
@@ -295,7 +296,7 @@ bool ScenarioTestComponent::checkCollision(
   if (bg::disjoint(poly0_bg, poly1_bg)) {
     return false;
   }
-  return true;
+  return false;
 }
 }  // namespace navi_sim
 
