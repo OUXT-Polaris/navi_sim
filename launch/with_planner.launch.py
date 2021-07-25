@@ -35,7 +35,8 @@ def generate_launch_description():
             description="filename of the scenario yaml file."),
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(
-                [navi_sim_launch_file_dir, '/navi_sim.launch.py']), launch_arguments = {'scenario_filename': scenario_filename}.items()
+                [navi_sim_launch_file_dir, '/navi_sim.launch.py']),
+            launch_arguments={'scenario_filename': scenario_filename}.items()
         ),
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(
