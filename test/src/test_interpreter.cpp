@@ -25,8 +25,9 @@ TEST(Interpreter, load)
   std::string path = ament_index_cpp::get_package_share_directory("navi_sim") +
     "/scenarios/go_straight.yaml";
   navi_sim::Interpreter interpreter(path);
-  ASSERT_EQ(interpreter.getEventIndex("reach_first_goal"), static_cast<size_t>(0));
-  ASSERT_EQ(interpreter.getEventIndex("reach_second_goal"), static_cast<size_t>(1));
+  ASSERT_EQ(interpreter.getEventIndex("start_ego"), static_cast<size_t>(0));
+  ASSERT_EQ(interpreter.getEventIndex("reach_first_goal"), static_cast<size_t>(1));
+  ASSERT_EQ(interpreter.getEventIndex("reach_second_goal"), static_cast<size_t>(2));
 }
 
 TEST(BlackBoard, string)
