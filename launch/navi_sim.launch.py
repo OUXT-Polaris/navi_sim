@@ -73,7 +73,7 @@ def getCameraSimComponent(camera_name):
     return component
 
 
-def getScenarioTestComponent():
+def getScenarioTestComponent(scenario_filename):
     config_directory = os.path.join(
         get_package_share_directory('navi_sim'),
         'config')
@@ -86,6 +86,7 @@ def getScenarioTestComponent():
             'config',
             'objects.json')
     params["objects_path"] = object_config_path
+    params["scenario_filename"] = scenario_filename
     component = ComposableNode(
         package='navi_sim',
         plugin='navi_sim::ScenarioTestComponent',
@@ -130,7 +131,7 @@ def generate_launch_description():
             executable='component_container',
             composable_node_descriptions=[
                 getNaviSimComponent(),
-                getScenarioTestComponent(),
+                getScenarioTestComponent(scenario_filename),
                 getLidarSimComponent("front_lidar"),
                 getLidarSimComponent("rear_lidar"),
                 getLidarSimComponent("right_lidar"),
