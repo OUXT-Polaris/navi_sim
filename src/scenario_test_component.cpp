@@ -25,6 +25,7 @@
 
 #include <quaternion_operation/quaternion_operation.h>
 
+#include <fstream>
 #include <string>
 #include <vector>
 #include <memory>
@@ -174,6 +175,9 @@ void ScenarioTestComponent::update()
   // std::cout << context << std::endl;
   const auto collision = checkCollision();
   collision_marker_pub_->publish(getCollisionMarker(collision));
+  std::ofstream output("/tmp/context.yaml", std::ios::out | std::ios::trunc);
+  output << ss.str();
+  output.close();
   if (interpreter_->getActionState("success") == actions::ActionState::FINISHED ||
     interpreter_->getActionState("failure") == actions::ActionState::FINISHED)
   {

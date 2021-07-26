@@ -31,15 +31,18 @@ SimulationTimeEvent::SimulationTimeEvent(const std::string & name, const YAML::N
 void SimulationTimeEvent::getDebugString(YAML::Node & yaml)
 {
   EventBase::getDebugString(yaml);
+  if(getState() == events::EventState::ACTIVE) {
+    yaml["events"][name]["simulation_time"] = simulation_time_;
+  }
 }
 
 EventState SimulationTimeEvent::onUpdate(const BlackBoard & black_board)
 {
-  double simulation_time = black_board.get<double>("simulation_time");
-  if (grater_ && value_ <= simulation_time) {
+  simulation_time_ = black_board.get<double>("simulation_time");
+  if (grater_ && value_ <= simulation_time_) {
     return EventState::FINISHED;
   }
-  if (!grater_ && value_ >= simulation_time) {
+  if (!grater_ && value_ >= simulation_time_) {
     return EventState::FINISHED;
   }
   return EventState::ACTIVE;

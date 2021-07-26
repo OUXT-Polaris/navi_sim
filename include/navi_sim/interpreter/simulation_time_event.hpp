@@ -35,6 +35,7 @@ public:
 private:
   double value_;
   bool grater_;
+  double simulation_time_;
 };
 }  // namespace events
 }  // namespace navi_sim
