@@ -115,6 +115,7 @@ def generate_launch_description():
     description_dir = os.path.join(
             get_package_share_directory('wamv_description'), 'launch')
     scenario_filename = LaunchConfiguration("scenario_filename", default="go_straight.yaml")
+    record = LaunchConfiguration("record", default=False)
     simulator = ComposableNodeContainer(
         name='navi_sim_bringup_container',
         namespace='sensing',
@@ -140,6 +141,11 @@ def generate_launch_description():
             "scenario_filename",
             default_value=scenario_filename,
             description="filename of the scenario yaml file."),
+        DeclareLaunchArgument(
+            "record",
+            default_value=record,
+            description="If true, record rosbag data."
+        ),
         Node(
             package='rviz2',
             executable='rviz2',
