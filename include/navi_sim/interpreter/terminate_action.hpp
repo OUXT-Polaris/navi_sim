@@ -31,7 +31,7 @@ public:
 
 private:
   ActionState onUpdate(const BlackBoard & black_board) override;
-  double timeout_;
+  bool success_;
 };
 }  // namespace actions
 }  // namespace navi_sim

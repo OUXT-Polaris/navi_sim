@@ -23,6 +23,7 @@ namespace actions
 TerminateAction::TerminateAction(const std::string & name, const YAML::Node & yaml)
 : ActionBase(name, yaml)
 {
+  success_ = yaml["success"].as<bool>();
 }
 
 void TerminateAction::getDebugString(YAML::Node & yaml)
@@ -30,8 +31,10 @@ void TerminateAction::getDebugString(YAML::Node & yaml)
   ActionBase::getDebugString(yaml);
 }
 
-ActionState TerminateAction::onUpdate(const BlackBoard & black_board)
+ActionState TerminateAction::onUpdate(const BlackBoard &)
 {
+  rclcpp::shutdown();
+  return ActionState::FINISHED;
 }
 }  // namespace actions
 }  // namespace navi_sim
