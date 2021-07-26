@@ -34,6 +34,10 @@ def generate_launch_description():
             "scenario_filename",
             default_value=scenario_filename,
             description="filename of the scenario yaml file."),
+        DeclareLaunchArgument(
+            "record",
+            default_value=record,
+            description="If true, record rosbag data."),
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(
                 [navi_sim_launch_file_dir, '/navi_sim.launch.py']),
