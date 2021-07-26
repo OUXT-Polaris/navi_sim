@@ -20,11 +20,13 @@ from launch.event_handlers import OnProcessExit
 from launch.events import Shutdown
 from launch_ros.actions import Node
 from launch.actions import IncludeLaunchDescription, EmitEvent, RegisterEventHandler
+from launch.actions import ExecuteProcess
 from launch.actions.declare_launch_argument import DeclareLaunchArgument
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch_ros.actions import ComposableNodeContainer
 from launch_ros.descriptions import ComposableNode
 from launch.substitutions.launch_configuration import LaunchConfiguration
+from launch.conditions import IfCondition
 
 import yaml
 
@@ -160,5 +162,15 @@ def generate_launch_description():
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource([description_dir, '/wamv_description.launch.py']),
         ),
+        ExecuteProcess(
+            cmd=[
+                'ros2',
+                'bag',
+                'record',
+                '-a',
+                '-o', scenario_filename],
+            output='screen',
+            condition=IfCondition(record)
+        )
     ])
     return description
