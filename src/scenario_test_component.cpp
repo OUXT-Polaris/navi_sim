@@ -171,7 +171,7 @@ void ScenarioTestComponent::update()
   std_msgs::msg::String string_data;
   string_data.data = ss.str();
   context_pub_->publish(string_data);
-  std::cout << context << std::endl;
+  // std::cout << context << std::endl;
   const auto collision = checkCollision();
   collision_marker_pub_->publish(getCollisionMarker(collision));
 }

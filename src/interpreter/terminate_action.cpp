@@ -14,6 +14,7 @@
 
 #include <navi_sim/interpreter/terminate_action.hpp>
 #include <rclcpp/rclcpp.hpp>
+#include <string>
 
 namespace navi_sim
 {
