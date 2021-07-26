@@ -31,7 +31,7 @@ SimulationTimeEvent::SimulationTimeEvent(const std::string & name, const YAML::N
 void SimulationTimeEvent::getDebugString(YAML::Node & yaml)
 {
   EventBase::getDebugString(yaml);
-  if(getState() == events::EventState::ACTIVE) {
+  if (getState() == events::EventState::ACTIVE) {
     yaml["events"][name]["simulation_time"] = simulation_time_;
   }
 }

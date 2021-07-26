@@ -125,12 +125,20 @@ target_link_libraries(example
   yaml-cpp
 )
 
+add_executable(check_result
+  src/check_result.cpp
+)
+target_link_libraries(check_result
+  yaml-cpp
+)
+
 install(TARGETS
   navi_sim_node
   lidar_sim_node
   camera_sim_node
   scenario_test_node
   example
+  check_result
   DESTINATION lib/navi_sim
 )
 install(TARGETS
