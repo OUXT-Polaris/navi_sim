@@ -168,7 +168,9 @@ def generate_launch_description():
                 'bag',
                 'record',
                 '-a',
-                '-o', scenario_filename],
+                '-o', scenario_filename,
+                '--compression-mode', 'file',
+                '--compression-format', 'zstd'],
             output='screen',
             condition=IfCondition(record)
         )
