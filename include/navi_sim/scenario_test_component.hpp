@@ -67,6 +67,7 @@ extern "C" {
 
 #include <boost/optional.hpp>
 
+#include <fstream>
 #include <memory>
 #include <string>
 #include <utility>

@@ -34,6 +34,8 @@ public:
   Interpreter() = delete;
   explicit Interpreter(const std::string & path);
   size_t getEventIndex(const std::string & name) const;
+  size_t getActionIndex(const std::string & name) const;
+  actions::ActionState getActionState(const std::string & name) const;
   void getDebugString(YAML::Node & yaml);
   template<typename T>
   void setValueToBlackBoard(const std::string & key, const T & value)

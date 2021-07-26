@@ -33,7 +33,6 @@ void TerminateAction::getDebugString(YAML::Node & yaml)
 
 ActionState TerminateAction::onUpdate(const BlackBoard &)
 {
-  rclcpp::shutdown();
   return ActionState::FINISHED;
 }
 }  // namespace actions

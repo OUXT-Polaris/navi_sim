@@ -28,15 +28,20 @@ def generate_launch_description():
     perception_bringup_package_path = get_package_share_directory('perception_bringup')
     perception_bringup_launch_dir = os.path.join(perception_bringup_package_path, 'launch')
     scenario_filename = LaunchConfiguration("scenario_filename", default="go_straight.yaml")
+    record = LaunchConfiguration("record", default=False)
     return LaunchDescription([
         DeclareLaunchArgument(
             "scenario_filename",
             default_value=scenario_filename,
             description="filename of the scenario yaml file."),
+        DeclareLaunchArgument(
+            "record",
+            default_value=record,
+            description="If true, record rosbag data."),
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(
                 [navi_sim_launch_file_dir, '/navi_sim.launch.py']),
-            launch_arguments={'scenario_filename': scenario_filename}.items()
+            launch_arguments={'scenario_filename': scenario_filename, 'record': record}.items()
         ),
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(

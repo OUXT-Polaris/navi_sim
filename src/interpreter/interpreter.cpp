@@ -108,6 +108,23 @@ void Interpreter::getDebugString(YAML::Node & yaml)
   }
 }
 
+actions::ActionState Interpreter::getActionState(const std::string & name) const
+{
+  return actions_[getActionIndex(name)]->getState();
+}
+
+size_t Interpreter::getActionIndex(const std::string & name) const
+{
+  size_t index = 0;
+  for (const auto & action : actions_) {
+    if (action->name == name) {
+      return index;
+    }
+    index++;
+  }
+  throw std::runtime_error("action : " + name + " does not exist.");
+}
+
 size_t Interpreter::getEventIndex(const std::string & name) const
 {
   size_t index = 0;
