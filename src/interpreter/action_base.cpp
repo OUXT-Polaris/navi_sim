@@ -26,6 +26,9 @@ ActionType toActionTypeEnum(const std::string string_val)
 {
   if (string_val == "send_goal") {
     return ActionType::SEND_GOAL;
+  }
+  else if(string_val == "terminate") {
+    return ActionType::TERMINATE;
   } else {
     throw std::runtime_error("invalid action type : " + string_val);
   }
@@ -37,6 +40,9 @@ std::string toActionTypeString(const ActionType & enum_val)
   switch (enum_val) {
     case ActionType::SEND_GOAL:
       ret = "send_goal";
+      break;
+    case ActionType::TERMINATE:
+      ret = "terminate";
       break;
   }
   return ret;

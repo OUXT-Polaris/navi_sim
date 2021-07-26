@@ -18,6 +18,7 @@
 #include <navi_sim/interpreter/reach_position_event.hpp>
 #include <navi_sim/interpreter/simulation_time_event.hpp>
 #include <navi_sim/interpreter/send_goal_action.hpp>
+#include <navi_sim/interpreter/terminate_action.hpp>
 
 #include <yaml-cpp/yaml.h>
 #include <string>
@@ -42,6 +43,7 @@ public:
   void evaluate();
 
 private:
+  const YAML::Node appendDefaultActions(const YAML::Node & scenario);
   BlackBoard black_board_;
   const YAML::Node scenario_;
   std::vector<std::unique_ptr<events::EventBase>> events_;

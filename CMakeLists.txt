@@ -91,6 +91,7 @@ ament_auto_add_library(scenario_test_component SHARED
   src/interpreter/reach_position_event.cpp
   src/interpreter/send_goal_action.cpp
   src/interpreter/simulation_time_event.cpp
+  src/interpreter/terminate_action.cpp
   src/primitives/box.cpp
   src/primitives/primitive.cpp
   src/raycaster.cpp
@@ -118,6 +119,7 @@ ament_auto_add_executable(example
   src/interpreter/reach_position_event.cpp
   src/interpreter/send_goal_action.cpp
   src/interpreter/simulation_time_event.cpp
+  src/interpreter/terminate_action.cpp
 )
 target_link_libraries(example
   yaml-cpp

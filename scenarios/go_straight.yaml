@@ -25,7 +25,6 @@ second_goal: &second_goal
       w: 1.0
 
 scenario:
-  timeout: 30
   actions:
     goto_first_goal:
       type: send_goal
@@ -52,4 +51,10 @@ scenario:
       target: *second_goal
       radius: 0.5
       next_action: success
+      trigger: always
+    timeout:
+      type: simulation_time
+      next_action: failure
+      grater: true
+      value: 10.0
       trigger: always
