@@ -174,6 +174,11 @@ void ScenarioTestComponent::update()
   // std::cout << context << std::endl;
   const auto collision = checkCollision();
   collision_marker_pub_->publish(getCollisionMarker(collision));
+  if (interpreter_->getActionState("success") == actions::ActionState::FINISHED ||
+    interpreter_->getActionState("failure") == actions::ActionState::FINISHED)
+  {
+    rclcpp::shutdown();
+  }
 }
 
 bool ScenarioTestComponent::checkCollision()
