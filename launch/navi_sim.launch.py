@@ -16,8 +16,10 @@ import os
 
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
+from launch.event_handlers import OnProcessExit
+from launch.events import Shutdown
 from launch_ros.actions import Node
-from launch.actions import IncludeLaunchDescription
+from launch.actions import IncludeLaunchDescription, EmitEvent, RegisterEventHandler
 from launch.actions.declare_launch_argument import DeclareLaunchArgument
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch_ros.actions import ComposableNodeContainer
@@ -113,6 +115,26 @@ def generate_launch_description():
     description_dir = os.path.join(
             get_package_share_directory('wamv_description'), 'launch')
     scenario_filename = LaunchConfiguration("scenario_filename", default="go_straight.yaml")
+    simulator = ComposableNodeContainer(
+        name='navi_sim_bringup_container',
+        namespace='sensing',
+        package='rclcpp_components',
+        executable='component_container',
+        composable_node_descriptions=[
+            getNaviSimComponent(),
+            getScenarioTestComponent(scenario_filename),
+            getLidarSimComponent("front_lidar"),
+            getLidarSimComponent("rear_lidar"),
+            getLidarSimComponent("right_lidar"),
+            getLidarSimComponent("left_lidar"),
+            getCameraSimComponent("front_left_camera"),
+            getCameraSimComponent("front_right_camera"),
+            getCameraSimComponent("rear_left_camera"),
+            getCameraSimComponent("rear_right_camera"),
+            getCameraSimComponent("left_camera"),
+            getCameraSimComponent("right_camera")
+        ],
+        output='screen')
     description = LaunchDescription([
         DeclareLaunchArgument(
             "scenario_filename",
@@ -124,26 +146,11 @@ def generate_launch_description():
             name='rviz2',
             arguments=['-d', rviz_config_dir],
             output='screen'),
-        ComposableNodeContainer(
-            name='navi_sim_bringup_container',
-            namespace='sensing',
-            package='rclcpp_components',
-            executable='component_container',
-            composable_node_descriptions=[
-                getNaviSimComponent(),
-                getScenarioTestComponent(scenario_filename),
-                getLidarSimComponent("front_lidar"),
-                getLidarSimComponent("rear_lidar"),
-                getLidarSimComponent("right_lidar"),
-                getLidarSimComponent("left_lidar"),
-                getCameraSimComponent("front_left_camera"),
-                getCameraSimComponent("front_right_camera"),
-                getCameraSimComponent("rear_left_camera"),
-                getCameraSimComponent("rear_right_camera"),
-                getCameraSimComponent("left_camera"),
-                getCameraSimComponent("right_camera")
-            ],
-            output='screen'),
+        simulator,
+        RegisterEventHandler(
+            event_handler=OnProcessExit(
+                target_action=simulator,
+                on_exit=[EmitEvent(event=Shutdown())])),
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource([description_dir, '/wamv_description.launch.py']),
         ),

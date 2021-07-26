@@ -29,7 +29,8 @@ namespace navi_sim
 Interpreter::Interpreter(const std::string & path)
 : scenario_(YAML::LoadFile(path))
 {
-  const auto event_tree = scenario_["scenario"]["events"];
+  const auto scenario = appendDefaultActions(scenario_);
+  const auto event_tree = scenario["scenario"]["events"];
   for (YAML::const_iterator it = event_tree.begin(); it != event_tree.end(); it++) {
     const std::string name = it->first.as<std::string>();
     const auto event = event_tree[name];
@@ -42,13 +43,16 @@ Interpreter::Interpreter(const std::string & path)
         break;
     }
   }
-  const auto action_tree = scenario_["scenario"]["actions"];
+  const auto action_tree = scenario["scenario"]["actions"];
   for (YAML::const_iterator it = action_tree.begin(); it != action_tree.end(); it++) {
     const std::string name = it->first.as<std::string>();
     const auto action = action_tree[name];
     switch (actions::toActionTypeEnum(action["type"].as<std::string>())) {
       case actions::ActionType::SEND_GOAL:
         addAction<actions::SendGoalAction>(name, action);
+        break;
+      case actions::ActionType::TERMINATE:
+        addAction<actions::TerminateAction>(name, action);
         break;
     }
   }
@@ -59,6 +63,17 @@ Interpreter::Interpreter(const std::string & path)
   black_board_.set<rclcpp::Clock::SharedPtr>("clock", nullptr);
   black_board_.set<std::vector<std::string>>("activated_events", {});
   black_board_.set<std::vector<std::string>>("triggerd_actions", {});
+}
+
+const YAML::Node Interpreter::appendDefaultActions(const YAML::Node & scenario)
+{
+  YAML::Node node;
+  node = scenario;
+  node["scenario"]["actions"]["success"]["type"] = "terminate";
+  node["scenario"]["actions"]["success"]["success"] = true;
+  node["scenario"]["actions"]["failure"]["type"] = "terminate";
+  node["scenario"]["actions"]["failure"]["success"] = true;
+  return node;
 }
 
 void Interpreter::evaluate()

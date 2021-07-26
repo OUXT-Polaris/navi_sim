@@ -32,7 +32,8 @@ enum class ActionState
 
 enum class ActionType
 {
-  SEND_GOAL = 0
+  SEND_GOAL = 0,
+  TERMINATE = 1
 };
 
 ActionType toActionTypeEnum(const std::string string_val);
