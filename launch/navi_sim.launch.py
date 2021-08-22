@@ -118,6 +118,7 @@ def generate_launch_description():
             get_package_share_directory('wamv_description'), 'launch')
     scenario_filename = LaunchConfiguration("scenario_filename", default="go_straight.yaml")
     record = LaunchConfiguration("record", default=False)
+    rosbag_directory = LaunchConfiguration("rosbag_directory", default="/tmp")
     simulator = ComposableNodeContainer(
         name='navi_sim_bringup_container',
         namespace='sensing',
@@ -148,6 +149,11 @@ def generate_launch_description():
             default_value=record,
             description="If true, record rosbag data."
         ),
+        DeclareLaunchArgument(
+            "rosbag_directory",
+            default_value=rosbag_directory,
+            description="output directory of the rosbag data"
+        ),
         Node(
             package='rviz2',
             executable='rviz2',
@@ -168,7 +174,7 @@ def generate_launch_description():
                 'bag',
                 'record',
                 '-a',
-                '-o', scenario_filename,
+                '-o', rosbag_directory,
                 '--compression-mode', 'file',
                 '--compression-format', 'zstd'],
             output='screen',
