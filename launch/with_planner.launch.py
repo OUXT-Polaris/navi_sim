@@ -29,6 +29,7 @@ def generate_launch_description():
     perception_bringup_launch_dir = os.path.join(perception_bringup_package_path, 'launch')
     scenario_filename = LaunchConfiguration("scenario_filename", default="go_straight.yaml")
     record = LaunchConfiguration("record", default=False)
+    rosbag_directory = LaunchConfiguration("rosbag_directory", default="/tmp")
     return LaunchDescription([
         DeclareLaunchArgument(
             "scenario_filename",
@@ -41,7 +42,10 @@ def generate_launch_description():
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(
                 [navi_sim_launch_file_dir, '/navi_sim.launch.py']),
-            launch_arguments={'scenario_filename': scenario_filename, 'record': record}.items()
+            launch_arguments={
+                'scenario_filename': scenario_filename,
+                'record': record,
+                'rosbag_directory': rosbag_directory}.items()
         ),
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(
