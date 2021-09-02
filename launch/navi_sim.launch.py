@@ -119,6 +119,7 @@ def generate_launch_description():
     scenario_filename = LaunchConfiguration("scenario_filename", default="go_straight.yaml")
     record = LaunchConfiguration("record", default=False)
     rosbag_directory = LaunchConfiguration("rosbag_directory", default="/tmp")
+    launch_prefix = LaunchConfiguration("launch_prefix")
     simulator = ComposableNodeContainer(
         name='navi_sim_bringup_container',
         namespace='sensing',
@@ -138,6 +139,7 @@ def generate_launch_description():
             getCameraSimComponent("left_camera"),
             getCameraSimComponent("right_camera")
         ],
+        prefix=[launch_prefix],
         output='screen')
     description = LaunchDescription([
         DeclareLaunchArgument(
@@ -153,6 +155,11 @@ def generate_launch_description():
             "rosbag_directory",
             default_value=rosbag_directory,
             description="output directory of the rosbag data"
+        ),
+        DeclareLaunchArgument(
+            'launch_prefix',
+            default_value=launch_prefix,
+            description="launch prefix"
         ),
         Node(
             package='rviz2',

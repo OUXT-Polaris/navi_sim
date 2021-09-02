@@ -30,8 +30,15 @@ def generate_launch_description():
     scenario_filename = LaunchConfiguration("scenario_filename", default="go_straight.yaml")
     record = LaunchConfiguration("record", default=False)
     rosbag_directory = LaunchConfiguration("rosbag_directory", default="/tmp")
-    planner_launch_prefix = LaunchConfiguration("planner_launch_prefix", default="taskset -c 2")
-    perception_launch_prefix = LaunchConfiguration("perception_launch_prefix", default="taskset -c 2")
+    planner_launch_prefix = LaunchConfiguration(
+        "planner_launch_prefix",
+        default="taskset -c 2")
+    perception_launch_prefix = LaunchConfiguration(
+        "perception_launch_prefix",
+        default="taskset -c 2")
+    simulation_launch_prefix = LaunchConfiguration(
+        "perception_launch_prefix",
+        default="taskset -c 1")
     return LaunchDescription([
         DeclareLaunchArgument(
             "scenario_filename",
@@ -47,7 +54,8 @@ def generate_launch_description():
             launch_arguments={
                 'scenario_filename': scenario_filename,
                 'record': record,
-                'rosbag_directory': rosbag_directory}.items()
+                'rosbag_directory': rosbag_directory,
+                'launch_prefix': simulation_launch_prefix}.items()
         ),
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(
