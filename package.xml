@@ -33,6 +33,7 @@
   <depend>color_names</depend>
   <depend>yaml-cpp</depend>
   <depend>rosbag2</depend>
+  <depend>util-linux</depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
