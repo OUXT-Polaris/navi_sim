@@ -37,7 +37,7 @@ def generate_launch_description():
         "perception_launch_prefix",
         default="taskset -c 2")
     simulation_launch_prefix = LaunchConfiguration(
-        "perception_launch_prefix",
+        "simulation_launch_prefix",
         default="taskset -c 1")
     return LaunchDescription([
         DeclareLaunchArgument(
