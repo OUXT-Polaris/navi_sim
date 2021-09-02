@@ -30,6 +30,7 @@ def generate_launch_description():
     scenario_filename = LaunchConfiguration("scenario_filename", default="go_straight.yaml")
     record = LaunchConfiguration("record", default=False)
     rosbag_directory = LaunchConfiguration("rosbag_directory", default="/tmp")
+    planner_launch_prefix = LaunchConfiguration("planner_launch_prefix", default="taskset -c 2")
     return LaunchDescription([
         DeclareLaunchArgument(
             "scenario_filename",
@@ -50,6 +51,7 @@ def generate_launch_description():
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(
                 [hermite_path_planner_launch_dir, '/bringup.launch.py']),
+            launch_arguments={'launch_prefix': planner_launch_prefix}.items()
         ),
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(
