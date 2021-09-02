@@ -48,6 +48,21 @@ def generate_launch_description():
             "record",
             default_value=record,
             description="If true, record rosbag data."),
+        DeclareLaunchArgument(
+            "planner_launch_prefix",
+            default_value="taskset -c 1",
+            description="launch prefix of planner executor"
+        ),
+        DeclareLaunchArgument(
+            "perception_launch_prefix",
+            default_value="taskset -c 1",
+            description="launch prefix of perception executor"
+        ),
+        DeclareLaunchArgument(
+            "simulation_launch_prefix",
+            default_value="taskset -c 1",
+            description="launch prefix of simulation executor"
+        ),
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(
                 [navi_sim_launch_file_dir, '/navi_sim.launch.py']),
