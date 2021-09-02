@@ -31,6 +31,7 @@ def generate_launch_description():
     record = LaunchConfiguration("record", default=False)
     rosbag_directory = LaunchConfiguration("rosbag_directory", default="/tmp")
     planner_launch_prefix = LaunchConfiguration("planner_launch_prefix", default="taskset -c 2")
+    perception_launch_prefix = LaunchConfiguration("perception_launch_prefix", default="taskset -c 2")
     return LaunchDescription([
         DeclareLaunchArgument(
             "scenario_filename",
@@ -56,5 +57,6 @@ def generate_launch_description():
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(
                 [perception_bringup_launch_dir, '/perception_bringup.launch.py']),
+            launch_arguments={'launch_prefix': perception_launch_prefix}.items()
         )
     ])
