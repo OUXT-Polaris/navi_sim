@@ -32,13 +32,13 @@ def generate_launch_description():
     rosbag_directory = LaunchConfiguration("rosbag_directory", default="/tmp")
     planner_launch_prefix = LaunchConfiguration(
         "planner_launch_prefix",
-        default="taskset -c 2")
+        default="taskset -c 0")
     perception_launch_prefix = LaunchConfiguration(
         "perception_launch_prefix",
-        default="taskset -c 2")
+        default="taskset -c 1")
     simulation_launch_prefix = LaunchConfiguration(
         "simulation_launch_prefix",
-        default="taskset -c 1")
+        default="taskset -c 0")
     return LaunchDescription([
         DeclareLaunchArgument(
             "scenario_filename",
@@ -50,7 +50,7 @@ def generate_launch_description():
             description="If true, record rosbag data."),
         DeclareLaunchArgument(
             "planner_launch_prefix",
-            default_value="taskset -c 1",
+            default_value="taskset -c 0",
             description="launch prefix of planner executor"
         ),
         DeclareLaunchArgument(
@@ -60,7 +60,7 @@ def generate_launch_description():
         ),
         DeclareLaunchArgument(
             "simulation_launch_prefix",
-            default_value="taskset -c 1",
+            default_value="taskset -c 0",
             description="launch prefix of simulation executor"
         ),
         IncludeLaunchDescription(
