@@ -23,7 +23,7 @@
   <depend>sensor_msgs</depend>
   <depend>wamv_description</depend>
   <depend>visualization_msgs</depend>
-  <depend>rviz_assimp_vendor</depend>
+  <depend>rviz2</depend>
   <depend>ament_cmake_auto</depend>
   <depend>pcl_conversions</depend>
   <depend>libpcl-all-dev</depend>
@@ -31,6 +31,9 @@
   <depend>vision_msgs</depend>
   <depend>embree</depend>
   <depend>color_names</depend>
+  <depend>yaml-cpp</depend>
+  <depend>rosbag2</depend>
+  <depend>util-linux</depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>

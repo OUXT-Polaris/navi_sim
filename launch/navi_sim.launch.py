@@ -16,11 +16,17 @@ import os
 
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
+from launch.event_handlers import OnProcessExit
+from launch.events import Shutdown
 from launch_ros.actions import Node
-from launch.actions import IncludeLaunchDescription
+from launch.actions import IncludeLaunchDescription, EmitEvent, RegisterEventHandler
+from launch.actions import ExecuteProcess
+from launch.actions.declare_launch_argument import DeclareLaunchArgument
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch_ros.actions import ComposableNodeContainer
 from launch_ros.descriptions import ComposableNode
+from launch.substitutions.launch_configuration import LaunchConfiguration
+from launch.conditions import IfCondition
 
 import yaml
 
@@ -33,7 +39,6 @@ def getLidarSimComponent(lidar_name):
     params = {}
     with open(param_config, 'r') as f:
         params = yaml.safe_load(f)[lidar_name + '_node']['ros__parameters']
-        print(params)
     object_config_path = os.path.join(
             get_package_share_directory('navi_sim'),
             'config',
@@ -57,7 +62,6 @@ def getCameraSimComponent(camera_name):
     params = {}
     with open(param_config, 'r') as f:
         params = yaml.safe_load(f)[camera_name + '_node']['ros__parameters']
-        print(params)
     object_config_path = os.path.join(
             get_package_share_directory('navi_sim'),
             'config',
@@ -68,6 +72,30 @@ def getCameraSimComponent(camera_name):
         plugin='navi_sim::CameraSimComponent',
         namespace='/sensing/'+camera_name,
         name=camera_name + '_node',
+        remappings=[],
+        parameters=[params])
+    return component
+
+
+def getScenarioTestComponent(scenario_filename):
+    config_directory = os.path.join(
+        get_package_share_directory('navi_sim'),
+        'config')
+    param_config = os.path.join(config_directory, 'scenario_test.yaml')
+    params = {}
+    with open(param_config, 'r') as f:
+        params = yaml.safe_load(f)['scenario_test_node']['ros__parameters']
+    object_config_path = os.path.join(
+            get_package_share_directory('navi_sim'),
+            'config',
+            'objects.json')
+    params["objects_path"] = object_config_path
+    params["scenario_filename"] = scenario_filename
+    component = ComposableNode(
+        package='navi_sim',
+        plugin='navi_sim::ScenarioTestComponent',
+        name='scenario_test_node',
+        namespace='simulation',
         remappings=[],
         parameters=[params])
     return component
@@ -88,34 +116,76 @@ def generate_launch_description():
             'navi_sim.rviz')
     description_dir = os.path.join(
             get_package_share_directory('wamv_description'), 'launch')
+    scenario_filename = LaunchConfiguration("scenario_filename", default="go_straight.yaml")
+    record = LaunchConfiguration("record", default=False)
+    rosbag_directory = LaunchConfiguration("rosbag_directory", default="/tmp")
+    launch_prefix = LaunchConfiguration("launch_prefix")
+    simulator = ComposableNodeContainer(
+        name='navi_sim_bringup_container',
+        namespace='sensing',
+        package='rclcpp_components',
+        executable='component_container',
+        composable_node_descriptions=[
+            getNaviSimComponent(),
+            getScenarioTestComponent(scenario_filename),
+            getLidarSimComponent("front_lidar"),
+            getLidarSimComponent("rear_lidar"),
+            getLidarSimComponent("right_lidar"),
+            getLidarSimComponent("left_lidar"),
+            getCameraSimComponent("front_left_camera"),
+            getCameraSimComponent("front_right_camera"),
+            getCameraSimComponent("rear_left_camera"),
+            getCameraSimComponent("rear_right_camera"),
+            getCameraSimComponent("left_camera"),
+            getCameraSimComponent("right_camera")
+        ],
+        prefix=[launch_prefix],
+        output='screen')
     description = LaunchDescription([
+        DeclareLaunchArgument(
+            "scenario_filename",
+            default_value=scenario_filename,
+            description="filename of the scenario yaml file."),
+        DeclareLaunchArgument(
+            "record",
+            default_value=record,
+            description="If true, record rosbag data."
+        ),
+        DeclareLaunchArgument(
+            "rosbag_directory",
+            default_value=rosbag_directory,
+            description="output directory of the rosbag data"
+        ),
+        DeclareLaunchArgument(
+            'launch_prefix',
+            default_value=launch_prefix,
+            description="launch prefix"
+        ),
         Node(
             package='rviz2',
             executable='rviz2',
             name='rviz2',
             arguments=['-d', rviz_config_dir],
             output='screen'),
-        ComposableNodeContainer(
-            name='navi_sim_bringup_container',
-            namespace='sensing',
-            package='rclcpp_components',
-            executable='component_container',
-            composable_node_descriptions=[
-                getNaviSimComponent(),
-                getLidarSimComponent("front_lidar"),
-                getLidarSimComponent("rear_lidar"),
-                getLidarSimComponent("right_lidar"),
-                getLidarSimComponent("left_lidar"),
-                getCameraSimComponent("front_left_camera"),
-                getCameraSimComponent("front_right_camera"),
-                getCameraSimComponent("rear_left_camera"),
-                getCameraSimComponent("rear_right_camera"),
-                getCameraSimComponent("left_camera"),
-                getCameraSimComponent("right_camera")
-            ],
-            output='screen'),
+        simulator,
+        RegisterEventHandler(
+            event_handler=OnProcessExit(
+                target_action=simulator,
+                on_exit=[EmitEvent(event=Shutdown())])),
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource([description_dir, '/wamv_description.launch.py']),
         ),
+        ExecuteProcess(
+            cmd=[
+                'ros2',
+                'bag',
+                'record',
+                '-a',
+                '-o', rosbag_directory,
+                '--compression-mode', 'file',
+                '--compression-format', 'zstd'],
+            output='screen',
+            condition=IfCondition(record)
+        )
     ])
     return description
