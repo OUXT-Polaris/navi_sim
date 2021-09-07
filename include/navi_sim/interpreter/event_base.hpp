@@ -15,30 +15,21 @@
 #ifndef NAVI_SIM__INTERPRETER__EVENT_BASE_HPP_
 #define NAVI_SIM__INTERPRETER__EVENT_BASE_HPP_
 
-#include <navi_sim/interpreter/black_board.hpp>
+#include <yaml-cpp/yaml.h>
 
+#include <functional>
 #include <geometry_msgs/msg/pose.hpp>
 #include <geometry_msgs/msg/twist.hpp>
-#include <yaml-cpp/yaml.h>
+#include <navi_sim/interpreter/black_board.hpp>
 #include <string>
-#include <functional>
 
 namespace navi_sim
 {
 namespace events
 {
-enum class EventState
-{
-  INACTIVE = 0,
-  ACTIVE = 1,
-  FINISHED = 2
-};
+enum class EventState { INACTIVE = 0, ACTIVE = 1, FINISHED = 2 };
 
-enum class EventType
-{
-  REACH_POSITION = 0,
-  SIMULATION_TIME = 1
-};
+enum class EventType { REACH_POSITION = 0, SIMULATION_TIME = 1 };
 
 void toEnum(const std::string string_val, EventType & enum_val);
 EventType toEventTypeEnum(const std::string string_val);

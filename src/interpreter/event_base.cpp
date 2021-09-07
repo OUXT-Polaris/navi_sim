@@ -12,13 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <fstream>
+#include <iostream>
 #include <navi_sim/interpreter/event_base.hpp>
 #include <rclcpp/rclcpp.hpp>
-
-#include <fstream>
 #include <string>
 #include <vector>
-#include <iostream>
 
 namespace navi_sim
 {
@@ -80,10 +79,7 @@ EventBase::EventBase(const std::string & name, const YAML::Node & yaml)
   state_ = EventState::INACTIVE;
 }
 
-EventState EventBase::getState() const
-{
-  return state_;
-}
+EventState EventBase::getState() const { return state_; }
 
 void EventBase::getDebugString(YAML::Node & yaml)
 {
@@ -95,31 +91,27 @@ void EventBase::updateState(const BlackBoard & black_board)
 {
   const auto activated_events = black_board.get<std::vector<std::string>>("activated_events");
   switch (state_) {
-    case EventState::ACTIVE:
-      {
-        const auto state = onUpdate(black_board);
-        state_ = state;
-        break;
+    case EventState::ACTIVE: {
+      const auto state = onUpdate(black_board);
+      state_ = state;
+      break;
+    }
+    case EventState::INACTIVE: {
+      if (trigger == "always") {
+        state_ = EventState::ACTIVE;
+        updateState(black_board);
       }
-    case EventState::INACTIVE:
-      {
-        if (trigger == "always") {
-          state_ = EventState::ACTIVE;
-          updateState(black_board);
-        }
-        if (std::find(
-            activated_events.begin(),
-            activated_events.end(), trigger) != activated_events.end())
-        {
-          state_ = EventState::ACTIVE;
-          updateState(black_board);
-        }
-        break;
+      if (
+        std::find(activated_events.begin(), activated_events.end(), trigger) !=
+        activated_events.end()) {
+        state_ = EventState::ACTIVE;
+        updateState(black_board);
       }
-    case EventState::FINISHED:
-      {
-        break;
-      }
+      break;
+    }
+    case EventState::FINISHED: {
+      break;
+    }
   }
 }
 }  // namespace events

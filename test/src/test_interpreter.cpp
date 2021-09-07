@@ -14,16 +14,15 @@
 
 #include <gtest/gtest.h>
 
-#include <navi_sim/interpreter/interpreter.hpp>
-#include <navi_sim/interpreter/black_board.hpp>
 #include <ament_index_cpp/get_package_share_directory.hpp>
-
+#include <navi_sim/interpreter/black_board.hpp>
+#include <navi_sim/interpreter/interpreter.hpp>
 #include <string>
 
 TEST(Interpreter, load)
 {
-  std::string path = ament_index_cpp::get_package_share_directory("navi_sim") +
-    "/scenarios/go_straight.yaml";
+  std::string path =
+    ament_index_cpp::get_package_share_directory("navi_sim") + "/scenarios/go_straight.yaml";
   navi_sim::Interpreter interpreter(path);
   ASSERT_EQ(interpreter.getEventIndex("start_ego"), static_cast<size_t>(0));
   ASSERT_EQ(interpreter.getEventIndex("reach_first_goal"), static_cast<size_t>(1));

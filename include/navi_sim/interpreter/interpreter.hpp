@@ -15,16 +15,16 @@
 #ifndef NAVI_SIM__INTERPRETER__INTERPRETER_HPP_
 #define NAVI_SIM__INTERPRETER__INTERPRETER_HPP_
 
-#include <navi_sim/interpreter/reach_position_event.hpp>
-#include <navi_sim/interpreter/simulation_time_event.hpp>
-#include <navi_sim/interpreter/send_goal_action.hpp>
-#include <navi_sim/interpreter/terminate_action.hpp>
-
 #include <yaml-cpp/yaml.h>
-#include <string>
+
 #include <memory>
-#include <vector>
+#include <navi_sim/interpreter/reach_position_event.hpp>
+#include <navi_sim/interpreter/send_goal_action.hpp>
+#include <navi_sim/interpreter/simulation_time_event.hpp>
+#include <navi_sim/interpreter/terminate_action.hpp>
+#include <string>
 #include <utility>
+#include <vector>
 
 namespace navi_sim
 {
@@ -37,7 +37,7 @@ public:
   size_t getActionIndex(const std::string & name) const;
   actions::ActionState getActionState(const std::string & name) const;
   void getDebugString(YAML::Node & yaml);
-  template<typename T>
+  template <typename T>
   void setValueToBlackBoard(const std::string & key, const T & value)
   {
     black_board_.set(key, value);
@@ -50,12 +50,12 @@ private:
   const YAML::Node scenario_;
   std::vector<std::unique_ptr<events::EventBase>> events_;
   std::vector<std::unique_ptr<actions::ActionBase>> actions_;
-  template<typename T>
+  template <typename T>
   void addEvent(const std::string & name, const YAML::Node & yaml)
   {
     events_.emplace_back(std::make_unique<T>(name, yaml));
   }
-  template<typename T>
+  template <typename T>
   void addAction(const std::string & name, const YAML::Node & yaml)
   {
     actions_.emplace_back(std::make_unique<T>(name, yaml));

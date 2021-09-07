@@ -15,26 +15,18 @@
 #ifndef NAVI_SIM__INTERPRETER__ACTION_BASE_HPP_
 #define NAVI_SIM__INTERPRETER__ACTION_BASE_HPP_
 
-#include <navi_sim/interpreter/black_board.hpp>
 #include <yaml-cpp/yaml.h>
+
+#include <navi_sim/interpreter/black_board.hpp>
 #include <string>
 
 namespace navi_sim
 {
 namespace actions
 {
-enum class ActionState
-{
-  INACTIVE = 0,
-  ACTIVE = 1,
-  FINISHED = 2
-};
+enum class ActionState { INACTIVE = 0, ACTIVE = 1, FINISHED = 2 };
 
-enum class ActionType
-{
-  SEND_GOAL = 0,
-  TERMINATE = 1
-};
+enum class ActionType { SEND_GOAL = 0, TERMINATE = 1 };
 
 ActionType toActionTypeEnum(const std::string string_val);
 std::string toActionTypeString(const ActionType & enum_val);

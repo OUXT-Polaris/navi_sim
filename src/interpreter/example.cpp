@@ -12,17 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <navi_sim/interpreter/interpreter.hpp>
+#include <yaml-cpp/yaml.h>
+
 #include <ament_index_cpp/get_package_share_directory.hpp>
 #include <boost/optional.hpp>
-#include <yaml-cpp/yaml.h>
-#include <string>
 #include <iostream>
+#include <navi_sim/interpreter/interpreter.hpp>
+#include <string>
 
 int main()
 {
-  std::string path = ament_index_cpp::get_package_share_directory("navi_sim") +
-    "/scenarios/go_straight.yaml";
+  std::string path =
+    ament_index_cpp::get_package_share_directory("navi_sim") + "/scenarios/go_straight.yaml";
   navi_sim::Interpreter interpreter(path);
   geometry_msgs::msg::Pose ego_pose;
   ego_pose.position.x = 10;

@@ -15,15 +15,13 @@
 #ifndef NAVI_SIM__PRIMITIVES__PRIMITIVE_HPP_
 #define NAVI_SIM__PRIMITIVES__PRIMITIVE_HPP_
 
-#include <geometry_msgs/msg/pose.hpp>
-
 #include <embree3/rtcore.h>
 
+#include <algorithm>
+#include <geometry_msgs/msg/pose.hpp>
 #include <nlohmann/json.hpp>
-
 #include <string>
 #include <vector>
-#include <algorithm>
 
 namespace navi_sim
 {
@@ -53,7 +51,7 @@ public:
   std::vector<Vertex> getVertex() const;
   std::vector<Vertex> getVertex(const geometry_msgs::msg::Pose & sensor_pose) const;
   std::vector<Triangle> getTriangles() const;
-  virtual nlohmann::json toJson() const {return nlohmann::json{};}
+  virtual nlohmann::json toJson() const { return nlohmann::json{}; }
   nlohmann::json toBaseJson() const;
   std::vector<geometry_msgs::msg::Point> get2DPolygon() const;
 

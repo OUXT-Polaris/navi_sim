@@ -12,27 +12,26 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <navi_sim/primitives/primitive.hpp>
-
-#include <boost/geometry.hpp>
-#include <boost/geometry/geometries/point_xy.hpp>
-#include <boost/geometry/geometries/polygon.hpp>
-#include <boost/geometry/geometries/box.hpp>
-#include <boost/assign/list_of.hpp>
-
 #include <quaternion_operation/quaternion_operation.h>
 
 #include <algorithm>
+#include <boost/assign/list_of.hpp>
+#include <boost/geometry.hpp>
+#include <boost/geometry/geometries/box.hpp>
+#include <boost/geometry/geometries/point_xy.hpp>
+#include <boost/geometry/geometries/polygon.hpp>
+#include <iostream>
+#include <navi_sim/primitives/primitive.hpp>
 #include <string>
 #include <vector>
-#include <iostream>
 
 namespace navi_sim
 {
 Primitive::Primitive(
-  std::string primitive_type, std::string object_type,
-  geometry_msgs::msg::Pose pose)
-: primitive_type(primitive_type), object_type(object_type), pose(pose) {}
+  std::string primitive_type, std::string object_type, geometry_msgs::msg::Pose pose)
+: primitive_type(primitive_type), object_type(object_type), pose(pose)
+{
+}
 
 std::vector<geometry_msgs::msg::Point> Primitive::get2DPolygon() const
 {
@@ -115,35 +114,27 @@ std::vector<Vertex> Primitive::transform() const
   return ret;
 }
 
-std::vector<Vertex> Primitive::getVertex() const
-{
-  return transform();
-}
+std::vector<Vertex> Primitive::getVertex() const { return transform(); }
 
 std::vector<Vertex> Primitive::getVertex(const geometry_msgs::msg::Pose & sensor_pose) const
 {
   return transform(sensor_pose);
 }
 
-std::vector<Triangle> Primitive::getTriangles() const
-{
-  return triangles_;
-}
+std::vector<Triangle> Primitive::getTriangles() const { return triangles_; }
 
 unsigned int Primitive::addToScene(RTCDevice device, RTCScene scene)
 {
   RTCGeometry mesh = rtcNewGeometry(device, RTC_GEOMETRY_TYPE_TRIANGLE);
   const auto transformed_vertices = transform();
   Vertex * vertices = static_cast<Vertex *>(rtcSetNewGeometryBuffer(
-      mesh, RTC_BUFFER_TYPE_VERTEX, 0,
-      RTC_FORMAT_FLOAT3, sizeof(Vertex), transformed_vertices.size()));
+    mesh, RTC_BUFFER_TYPE_VERTEX, 0, RTC_FORMAT_FLOAT3, sizeof(Vertex),
+    transformed_vertices.size()));
   for (size_t i = 0; i < transformed_vertices.size(); i++) {
     vertices[i] = transformed_vertices[i];
   }
   Triangle * triangles = static_cast<Triangle *>(rtcSetNewGeometryBuffer(
-      mesh, RTC_BUFFER_TYPE_INDEX, 0,
-      RTC_FORMAT_UINT3, sizeof(Triangle),
-      triangles_.size()));
+    mesh, RTC_BUFFER_TYPE_INDEX, 0, RTC_FORMAT_UINT3, sizeof(Triangle), triangles_.size()));
   for (size_t i = 0; i < triangles_.size(); i++) {
     triangles[i] = triangles_[i];
   }
@@ -164,10 +155,7 @@ void to_json(nlohmann::json & j, const Primitive & p)
 {
   auto j_pose = nlohmann::json{};
   to_json(j_pose, p.pose);
-  j = nlohmann::json{
-    {"primitive_type", p.primitive_type},
-    {"object_type", p.object_type}
-  };
+  j = nlohmann::json{{"primitive_type", p.primitive_type}, {"object_type", p.object_type}};
   j["pose"] = j_pose;
 }
 

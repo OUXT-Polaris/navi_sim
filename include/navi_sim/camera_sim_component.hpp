@@ -52,23 +52,21 @@ extern "C" {
 }  // extern "C"
 #endif
 
-#include <navi_sim/raycaster.hpp>
-
-#include <rclcpp/rclcpp.hpp>
-
+#include <image_geometry/pinhole_camera_model.h>
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 #include <tf2_ros/transform_broadcaster.h>
 #include <tf2_ros/transform_listener.h>
-#include <image_geometry/pinhole_camera_model.h>
-#include <sensor_msgs/msg/camera_info.hpp>
-#include <vision_msgs/msg/vision_info.hpp>
-#include <vision_msgs/msg/detection2_d_array.hpp>
-#include <visualization_msgs/msg/marker_array.hpp>
 
-#include <utility>
-#include <string>
 #include <memory>
+#include <navi_sim/raycaster.hpp>
+#include <rclcpp/rclcpp.hpp>
+#include <sensor_msgs/msg/camera_info.hpp>
+#include <string>
+#include <utility>
 #include <vector>
+#include <vision_msgs/msg/detection2_d_array.hpp>
+#include <vision_msgs/msg/vision_info.hpp>
+#include <visualization_msgs/msg/marker_array.hpp>
 
 namespace navi_sim
 {
@@ -79,8 +77,8 @@ public:
   explicit CameraSimComponent(const rclcpp::NodeOptions & options);
   NAVI_SIM_CAMEAR_SIM_COMPONENT_PUBLIC
   explicit CameraSimComponent(std::string name, const rclcpp::NodeOptions & options);
-  template<typename T, typename ... Ts>
-  void addPrimitive(Ts && ... xs)
+  template <typename T, typename... Ts>
+  void addPrimitive(Ts &&... xs)
   {
     raycaster_ptr_->addPrimitive<T>(std::forward<Ts>(xs)...);
   }
@@ -108,10 +106,8 @@ private:
   const visualization_msgs::msg::MarkerArray generateMarker(
     const std::vector<vision_msgs::msg::Detection2D> & detections);
   const geometry_msgs::msg::Point internallyDivide(
-    const geometry_msgs::msg::Point & p0,
-    const geometry_msgs::msg::Point & p1,
-    double x_ratio_in_image,
-    double y_ratio_in_image);
+    const geometry_msgs::msg::Point & p0, const geometry_msgs::msg::Point & p1,
+    double x_ratio_in_image, double y_ratio_in_image);
 };
 }  // namespace navi_sim
 

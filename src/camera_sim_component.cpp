@@ -12,23 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <navi_sim/camera_sim_component.hpp>
-#include <ament_index_cpp/get_package_share_directory.hpp>
-
-#include <rclcpp_components/register_node_macro.hpp>
-
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 
-#include <color_names/color_names.hpp>
-
+#include <ament_index_cpp/get_package_share_directory.hpp>
 #include <boost/geometry.hpp>
+#include <boost/geometry/geometries/box.hpp>
 #include <boost/geometry/geometries/point_xy.hpp>
 #include <boost/geometry/geometries/polygon.hpp>
-#include <boost/geometry/geometries/box.hpp>
-
-#include <vector>
+#include <color_names/color_names.hpp>
 #include <memory>
+#include <navi_sim/camera_sim_component.hpp>
+#include <rclcpp_components/register_node_macro.hpp>
 #include <string>
+#include <vector>
 
 namespace navi_sim
 {
@@ -149,32 +145,30 @@ void CameraSimComponent::initialize()
   camera_info_.width = horizontal_pixels_;
   camera_info_.distortion_model = "plumb_bob";
   camera_info_.d = {0, 0, 0, 0, 0};
-  double f = static_cast<double>(vertical_pixels_) * 0.5 /
-    std::tan(vertical_fov * 0.5);
-  camera_info_.k =
-  {
-    f, 0, static_cast<double>(horizontal_pixels_) * 0.5,
-    0, f, static_cast<double>(vertical_pixels_) * 0.5,
-    0, 0, 1
-  };
-  camera_info_.r =
-  {
-    1, 0, 0,
-    0, 1, 0,
-    0, 0, 1
-  };
-  camera_info_.p =
-  {
-    f, 0, static_cast<double>(horizontal_pixels_) * 0.5, 0,
-    0, f, static_cast<double>(vertical_pixels_) * 0.5, 0,
-    0, 0, 1, 0
-  };
+  double f = static_cast<double>(vertical_pixels_) * 0.5 / std::tan(vertical_fov * 0.5);
+  camera_info_.k = {f, 0, static_cast<double>(horizontal_pixels_) * 0.5,
+                    0, f, static_cast<double>(vertical_pixels_) * 0.5,
+                    0, 0, 1};
+  camera_info_.r = {1, 0, 0, 0, 1, 0, 0, 0, 1};
+  camera_info_.p = {
+    f,
+    0,
+    static_cast<double>(horizontal_pixels_) * 0.5,
+    0,
+    0,
+    f,
+    static_cast<double>(vertical_pixels_) * 0.5,
+    0,
+    0,
+    0,
+    1,
+    0};
   cam_model_.fromCameraInfo(camera_info_);
   declare_parameter("objects_filename", "objects.json");
   std::string objects_filename;
   get_parameter("objects_filename", objects_filename);
-  std::string objects_path = ament_index_cpp::get_package_share_directory("navi_sim") + "/config/" +
-    objects_filename;
+  std::string objects_path =
+    ament_index_cpp::get_package_share_directory("navi_sim") + "/config/" + objects_filename;
   namespace fs = boost::filesystem;
   const fs::path path(objects_path);
   boost::system::error_code error;
@@ -198,10 +192,8 @@ void CameraSimComponent::initialize()
 }
 
 const geometry_msgs::msg::Point CameraSimComponent::internallyDivide(
-  const geometry_msgs::msg::Point & p0,
-  const geometry_msgs::msg::Point & p1,
-  double x_ratio_in_image,
-  double y_ratio_in_image)
+  const geometry_msgs::msg::Point & p0, const geometry_msgs::msg::Point & p1,
+  double x_ratio_in_image, double y_ratio_in_image)
 {
   geometry_msgs::msg::Point p;
   p.x = p0.x * (1 - x_ratio_in_image) + p1.x * x_ratio_in_image;

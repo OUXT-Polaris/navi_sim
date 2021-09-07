@@ -15,27 +15,23 @@
 #ifndef NAVI_SIM__RAYCASTER_HPP_
 #define NAVI_SIM__RAYCASTER_HPP_
 
-#include <navi_sim/primitives/box.hpp>
-#include <navi_sim/primitives/primitive.hpp>
-
 #include <embree3/rtcore.h>
-
 #include <pcl_conversions/pcl_conversions.h>
 
 #include <geometry_msgs/msg/pose.hpp>
 #include <geometry_msgs/msg/vector3.hpp>
-#include <sensor_msgs/msg/point_cloud2.hpp>
-
-#include <unordered_map>
-#include <vector>
-#include <string>
 #include <memory>
-#include <utility>
+#include <navi_sim/primitives/box.hpp>
+#include <navi_sim/primitives/primitive.hpp>
 #include <random>
+#include <sensor_msgs/msg/point_cloud2.hpp>
+#include <string>
+#include <unordered_map>
+#include <utility>
+#include <vector>
 
 namespace navi_sim
 {
-
 class Raycaster
 {
 public:
@@ -43,8 +39,8 @@ public:
   explicit Raycaster(std::string embree_config);
   ~Raycaster();
   void addPrimitives(nlohmann::json json);
-  template<typename T, typename ... Ts>
-  void addPrimitive(std::string name, Ts && ... xs)
+  template <typename T, typename... Ts>
+  void addPrimitive(std::string name, Ts &&... xs)
   {
     if (primitive_ptrs_.count(name) != 0) {
       throw std::runtime_error("primitive " + name + " already exist.");
@@ -53,20 +49,13 @@ public:
     primitive_ptrs_.emplace(name, std::move(primitive_ptr));
   }
   const sensor_msgs::msg::PointCloud2 raycast(
-    geometry_msgs::msg::Pose origin,
-    double horizontal_resolution,
-    std::vector<double> vertical_angles,
-    double horizontal_angle_start = 0,
-    double horizontal_angle_end = 2 * M_PI,
-    double max_distance = 100, double min_distance = 0,
-    double noise_distribution = 0.15,
-    double ghost_ratio = 0.001
-  );
+    geometry_msgs::msg::Pose origin, double horizontal_resolution,
+    std::vector<double> vertical_angles, double horizontal_angle_start = 0,
+    double horizontal_angle_end = 2 * M_PI, double max_distance = 100, double min_distance = 0,
+    double noise_distribution = 0.15, double ghost_ratio = 0.001);
   const sensor_msgs::msg::PointCloud2 raycast(
-    geometry_msgs::msg::Pose origin,
-    std::vector<geometry_msgs::msg::Quaternion> directions,
-    double max_distance = 100, double min_distance = 0,
-    double noise_distribution = 0.15,
+    geometry_msgs::msg::Pose origin, std::vector<geometry_msgs::msg::Quaternion> directions,
+    double max_distance = 100, double min_distance = 0, double noise_distribution = 0.15,
     double ghost_ratio = 0.001);
   nlohmann::json dumpPrimitives() const;
   const std::vector<std::string> getPrimitiveNames();

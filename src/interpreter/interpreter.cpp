@@ -12,22 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <fstream>
+#include <geometry_msgs/msg/pose_stamped.hpp>
+#include <iostream>
 #include <navi_sim/interpreter/interpreter.hpp>
 #include <navi_sim/interpreter/reach_position_event.hpp>
-
 #include <rclcpp/rclcpp.hpp>
-#include <geometry_msgs/msg/pose_stamped.hpp>
-
-#include <fstream>
-#include <string>
-#include <iostream>
 #include <set>
+#include <string>
 #include <vector>
 
 namespace navi_sim
 {
-Interpreter::Interpreter(const std::string & path)
-: scenario_(YAML::LoadFile(path))
+Interpreter::Interpreter(const std::string & path) : scenario_(YAML::LoadFile(path))
 {
   const auto scenario = appendDefaultActions(scenario_);
   const auto event_tree = scenario["scenario"]["events"];
@@ -57,8 +54,7 @@ Interpreter::Interpreter(const std::string & path)
     }
   }
   black_board_.set<rclcpp::Publisher<geometry_msgs::msg::PoseStamped>::SharedPtr>(
-    "goal_publisher",
-    nullptr);
+    "goal_publisher", nullptr);
   black_board_.set<double>("simulation_time", 0);
   black_board_.set<rclcpp::Clock::SharedPtr>("clock", nullptr);
   black_board_.set<std::vector<std::string>>("activated_events", {});

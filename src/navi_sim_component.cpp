@@ -15,8 +15,8 @@
 #include <navi_sim/navi_sim_component.hpp>
 #include <rclcpp_components/register_node_macro.hpp>
 #include <set>
-#include <vector>
 #include <string>
+#include <vector>
 
 namespace navi_sim
 {
@@ -74,8 +74,8 @@ void NaviSimComponent::updateJointState()
 {
   sensor_msgs::msg::JointState joint_state;
   joint_state.header.stamp = get_clock()->now();
-  std::vector<std::string> joints =
-  {"left_chasis_engine_joint", "left_engine_propeller_joint", "right_chasis_engine_joint",
+  std::vector<std::string> joints = {
+    "left_chasis_engine_joint", "left_engine_propeller_joint", "right_chasis_engine_joint",
     "right_engine_propeller_joint"};
   for (auto itr = joints.begin(); itr != joints.end(); itr++) {
     joint_state.name.push_back(*itr);

@@ -12,19 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <navi_sim/lidar_sim_component.hpp>
-
-#include <rclcpp_components/register_node_macro.hpp>
-
-#include <nlohmann/json.hpp>
-
 #include <ament_index_cpp/get_package_share_directory.hpp>
-
 #include <boost/filesystem.hpp>
-
-#include <string>
 #include <fstream>
 #include <memory>
+#include <navi_sim/lidar_sim_component.hpp>
+#include <nlohmann/json.hpp>
+#include <rclcpp_components/register_node_macro.hpp>
+#include <string>
 #include <vector>
 
 namespace navi_sim
@@ -61,8 +56,8 @@ void LidarSimComponent::setParameters()
   declare_parameter("objects_filename", "objects.json");
   std::string objects_filename;
   get_parameter("objects_filename", objects_filename);
-  objects_path_ = ament_index_cpp::get_package_share_directory("navi_sim") + "/config/" +
-    objects_filename;
+  objects_path_ =
+    ament_index_cpp::get_package_share_directory("navi_sim") + "/config/" + objects_filename;
   declare_parameter("vertical_angles", std::vector<double>(0));
   if (!has_parameter("vertical_angles")) {
     throw std::runtime_error("vertical_angles parameter does not exist");
@@ -106,19 +101,16 @@ void LidarSimComponent::updateScan()
 {
   rclcpp::Time now = get_clock()->now();
   try {
-    geometry_msgs::msg::TransformStamped transform_stamped = buffer_.lookupTransform(
-      map_frame_, lidar_frame_, rclcpp::Time(0), tf2::durationFromSec(1.0));
+    geometry_msgs::msg::TransformStamped transform_stamped =
+      buffer_.lookupTransform(map_frame_, lidar_frame_, rclcpp::Time(0), tf2::durationFromSec(1.0));
     geometry_msgs::msg::Pose pose;
     pose.position.x = transform_stamped.transform.translation.x;
     pose.position.y = transform_stamped.transform.translation.y;
     pose.position.z = transform_stamped.transform.translation.z;
     pose.orientation = transform_stamped.transform.rotation;
     auto pointcloud_msg = raycaster_ptr_->raycast(
-      pose, horizontal_resolution_, vertical_angles_,
-      start_horizontal_angle_,
-      end_horizontal_angle_,
-      max_distance_, min_distance_,
-      noise_distribution_);
+      pose, horizontal_resolution_, vertical_angles_, start_horizontal_angle_,
+      end_horizontal_angle_, max_distance_, min_distance_, noise_distribution_);
     pointcloud_msg.header.stamp = now;
     pointcloud_msg.header.frame_id = lidar_frame_;
     pointcloud_pub_->publish(pointcloud_msg);
