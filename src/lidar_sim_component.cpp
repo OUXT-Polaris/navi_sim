@@ -40,12 +40,12 @@ void LidarSimComponent::setParameters()
 {
   using namespace std::chrono_literals;
 
-  declare_parameter("lidar_frame", "base_link");
+  declare_parameter<std::string>("lidar_frame", "base_link");
   get_parameter("lidar_frame", lidar_frame_);
   std::cout << "frame : " << lidar_frame_ << std::endl;
-  declare_parameter("map_frame", "map");
+  declare_parameter<std::string>("map_frame", "map");
   get_parameter("map_frame", map_frame_);
-  declare_parameter("embree_config");
+  declare_parameter<std::string>("embree_config", "");
   if (has_parameter("embree_config")) {
     std::string embree_config;
     get_parameter("embree_config", embree_config);
@@ -53,29 +53,29 @@ void LidarSimComponent::setParameters()
   } else {
     raycaster_ptr_ = std::make_unique<Raycaster>();
   }
-  declare_parameter("objects_filename", "objects.json");
+  declare_parameter<std::string>("objects_filename", "objects.json");
   std::string objects_filename;
   get_parameter("objects_filename", objects_filename);
   objects_path_ =
     ament_index_cpp::get_package_share_directory("navi_sim") + "/config/" + objects_filename;
-  declare_parameter("vertical_angles", std::vector<double>(0));
+  declare_parameter<std::vector<double>>("vertical_angles", std::vector<double>(0));
   if (!has_parameter("vertical_angles")) {
     throw std::runtime_error("vertical_angles parameter does not exist");
   }
   vertical_angles_ = get_parameter("vertical_angles").as_double_array();
-  declare_parameter("max_distance", 100.0);
+  declare_parameter<double>("max_distance", 100.0);
   get_parameter("max_distance", max_distance_);
-  declare_parameter("min_distance", 0.0);
+  declare_parameter<double>("min_distance", 0.0);
   get_parameter("min_distance", min_distance_);
-  declare_parameter("start_horizontal_angle", 0.0);
+  declare_parameter<double>("start_horizontal_angle", 0.0);
   get_parameter("start_horizontal_angle", start_horizontal_angle_);
-  declare_parameter("end_horizontal_angle", M_PI * 2);
+  declare_parameter<double>("end_horizontal_angle", M_PI * 2);
   get_parameter("end_horizontal_angle", end_horizontal_angle_);
-  declare_parameter("horizontal_resolution", 2 * M_PI / 360.0);
+  declare_parameter<double>("horizontal_resolution", 2 * M_PI / 360.0);
   get_parameter("horizontal_resolution", horizontal_resolution_);
-  declare_parameter("noise_distribution", 0.15);
+  declare_parameter<double>("noise_distribution", 0.15);
   get_parameter("noise_distribution", noise_distribution_);
-  declare_parameter("double ghost_ratio", 0.001);
+  declare_parameter<double>("double ghost_ratio", 0.001);
   get_parameter("ghost_ratio", ghost_ratio_);
   namespace fs = boost::filesystem;
   const fs::path path(objects_path_);

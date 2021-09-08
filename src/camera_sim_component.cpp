@@ -115,7 +115,7 @@ void CameraSimComponent::update()
 
 void CameraSimComponent::initialize()
 {
-  declare_parameter("embree_config");
+  declare_parameter<std::string>("embree_config", "");
   if (has_parameter("embree_config")) {
     std::string embree_config;
     get_parameter("embree_config", embree_config);
@@ -124,21 +124,21 @@ void CameraSimComponent::initialize()
     raycaster_ptr_ = std::make_unique<Raycaster>();
   }
   double vertical_fov;
-  declare_parameter("vertical_fov", 2.0978006228796881594);
+  declare_parameter<double>("vertical_fov", 2.0978006228796881594);
   get_parameter("vertical_fov", vertical_fov);
-  declare_parameter("horizontal_pixels", 720);
+  declare_parameter<int>("horizontal_pixels", 720);
   get_parameter("horizontal_pixels", horizontal_pixels_);
-  declare_parameter("vertical_pixels", 540);
+  declare_parameter<int>("vertical_pixels", 540);
   get_parameter("vertical_pixels", vertical_pixels_);
-  declare_parameter("frustum_color", "cyan");
+  declare_parameter<std::string>("frustum_color", "cyan");
   get_parameter("frustum_color", frustum_color_);
-  declare_parameter("detection_color", "limegreen");
+  declare_parameter<std::string>("detection_color", "limegreen");
   get_parameter("detection_color", detection_color_);
-  declare_parameter("camera_frame", "camera_link");
+  declare_parameter<std::string>("camera_frame", "camera_link");
   get_parameter("camera_frame", camera_frame_);
-  declare_parameter("camera_optical_frame", "camera_optical_link");
+  declare_parameter<std::string>("camera_optical_frame", "camera_optical_link");
   get_parameter("camera_optical_frame", camera_optical_frame_);
-  declare_parameter("map_frame", "map");
+  declare_parameter<std::string>("map_frame", "map");
   get_parameter("map_frame", map_frame_);
   camera_info_ = sensor_msgs::msg::CameraInfo();
   camera_info_.height = vertical_pixels_;

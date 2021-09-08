@@ -44,23 +44,23 @@ ScenarioTestComponent::ScenarioTestComponent(std::string name, const rclcpp::Nod
 
 void ScenarioTestComponent::initialize()
 {
-  declare_parameter("bbox_center_x", 0.0);
+  declare_parameter<double>("bbox_center_x", 0.0);
   get_parameter("bbox_center_x", bbox_center_x_);
-  declare_parameter("bbox_center_y", 0.0);
+  declare_parameter<double>("bbox_center_y", 0.0);
   get_parameter("bbox_center_y", bbox_center_y_);
-  declare_parameter("bbox_center_z", 0.0);
+  declare_parameter<double>("bbox_center_z", 0.0);
   get_parameter("bbox_center_z", bbox_center_z_);
-  declare_parameter("bbox_length", 0.0);
+  declare_parameter<double>("bbox_length", 0.0);
   get_parameter("bbox_length", bbox_length_);
-  declare_parameter("bbox_width", 0.0);
+  declare_parameter<double>("bbox_width", 0.0);
   get_parameter("bbox_width", bbox_width_);
-  declare_parameter("map_frame", "map");
+  declare_parameter<std::string>("map_frame", "map");
   get_parameter("map_frame", map_frame_);
-  declare_parameter("scenario_filename", "");
+  declare_parameter<std::string>("scenario_filename", "");
   get_parameter("scenario_filename", scenario_filename_);
   std::string scenario_path =
     ament_index_cpp::get_package_share_directory("navi_sim") + "/scenarios/" + scenario_filename_;
-  declare_parameter("objects_filename", "objects.json");
+  declare_parameter<std::string>("objects_filename", "objects.json");
   std::string objects_filename;
   get_parameter("objects_filename", objects_filename);
   std::string objects_path =
