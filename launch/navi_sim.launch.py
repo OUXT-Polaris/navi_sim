@@ -12,22 +12,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
-
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.event_handlers import OnProcessExit
 from launch.events import Shutdown
-from launch_ros.actions import Node
-from launch.actions import IncludeLaunchDescription, EmitEvent, RegisterEventHandler
-from launch.actions import ExecuteProcess
+from launch.actions import EmitEvent, ExecuteProcess, IncludeLaunchDescription, RegisterEventHandler
 from launch.actions.declare_launch_argument import DeclareLaunchArgument
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch_ros.actions import ComposableNodeContainer
+from launch_ros.actions import ComposableNodeContainer, Node
 from launch_ros.descriptions import ComposableNode
 from launch.substitutions.launch_configuration import LaunchConfiguration
 from launch.conditions import IfCondition
 
+
+import os
 import yaml
 
 
@@ -43,13 +41,13 @@ def getLidarSimComponent(lidar_name):
             get_package_share_directory('navi_sim'),
             'config',
             'objects.json')
-    params["objects_path"] = object_config_path
+    params['objects_path'] = object_config_path
     component = ComposableNode(
         package='navi_sim',
         plugin='navi_sim::LidarSimComponent',
         namespace='/sensing/'+lidar_name,
         name=lidar_name + '_node',
-        remappings=[("lidar_points", "points_raw")],
+        remappings=[('lidar_points', 'points_raw')],
         parameters=[params])
     return component
 
@@ -66,7 +64,7 @@ def getCameraSimComponent(camera_name):
             get_package_share_directory('navi_sim'),
             'config',
             'objects.json')
-    params["objects_path"] = object_config_path
+    params['objects_path'] = object_config_path
     component = ComposableNode(
         package='navi_sim',
         plugin='navi_sim::CameraSimComponent',
@@ -89,8 +87,8 @@ def getScenarioTestComponent(scenario_filename):
             get_package_share_directory('navi_sim'),
             'config',
             'objects.json')
-    params["objects_path"] = object_config_path
-    params["scenario_filename"] = scenario_filename
+    params['objects_path'] = object_config_path
+    params['scenario_filename'] = scenario_filename
     component = ComposableNode(
         package='navi_sim',
         plugin='navi_sim::ScenarioTestComponent',
@@ -116,10 +114,10 @@ def generate_launch_description():
             'navi_sim.rviz')
     description_dir = os.path.join(
             get_package_share_directory('wamv_description'), 'launch')
-    scenario_filename = LaunchConfiguration("scenario_filename", default="go_straight.yaml")
-    record = LaunchConfiguration("record", default=False)
-    rosbag_directory = LaunchConfiguration("rosbag_directory", default="/tmp")
-    launch_prefix = LaunchConfiguration("launch_prefix")
+    scenario_filename = LaunchConfiguration('scenario_filename', default='go_straight.yaml')
+    record = LaunchConfiguration('record', default=False)
+    rosbag_directory = LaunchConfiguration('rosbag_directory', default='/tmp')
+    launch_prefix = LaunchConfiguration('launch_prefix')
     simulator = ComposableNodeContainer(
         name='navi_sim_bringup_container',
         namespace='sensing',
@@ -128,38 +126,38 @@ def generate_launch_description():
         composable_node_descriptions=[
             getNaviSimComponent(),
             getScenarioTestComponent(scenario_filename),
-            getLidarSimComponent("front_lidar"),
-            getLidarSimComponent("rear_lidar"),
-            getLidarSimComponent("right_lidar"),
-            getLidarSimComponent("left_lidar"),
-            getCameraSimComponent("front_left_camera"),
-            getCameraSimComponent("front_right_camera"),
-            getCameraSimComponent("rear_left_camera"),
-            getCameraSimComponent("rear_right_camera"),
-            getCameraSimComponent("left_camera"),
-            getCameraSimComponent("right_camera")
+            getLidarSimComponent('front_lidar'),
+            getLidarSimComponent('rear_lidar'),
+            getLidarSimComponent('right_lidar'),
+            getLidarSimComponent('left_lidar'),
+            getCameraSimComponent('front_left_camera'),
+            getCameraSimComponent('front_right_camera'),
+            getCameraSimComponent('rear_left_camera'),
+            getCameraSimComponent('rear_right_camera'),
+            getCameraSimComponent('left_camera'),
+            getCameraSimComponent('right_camera')
         ],
         prefix=[launch_prefix],
         output='screen')
     description = LaunchDescription([
         DeclareLaunchArgument(
-            "scenario_filename",
+            'scenario_filename',
             default_value=scenario_filename,
-            description="filename of the scenario yaml file."),
+            description='filename of the scenario yaml file.'),
         DeclareLaunchArgument(
-            "record",
+            'record',
             default_value=record,
-            description="If true, record rosbag data."
+            description='If true, record rosbag data.'
         ),
         DeclareLaunchArgument(
-            "rosbag_directory",
+            'rosbag_directory',
             default_value=rosbag_directory,
-            description="output directory of the rosbag data"
+            description='output directory of the rosbag data'
         ),
         DeclareLaunchArgument(
             'launch_prefix',
             default_value=launch_prefix,
-            description="launch prefix"
+            description='launch prefix'
         ),
         Node(
             package='rviz2',
