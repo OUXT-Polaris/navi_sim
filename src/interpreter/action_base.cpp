@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <iostream>
 #include <navi_sim/interpreter/action_base.hpp>
 #include <rclcpp/rclcpp.hpp>
 #include <string>
 #include <vector>
-#include <iostream>
 
 namespace navi_sim
 {
@@ -74,34 +74,27 @@ void ActionBase::update(const BlackBoard & black_board)
 {
   const auto triggerd_actions = black_board.get<std::vector<std::string>>("triggerd_actions");
   switch (state_) {
-    case ActionState::ACTIVE:
-      {
-        const auto state = onUpdate(black_board);
-        state_ = state;
-        break;
+    case ActionState::ACTIVE: {
+      const auto state = onUpdate(black_board);
+      state_ = state;
+      break;
+    }
+    case ActionState::INACTIVE: {
+      if (
+        std::find(triggerd_actions.begin(), triggerd_actions.end(), name) !=
+        triggerd_actions.end()) {
+        state_ = ActionState::ACTIVE;
+        update(black_board);
       }
-    case ActionState::INACTIVE:
-      {
-        if (std::find(
-            triggerd_actions.begin(),
-            triggerd_actions.end(), name) != triggerd_actions.end())
-        {
-          state_ = ActionState::ACTIVE;
-          update(black_board);
-        }
-        break;
-      }
-    case ActionState::FINISHED:
-      {
-        break;
-      }
+      break;
+    }
+    case ActionState::FINISHED: {
+      break;
+    }
   }
 }
 
-ActionState ActionBase::getState() const
-{
-  return state_;
-}
+ActionState ActionBase::getState() const { return state_; }
 
 void ActionBase::getDebugString(YAML::Node & yaml)
 {

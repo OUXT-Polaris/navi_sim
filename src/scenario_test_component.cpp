@@ -12,23 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <navi_sim/scenario_test_component.hpp>
-#include <ament_index_cpp/get_package_share_directory.hpp>
-#include <rclcpp_components/register_node_macro.hpp>
+#include <quaternion_operation/quaternion_operation.h>
 
+#include <ament_index_cpp/get_package_share_directory.hpp>
 #include <boost/assert.hpp>
 #include <boost/assign/list_of.hpp>
 #include <boost/geometry.hpp>
 #include <boost/geometry/algorithms/disjoint.hpp>
 #include <boost/geometry/geometries/linestring.hpp>
 #include <boost/geometry/geometries/point_xy.hpp>
-
-#include <quaternion_operation/quaternion_operation.h>
-
 #include <fstream>
+#include <memory>
+#include <navi_sim/scenario_test_component.hpp>
+#include <rclcpp_components/register_node_macro.hpp>
 #include <string>
 #include <vector>
-#include <memory>
 
 namespace navi_sim
 {
@@ -46,27 +44,27 @@ ScenarioTestComponent::ScenarioTestComponent(std::string name, const rclcpp::Nod
 
 void ScenarioTestComponent::initialize()
 {
-  declare_parameter("bbox_center_x", 0.0);
+  declare_parameter<double>("bbox_center_x", 0.0);
   get_parameter("bbox_center_x", bbox_center_x_);
-  declare_parameter("bbox_center_y", 0.0);
+  declare_parameter<double>("bbox_center_y", 0.0);
   get_parameter("bbox_center_y", bbox_center_y_);
-  declare_parameter("bbox_center_z", 0.0);
+  declare_parameter<double>("bbox_center_z", 0.0);
   get_parameter("bbox_center_z", bbox_center_z_);
-  declare_parameter("bbox_length", 0.0);
+  declare_parameter<double>("bbox_length", 0.0);
   get_parameter("bbox_length", bbox_length_);
-  declare_parameter("bbox_width", 0.0);
+  declare_parameter<double>("bbox_width", 0.0);
   get_parameter("bbox_width", bbox_width_);
-  declare_parameter("map_frame", "map");
+  declare_parameter<std::string>("map_frame", "map");
   get_parameter("map_frame", map_frame_);
-  declare_parameter("scenario_filename", "");
+  declare_parameter<std::string>("scenario_filename", "");
   get_parameter("scenario_filename", scenario_filename_);
-  std::string scenario_path = ament_index_cpp::get_package_share_directory("navi_sim") +
-    "/scenarios/" + scenario_filename_;
-  declare_parameter("objects_filename", "objects.json");
+  std::string scenario_path =
+    ament_index_cpp::get_package_share_directory("navi_sim") + "/scenarios/" + scenario_filename_;
+  declare_parameter<std::string>("objects_filename", "objects.json");
   std::string objects_filename;
   get_parameter("objects_filename", objects_filename);
-  std::string objects_path = ament_index_cpp::get_package_share_directory("navi_sim") + "/config/" +
-    objects_filename;
+  std::string objects_path =
+    ament_index_cpp::get_package_share_directory("navi_sim") + "/config/" + objects_filename;
   namespace fs = boost::filesystem;
   const fs::path path(objects_path);
   boost::system::error_code error;
@@ -83,9 +81,8 @@ void ScenarioTestComponent::initialize()
   }
   raycaster_ptr_ = std::make_unique<Raycaster>();
   raycaster_ptr_->addPrimitives(nlohmann::json::parse(json_string));
-  collision_marker_pub_ = this->create_publisher<visualization_msgs::msg::MarkerArray>(
-    "collision",
-    1);
+  collision_marker_pub_ =
+    this->create_publisher<visualization_msgs::msg::MarkerArray>("collision", 1);
   interpreter_ = std::make_unique<navi_sim::Interpreter>(scenario_path);
   goal_pub_ = this->create_publisher<geometry_msgs::msg::PoseStamped>("/move_base_simple/goal", 1);
   interpreter_->setValueToBlackBoard<rclcpp::Publisher<geometry_msgs::msg::PoseStamped>::SharedPtr>(
@@ -161,8 +158,7 @@ const visualization_msgs::msg::MarkerArray ScenarioTestComponent::getCollisionMa
 void ScenarioTestComponent::update()
 {
   interpreter_->setValueToBlackBoard(
-    "simulation_time",
-    (get_clock()->now() - start_time_).seconds());
+    "simulation_time", (get_clock()->now() - start_time_).seconds());
   interpreter_->setValueToBlackBoard("ego_pose", getEgoPose());
   interpreter_->evaluate();
   std::stringstream ss;
@@ -178,9 +174,9 @@ void ScenarioTestComponent::update()
   std::ofstream output("/tmp/context.yaml", std::ios::out | std::ios::trunc);
   output << ss.str();
   output.close();
-  if (interpreter_->getActionState("success") == actions::ActionState::FINISHED ||
-    interpreter_->getActionState("failure") == actions::ActionState::FINISHED)
-  {
+  if (
+    interpreter_->getActionState("success") == actions::ActionState::FINISHED ||
+    interpreter_->getActionState("failure") == actions::ActionState::FINISHED) {
     rclcpp::shutdown();
   }
 }
@@ -203,8 +199,8 @@ const boost::optional<geometry_msgs::msg::Pose> ScenarioTestComponent::getEgoPos
 {
   geometry_msgs::msg::TransformStamped transform_stamped;
   try {
-    transform_stamped = buffer_.lookupTransform(
-      map_frame_, "base_link", rclcpp::Time(0), tf2::durationFromSec(1.0));
+    transform_stamped =
+      buffer_.lookupTransform(map_frame_, "base_link", rclcpp::Time(0), tf2::durationFromSec(1.0));
     geometry_msgs::msg::Pose pose;
     pose.position.x = transform_stamped.transform.translation.x;
     pose.position.y = transform_stamped.transform.translation.y;
@@ -222,8 +218,8 @@ const std::vector<geometry_msgs::msg::Point> ScenarioTestComponent::getBboxPolyg
 {
   geometry_msgs::msg::TransformStamped transform_stamped;
   try {
-    transform_stamped = buffer_.lookupTransform(
-      map_frame_, "base_link", rclcpp::Time(0), tf2::durationFromSec(1.0));
+    transform_stamped =
+      buffer_.lookupTransform(map_frame_, "base_link", rclcpp::Time(0), tf2::durationFromSec(1.0));
   } catch (tf2::ExtrapolationException & ex) {
     RCLCPP_ERROR(get_logger(), ex.what());
     return {};
@@ -237,8 +233,7 @@ const std::vector<geometry_msgs::msg::Point> ScenarioTestComponent::getBboxPolyg
   return transformPoints(transform_stamped, points);
 }
 
-const geometry_msgs::msg::Point ScenarioTestComponent::getCornerPoint(
-  bool x_dir, bool y_dir) const
+const geometry_msgs::msg::Point ScenarioTestComponent::getCornerPoint(bool x_dir, bool y_dir) const
 {
   geometry_msgs::msg::Point p;
   if (x_dir) {

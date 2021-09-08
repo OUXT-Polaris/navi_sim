@@ -12,23 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <navi_sim/camera_sim_component.hpp>
-#include <ament_index_cpp/get_package_share_directory.hpp>
-
-#include <rclcpp_components/register_node_macro.hpp>
-
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 
-#include <color_names/color_names.hpp>
-
+#include <ament_index_cpp/get_package_share_directory.hpp>
 #include <boost/geometry.hpp>
+#include <boost/geometry/geometries/box.hpp>
 #include <boost/geometry/geometries/point_xy.hpp>
 #include <boost/geometry/geometries/polygon.hpp>
-#include <boost/geometry/geometries/box.hpp>
-
-#include <vector>
+#include <color_names/color_names.hpp>
 #include <memory>
+#include <navi_sim/camera_sim_component.hpp>
+#include <rclcpp_components/register_node_macro.hpp>
 #include <string>
+#include <vector>
 
 namespace navi_sim
 {
@@ -100,14 +96,14 @@ void CameraSimComponent::update()
       vision_msgs::msg::Detection2D detection;
       detection.header.frame_id = camera_optical_frame_;
       detection.header.stamp = now;
-      detection.is_tracking = false;
+      // detection.is_tracking = false;
       detection.bbox.center.x = (out.max_corner().x() + out.min_corner().x()) * 0.5;
       detection.bbox.center.y = (out.max_corner().y() + out.min_corner().y()) * 0.5;
       detection.bbox.size_x = out.max_corner().x() - out.min_corner().x();
       detection.bbox.size_y = out.max_corner().y() - out.min_corner().y();
       vision_msgs::msg::ObjectHypothesisWithPose result;
-      result.id = raycaster_ptr_->getObjectType(name);
-      result.score = 1.0;
+      // result.id = raycaster_ptr_->getObjectType(name);
+      // result.score = 1.0;
       detection.results.emplace_back(result);
       detection_array.detections.emplace_back(detection);
     }
@@ -119,7 +115,7 @@ void CameraSimComponent::update()
 
 void CameraSimComponent::initialize()
 {
-  declare_parameter("embree_config");
+  declare_parameter<std::string>("embree_config", "");
   if (has_parameter("embree_config")) {
     std::string embree_config;
     get_parameter("embree_config", embree_config);
@@ -128,53 +124,51 @@ void CameraSimComponent::initialize()
     raycaster_ptr_ = std::make_unique<Raycaster>();
   }
   double vertical_fov;
-  declare_parameter("vertical_fov", 2.0978006228796881594);
+  declare_parameter<double>("vertical_fov", 2.0978006228796881594);
   get_parameter("vertical_fov", vertical_fov);
-  declare_parameter("horizontal_pixels", 720);
+  declare_parameter<int>("horizontal_pixels", 720);
   get_parameter("horizontal_pixels", horizontal_pixels_);
-  declare_parameter("vertical_pixels", 540);
+  declare_parameter<int>("vertical_pixels", 540);
   get_parameter("vertical_pixels", vertical_pixels_);
-  declare_parameter("frustum_color", "cyan");
+  declare_parameter<std::string>("frustum_color", "cyan");
   get_parameter("frustum_color", frustum_color_);
-  declare_parameter("detection_color", "limegreen");
+  declare_parameter<std::string>("detection_color", "limegreen");
   get_parameter("detection_color", detection_color_);
-  declare_parameter("camera_frame", "camera_link");
+  declare_parameter<std::string>("camera_frame", "camera_link");
   get_parameter("camera_frame", camera_frame_);
-  declare_parameter("camera_optical_frame", "camera_optical_link");
+  declare_parameter<std::string>("camera_optical_frame", "camera_optical_link");
   get_parameter("camera_optical_frame", camera_optical_frame_);
-  declare_parameter("map_frame", "map");
+  declare_parameter<std::string>("map_frame", "map");
   get_parameter("map_frame", map_frame_);
   camera_info_ = sensor_msgs::msg::CameraInfo();
   camera_info_.height = vertical_pixels_;
   camera_info_.width = horizontal_pixels_;
   camera_info_.distortion_model = "plumb_bob";
   camera_info_.d = {0, 0, 0, 0, 0};
-  double f = static_cast<double>(vertical_pixels_) * 0.5 /
-    std::tan(vertical_fov * 0.5);
-  camera_info_.k =
-  {
-    f, 0, static_cast<double>(horizontal_pixels_) * 0.5,
-    0, f, static_cast<double>(vertical_pixels_) * 0.5,
-    0, 0, 1
-  };
-  camera_info_.r =
-  {
-    1, 0, 0,
-    0, 1, 0,
-    0, 0, 1
-  };
-  camera_info_.p =
-  {
-    f, 0, static_cast<double>(horizontal_pixels_) * 0.5, 0,
-    0, f, static_cast<double>(vertical_pixels_) * 0.5, 0,
-    0, 0, 1, 0
-  };
+  double f = static_cast<double>(vertical_pixels_) * 0.5 / std::tan(vertical_fov * 0.5);
+  camera_info_.k = {f, 0, static_cast<double>(horizontal_pixels_) * 0.5,
+                    0, f, static_cast<double>(vertical_pixels_) * 0.5,
+                    0, 0, 1};
+  camera_info_.r = {1, 0, 0, 0, 1, 0, 0, 0, 1};
+  camera_info_.p = {
+    f,
+    0,
+    static_cast<double>(horizontal_pixels_) * 0.5,
+    0,
+    0,
+    f,
+    static_cast<double>(vertical_pixels_) * 0.5,
+    0,
+    0,
+    0,
+    1,
+    0};
   cam_model_.fromCameraInfo(camera_info_);
   declare_parameter("objects_filename", "objects.json");
   std::string objects_filename;
   get_parameter("objects_filename", objects_filename);
-  std::string objects_path = ament_index_cpp::get_package_share_directory("navi_sim") + "/config/" +
-    objects_filename;
+  std::string objects_path =
+    ament_index_cpp::get_package_share_directory("navi_sim") + "/config/" + objects_filename;
   namespace fs = boost::filesystem;
   const fs::path path(objects_path);
   boost::system::error_code error;
@@ -198,10 +192,8 @@ void CameraSimComponent::initialize()
 }
 
 const geometry_msgs::msg::Point CameraSimComponent::internallyDivide(
-  const geometry_msgs::msg::Point & p0,
-  const geometry_msgs::msg::Point & p1,
-  double x_ratio_in_image,
-  double y_ratio_in_image)
+  const geometry_msgs::msg::Point & p0, const geometry_msgs::msg::Point & p1,
+  double x_ratio_in_image, double y_ratio_in_image)
 {
   geometry_msgs::msg::Point p;
   p.x = p0.x * (1 - x_ratio_in_image) + p1.x * x_ratio_in_image;

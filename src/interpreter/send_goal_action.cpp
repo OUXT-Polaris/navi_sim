@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <navi_sim/interpreter/send_goal_action.hpp>
-#include <navi_sim/interpreter/data_type.hpp>
-#include <rclcpp/rclcpp.hpp>
 #include <geometry_msgs/msg/pose_stamped.hpp>
+#include <navi_sim/interpreter/data_type.hpp>
+#include <navi_sim/interpreter/send_goal_action.hpp>
+#include <rclcpp/rclcpp.hpp>
 #include <string>
 
 namespace navi_sim
@@ -28,10 +28,7 @@ SendGoalAction::SendGoalAction(const std::string & name, const YAML::Node & yaml
   parse(yaml["goal"], goal_);
 }
 
-void SendGoalAction::getDebugString(YAML::Node & yaml)
-{
-  ActionBase::getDebugString(yaml);
-}
+void SendGoalAction::getDebugString(YAML::Node & yaml) { ActionBase::getDebugString(yaml); }
 
 ActionState SendGoalAction::onUpdate(const BlackBoard & black_board)
 {

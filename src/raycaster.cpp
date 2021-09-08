@@ -11,34 +11,26 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-#include <navi_sim/raycaster.hpp>
-#include <navi_sim/primitives/primitive.hpp>
-
 #include <quaternion_operation/quaternion_operation.h>
 
-#include <unordered_map>
-#include <string>
 #include <algorithm>
-#include <vector>
-#include <utility>
 #include <iostream>
+#include <navi_sim/primitives/primitive.hpp>
+#include <navi_sim/raycaster.hpp>
+#include <string>
+#include <unordered_map>
+#include <utility>
+#include <vector>
 
 namespace navi_sim
 {
-Raycaster::Raycaster()
-: primitive_ptrs_(0),
-  device_(nullptr),
-  scene_(nullptr),
-  engine_(seed_gen_())
+Raycaster::Raycaster() : primitive_ptrs_(0), device_(nullptr), scene_(nullptr), engine_(seed_gen_())
 {
   device_ = rtcNewDevice(nullptr);
 }
 
 Raycaster::Raycaster(std::string embree_config)
-: primitive_ptrs_(0),
-  device_(nullptr),
-  scene_(nullptr),
-  engine_(seed_gen_())
+: primitive_ptrs_(0), device_(nullptr), scene_(nullptr), engine_(seed_gen_())
 {
   device_ = rtcNewDevice(embree_config.c_str());
 }
@@ -103,14 +95,9 @@ nlohmann::json Raycaster::dumpPrimitives() const
 }
 
 const sensor_msgs::msg::PointCloud2 Raycaster::raycast(
-  geometry_msgs::msg::Pose origin,
-  double horizontal_resolution,
-  std::vector<double> vertical_angles,
-  double horizontal_angle_start,
-  double horizontal_angle_end,
-  double max_distance, double min_distance,
-  double noise_distribution, double ghost_ratio
-)
+  geometry_msgs::msg::Pose origin, double horizontal_resolution,
+  std::vector<double> vertical_angles, double horizontal_angle_start, double horizontal_angle_end,
+  double max_distance, double min_distance, double noise_distribution, double ghost_ratio)
 {
   std::vector<geometry_msgs::msg::Quaternion> directions;
   double horizontal_angle = horizontal_angle_start;
@@ -129,10 +116,8 @@ const sensor_msgs::msg::PointCloud2 Raycaster::raycast(
 }
 
 const sensor_msgs::msg::PointCloud2 Raycaster::raycast(
-  geometry_msgs::msg::Pose origin,
-  std::vector<geometry_msgs::msg::Quaternion> directions,
-  double max_distance, double min_distance,
-  double noise_distribution, double ghost_ratio)
+  geometry_msgs::msg::Pose origin, std::vector<geometry_msgs::msg::Quaternion> directions,
+  double max_distance, double min_distance, double noise_distribution, double ghost_ratio)
 {
   std::normal_distribution<> dist(0.0, noise_distribution);
   std::uniform_real_distribution<> ghost_dist(0.0, 1.0);
@@ -162,11 +147,8 @@ const sensor_msgs::msg::PointCloud2 Raycaster::raycast(
     rtcIntersect1(scene_, &context, &rayhit);
     if (ghost_dist(engine_) < ghost_ratio) {
       double distance = (max_distance - min_distance) * ghost_dist(engine_) + min_distance;
-      const auto vector = quaternion_operation::getRotationMatrix(direction) * Eigen::Vector3d(
-        1.0f,
-        0.0f,
-        0.0f) *
-        distance;
+      const auto vector = quaternion_operation::getRotationMatrix(direction) *
+                          Eigen::Vector3d(1.0f, 0.0f, 0.0f) * distance;
       pcl::PointXYZI p;
       p.x = vector[0];
       p.y = vector[1];
@@ -175,11 +157,8 @@ const sensor_msgs::msg::PointCloud2 Raycaster::raycast(
     } else {
       if (rayhit.hit.geomID != RTC_INVALID_GEOMETRY_ID) {
         double distance = rayhit.ray.tfar + dist(engine_);
-        const auto vector = quaternion_operation::getRotationMatrix(direction) * Eigen::Vector3d(
-          1.0f,
-          0.0f,
-          0.0f) *
-          distance;
+        const auto vector = quaternion_operation::getRotationMatrix(direction) *
+                            Eigen::Vector3d(1.0f, 0.0f, 0.0f) * distance;
         pcl::PointXYZI p;
         p.x = vector[0];
         p.y = vector[1];

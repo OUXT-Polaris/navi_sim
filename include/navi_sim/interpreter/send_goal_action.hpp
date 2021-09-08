@@ -15,9 +15,9 @@
 #ifndef NAVI_SIM__INTERPRETER__SEND_GOAL_ACTION_HPP_
 #define NAVI_SIM__INTERPRETER__SEND_GOAL_ACTION_HPP_
 
+#include <geometry_msgs/msg/pose_stamped.hpp>
 #include <navi_sim/interpreter/action_base.hpp>
 #include <navi_sim/interpreter/black_board.hpp>
-#include <geometry_msgs/msg/pose_stamped.hpp>
 #include <string>
 
 namespace navi_sim

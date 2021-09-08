@@ -13,7 +13,6 @@
 // limitations under the License.
 
 #include <navi_sim/interpreter/simulation_time_event.hpp>
-
 #include <rclcpp/rclcpp.hpp>
 #include <string>
 

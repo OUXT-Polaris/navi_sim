@@ -12,21 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <navi_sim/primitives/box.hpp>
-
-#include <vector>
-#include <string>
 #include <iostream>
+#include <navi_sim/primitives/box.hpp>
+#include <string>
+#include <vector>
 
 namespace navi_sim
 {
-
-Box::Box()
-: Primitive("Box", "Box", geometry_msgs::msg::Pose()), depth(0), width(0), height(0) {}
+Box::Box() : Primitive("Box", "Box", geometry_msgs::msg::Pose()), depth(0), width(0), height(0) {}
 
 Box::Box(
-  std::string object_type, float depth, float width, float height,
-  geometry_msgs::msg::Pose pose)
+  std::string object_type, float depth, float width, float height, geometry_msgs::msg::Pose pose)
 : Primitive("Box", object_type, pose), depth(depth), width(width), height(height)
 {
   vertices_ = std::vector<Vertex>(8);

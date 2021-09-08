@@ -12,11 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <memory>
 #include <navi_sim/camera_sim_component.hpp>
 #include <navi_sim/primitives/box.hpp>
-
 #include <rclcpp/rclcpp.hpp>
-#include <memory>
 
 int main(int argc, char * argv[])
 {

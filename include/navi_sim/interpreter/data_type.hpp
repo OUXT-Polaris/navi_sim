@@ -15,8 +15,9 @@
 #ifndef NAVI_SIM__INTERPRETER__DATA_TYPE_HPP_
 #define NAVI_SIM__INTERPRETER__DATA_TYPE_HPP_
 
-#include <geometry_msgs/msg/pose_stamped.hpp>
 #include <yaml-cpp/yaml.h>
+
+#include <geometry_msgs/msg/pose_stamped.hpp>
 
 namespace navi_sim
 {

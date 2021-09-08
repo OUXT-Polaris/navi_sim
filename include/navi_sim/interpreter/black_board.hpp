@@ -16,20 +16,20 @@
 #define NAVI_SIM__INTERPRETER__BLACK_BOARD_HPP_
 
 #include <boost/any.hpp>
-#include <unordered_map>
 #include <string>
+#include <unordered_map>
 
 namespace navi_sim
 {
 class BlackBoard
 {
 public:
-  template<typename T>
+  template <typename T>
   void set(const std::string & key, const T & value)
   {
     data_[key] = boost::any_cast<T>(value);
   }
-  template<typename T>
+  template <typename T>
   const T get(const std::string & key) const
   {
     return boost::any_cast<T>(getValue(key));

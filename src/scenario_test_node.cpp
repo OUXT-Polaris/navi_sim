@@ -15,8 +15,8 @@
 // Headers in this package
 #include <navi_sim/scenario_test_component.hpp>
 // Headers in RCLCPP
-#include <rclcpp/rclcpp.hpp>
 #include <memory>
+#include <rclcpp/rclcpp.hpp>
 
 int main(int argc, char * argv[])
 {

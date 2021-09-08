@@ -26,14 +26,8 @@ TerminateAction::TerminateAction(const std::string & name, const YAML::Node & ya
   success_ = yaml["success"].as<bool>();
 }
 
-void TerminateAction::getDebugString(YAML::Node & yaml)
-{
-  ActionBase::getDebugString(yaml);
-}
+void TerminateAction::getDebugString(YAML::Node & yaml) { ActionBase::getDebugString(yaml); }
 
-ActionState TerminateAction::onUpdate(const BlackBoard &)
-{
-  return ActionState::FINISHED;
-}
+ActionState TerminateAction::onUpdate(const BlackBoard &) { return ActionState::FINISHED; }
 }  // namespace actions
 }  // namespace navi_sim

@@ -52,26 +52,23 @@ extern "C" {
 }  // extern "C"
 #endif
 
-#include <navi_sim/raycaster.hpp>
-
-#include <rclcpp/rclcpp.hpp>
-
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
+#include <tf2_ros/buffer.h>
 #include <tf2_ros/transform_broadcaster.h>
 #include <tf2_ros/transform_listener.h>
 
-#include <sensor_msgs/msg/point_cloud2.hpp>
-#include <visualization_msgs/msg/marker_array.hpp>
-#include <navi_sim/interpreter/interpreter.hpp>
-#include <std_msgs/msg/string.hpp>
-
 #include <boost/optional.hpp>
-
 #include <fstream>
 #include <memory>
+#include <navi_sim/interpreter/interpreter.hpp>
+#include <navi_sim/raycaster.hpp>
+#include <rclcpp/rclcpp.hpp>
+#include <sensor_msgs/msg/point_cloud2.hpp>
+#include <std_msgs/msg/string.hpp>
 #include <string>
 #include <utility>
 #include <vector>
+#include <visualization_msgs/msg/marker_array.hpp>
 
 namespace navi_sim
 {
@@ -82,8 +79,8 @@ public:
   explicit ScenarioTestComponent(const rclcpp::NodeOptions & options);
   NAVI_SIM_SCENARIO_TEST_COMPONENT_PUBLIC
   explicit ScenarioTestComponent(std::string name, const rclcpp::NodeOptions & options);
-  template<typename T, typename ... Ts>
-  void addPrimitive(Ts && ... xs)
+  template <typename T, typename... Ts>
+  void addPrimitive(Ts &&... xs)
   {
     raycaster_ptr_->addPrimitive<T>(std::forward<Ts>(xs)...);
   }

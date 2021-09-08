@@ -12,16 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <navi_sim/interpreter/reach_position_event.hpp>
-#include <navi_sim/interpreter/data_type.hpp>
-
 #include <boost/optional.hpp>
-
-#include <rclcpp/rclcpp.hpp>
-
-#include <string>
-#include <iostream>
 #include <cmath>
+#include <iostream>
+#include <navi_sim/interpreter/data_type.hpp>
+#include <navi_sim/interpreter/reach_position_event.hpp>
+#include <rclcpp/rclcpp.hpp>
+#include <string>
 
 namespace navi_sim
 {
@@ -34,10 +31,7 @@ ReachPositionEvent::ReachPositionEvent(const std::string & name, const YAML::Nod
   radius_ = yaml["radius"].as<double>();
 }
 
-void ReachPositionEvent::getDebugString(YAML::Node & yaml)
-{
-  EventBase::getDebugString(yaml);
-}
+void ReachPositionEvent::getDebugString(YAML::Node & yaml) { EventBase::getDebugString(yaml); }
 
 EventState ReachPositionEvent::onUpdate(const BlackBoard & black_board)
 {
@@ -45,11 +39,10 @@ EventState ReachPositionEvent::onUpdate(const BlackBoard & black_board)
   if (!ego_pose) {
     return EventState::ACTIVE;
   }
-  double distance =
-    std::sqrt(
+  double distance = std::sqrt(
     std::pow(ego_pose->position.x - goal_.pose.position.x, 2) +
     std::pow(ego_pose->position.y - goal_.pose.position.y, 2) +
-    std::pow(ego_pose->position.z - goal_.pose.position.z, 2) );
+    std::pow(ego_pose->position.z - goal_.pose.position.z, 2));
   if (distance <= radius_) {
     return EventState::FINISHED;
   }
