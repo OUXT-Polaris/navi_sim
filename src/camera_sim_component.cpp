@@ -96,14 +96,14 @@ void CameraSimComponent::update()
       vision_msgs::msg::Detection2D detection;
       detection.header.frame_id = camera_optical_frame_;
       detection.header.stamp = now;
-      detection.is_tracking = false;
+      // detection.is_tracking = false;
       detection.bbox.center.x = (out.max_corner().x() + out.min_corner().x()) * 0.5;
       detection.bbox.center.y = (out.max_corner().y() + out.min_corner().y()) * 0.5;
       detection.bbox.size_x = out.max_corner().x() - out.min_corner().x();
       detection.bbox.size_y = out.max_corner().y() - out.min_corner().y();
       vision_msgs::msg::ObjectHypothesisWithPose result;
-      result.id = raycaster_ptr_->getObjectType(name);
-      result.score = 1.0;
+      // result.id = raycaster_ptr_->getObjectType(name);
+      // result.score = 1.0;
       detection.results.emplace_back(result);
       detection_array.detections.emplace_back(detection);
     }
