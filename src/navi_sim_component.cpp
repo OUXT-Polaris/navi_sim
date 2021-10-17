@@ -21,13 +21,36 @@
 namespace navi_sim
 {
 NaviSimComponent::NaviSimComponent(const rclcpp::NodeOptions & options)
-: Node("navi_sim", options), broadcaster_(this), buffer_(get_clock()), listener_(buffer_)
+: Node("navi_sim", options),
+  broadcaster_(this),
+  buffer_(get_clock()),
+  listener_(buffer_),
+  engine_(seed_gen_())
 {
   using namespace std::chrono_literals;
   update_position_timer_ =
     this->create_wall_timer(10ms, std::bind(&NaviSimComponent::updatePose, this));
-  current_pose_pub_ = this->create_publisher<geometry_msgs::msg::PoseStamped>("current_pose", 1);
-  current_twist_pub_ = this->create_publisher<geometry_msgs::msg::Twist>("current_twist", 1);
+  declare_parameter("with_covariance", false);
+  get_parameter("with_covariance", with_covariance_);
+  declare_parameter("publish_position", false);
+  get_parameter("publish_twist", publish_twist_);
+  declare_parameter("publish_pose", false);
+  get_parameter("publish_pose", publish_pose_);
+  declare_parameter("position_covariance", 0.0);
+  get_parameter("position_covariance", position_covariance_);
+  declare_parameter("linear_covariance", 0.0);
+  get_parameter("linear_covariance", linear_covariance_);
+  declare_parameter("angular_covariance", 0.0);
+  get_parameter("angular_covariance", angular_covariance_);
+  if (with_covariance_) {
+    current_pose_with_covariance_pub_ =
+      this->create_publisher<geometry_msgs::msg::PoseWithCovarianceStamped>("current_pose", 1);
+    current_twist_with_covariance_pub_ =
+      this->create_publisher<geometry_msgs::msg::TwistWithCovarianceStamped>("current_twist", 1);
+  } else {
+    current_pose_pub_ = this->create_publisher<geometry_msgs::msg::PoseStamped>("current_pose", 1);
+    current_twist_pub_ = this->create_publisher<geometry_msgs::msg::Twist>("current_twist", 1);
+  }
   joint_state_pub_ = this->create_publisher<sensor_msgs::msg::JointState>("joint_states", 1);
   initial_pose_sub_ = this->create_subscription<geometry_msgs::msg::PoseWithCovarianceStamped>(
     "initialpose", 1,
@@ -119,10 +142,73 @@ void NaviSimComponent::updatePose()
   current_pose_msg.pose = current_pose_;
   current_pose_msg.header.stamp = transform_stamped.header.stamp;
   current_pose_msg.header.frame_id = "map";
-  current_pose_pub_->publish(current_pose_msg);
-  current_twist_pub_->publish(current_twist_);
 
+  if (with_covariance_) {
+    if (publish_pose_) {
+      current_pose_with_covariance_pub_->publish(applyNoise(current_pose_msg));
+    }
+    if (publish_twist_) {
+      geometry_msgs::msg::TwistStamped twist_stamped;
+      twist_stamped.header.stamp = get_clock()->now();
+      twist_stamped.header.frame_id = "base_link";
+      twist_stamped.twist = current_twist_;
+      current_twist_with_covariance_pub_->publish(applyNoise(twist_stamped));
+    }
+    // current_twist_with_covariance_pub_->publish(current_twist_with_covariance_pub_());
+  } else {
+    if (publish_pose_) {
+      current_pose_pub_->publish(current_pose_msg);
+    }
+    if (publish_twist_) {
+      current_twist_pub_->publish(current_twist_);
+    }
+  }
   updateJointState();
+}
+
+geometry_msgs::msg::PoseWithCovarianceStamped NaviSimComponent::applyNoise(
+  const geometry_msgs::msg::PoseStamped & pose)
+{
+  geometry_msgs::msg::PoseWithCovarianceStamped value;
+  value.header = pose.header;
+  value.pose.covariance.fill(0);
+  value.pose.covariance[0] = position_covariance_;
+  value.pose.covariance[3] = position_covariance_;
+  value.pose.covariance[8] = position_covariance_;
+  /*
+  value.pose.covariance[15] = rpy_covariance_;
+  value.pose.covariance[24] = rpy_covariance_;
+  value.pose.covariance[35] = rpy_covariance_;
+  */
+  std::normal_distribution<> dist_position(0.0, position_covariance_);
+  value.pose.pose.position.x = pose.pose.position.x + dist_position(engine_);
+  value.pose.pose.position.y = pose.pose.position.y + dist_position(engine_);
+  value.pose.pose.position.z = pose.pose.position.z + dist_position(engine_);
+  value.pose.pose.orientation = pose.pose.orientation;
+  return value;
+}
+
+geometry_msgs::msg::TwistWithCovarianceStamped NaviSimComponent::applyNoise(
+  const geometry_msgs::msg::TwistStamped & twist)
+{
+  geometry_msgs::msg::TwistWithCovarianceStamped value;
+  value.header = twist.header;
+  value.twist.covariance.fill(0);
+  value.twist.covariance[0] = linear_covariance_;
+  value.twist.covariance[3] = linear_covariance_;
+  value.twist.covariance[8] = linear_covariance_;
+  value.twist.covariance[15] = angular_covariance_;
+  value.twist.covariance[24] = angular_covariance_;
+  value.twist.covariance[35] = angular_covariance_;
+  std::normal_distribution<> dist_linear(0.0, linear_covariance_);
+  value.twist.twist.linear.x = value.twist.twist.linear.x + dist_linear(engine_);
+  value.twist.twist.linear.y = value.twist.twist.linear.y + dist_linear(engine_);
+  value.twist.twist.linear.z = value.twist.twist.linear.z + dist_linear(engine_);
+  std::normal_distribution<> dist_angular(0.0, angular_covariance_);
+  value.twist.twist.angular.x = value.twist.twist.angular.x + dist_angular(engine_);
+  value.twist.twist.angular.y = value.twist.twist.angular.y + dist_angular(engine_);
+  value.twist.twist.angular.z = value.twist.twist.angular.z + dist_angular(engine_);
+  return value;
 }
 
 void NaviSimComponent::targetTwistCallback(const geometry_msgs::msg::Twist::SharedPtr data)
