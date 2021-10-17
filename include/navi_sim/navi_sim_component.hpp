@@ -65,6 +65,8 @@ extern "C" {
 #include <geometry_msgs/msg/pose_with_covariance_stamped.hpp>
 #include <geometry_msgs/msg/transform_stamped.hpp>
 #include <geometry_msgs/msg/twist.hpp>
+#include <geometry_msgs/msg/twist_stamped.hpp>
+#include <geometry_msgs/msg/twist_with_covariance_stamped.hpp>
 #include <rclcpp/rclcpp.hpp>
 #include <sensor_msgs/msg/joint_state.hpp>
 #include <sensor_msgs/msg/laser_scan.hpp>
@@ -76,6 +78,7 @@ extern "C" {
 // Headers in STL
 #include <chrono>
 #include <mutex>
+#include <random>
 #include <vector>
 
 namespace navi_sim
@@ -98,14 +101,30 @@ private:
   rclcpp::Subscription<geometry_msgs::msg::PointStamped>::SharedPtr clicked_point_sub_;
   rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr target_twist_sub_;
   rclcpp::Publisher<geometry_msgs::msg::PoseStamped>::SharedPtr current_pose_pub_;
+  rclcpp::Publisher<geometry_msgs::msg::PoseWithCovarianceStamped>::SharedPtr
+    current_pose_with_covariance_pub_;
   rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr current_twist_pub_;
+  rclcpp::Publisher<geometry_msgs::msg::TwistWithCovarianceStamped>::SharedPtr
+    current_twist_with_covariance_pub_;
   rclcpp::Publisher<sensor_msgs::msg::JointState>::SharedPtr joint_state_pub_;
   tf2_ros::Buffer buffer_;
   tf2_ros::TransformListener listener_;
   geometry_msgs::msg::PointStamped TransformToMapFrame(geometry_msgs::msg::PointStamped point);
   geometry_msgs::msg::PointStamped TransformToBaselinkFrame(
     geometry_msgs::msg::PointStamped point, bool from_message_timestamp = true);
+  geometry_msgs::msg::PoseWithCovarianceStamped applyNoise(
+    const geometry_msgs::msg::PoseStamped & pose);
+  geometry_msgs::msg::TwistWithCovarianceStamped applyNoise(
+    const geometry_msgs::msg::TwistStamped & twist);
   void updateJointState();
+  bool with_covariance_;
+  bool publish_twist_;
+  bool publish_pose_;
+  double position_covariance_;
+  double linear_covariance_;
+  double angular_covariance_;
+  std::random_device seed_gen_;
+  std::default_random_engine engine_;
 };
 }  // namespace navi_sim
 
