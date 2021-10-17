@@ -144,6 +144,17 @@ void NaviSimComponent::updatePose()
   current_pose_msg.header.frame_id = "map";
 
   if (with_covariance_) {
+    if (publish_pose_) {
+      current_pose_with_covariance_pub_->publish(applyNoise(current_pose_msg));
+    }
+    if (publish_twist_) {
+      geometry_msgs::msg::TwistStamped twist_stamped;
+      twist_stamped.header.stamp = get_clock()->now();
+      twist_stamped.header.frame_id = "base_link";
+      twist_stamped.twist = current_twist_;
+      current_twist_with_covariance_pub_->publish(applyNoise(twist_stamped));
+    }
+    // current_twist_with_covariance_pub_->publish(current_twist_with_covariance_pub_());
   } else {
     if (publish_pose_) {
       current_pose_pub_->publish(current_pose_msg);
