@@ -32,9 +32,9 @@ NaviSimComponent::NaviSimComponent(const rclcpp::NodeOptions & options)
     this->create_wall_timer(10ms, std::bind(&NaviSimComponent::updatePose, this));
   declare_parameter("with_covariance", false);
   get_parameter("with_covariance", with_covariance_);
-  declare_parameter("publish_position", false);
+  declare_parameter("publish_twist", true);
   get_parameter("publish_twist", publish_twist_);
-  declare_parameter("publish_pose", false);
+  declare_parameter("publish_pose", true);
   get_parameter("publish_pose", publish_pose_);
   declare_parameter("position_covariance", 0.0);
   get_parameter("position_covariance", position_covariance_);
