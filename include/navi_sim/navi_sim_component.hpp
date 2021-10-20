@@ -121,6 +121,7 @@ private:
   bool publish_twist_;
   bool publish_pose_;
   double position_covariance_;
+  double rpy_covariance_;
   double linear_covariance_;
   double angular_covariance_;
   std::random_device seed_gen_;

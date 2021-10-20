@@ -32,12 +32,14 @@ NaviSimComponent::NaviSimComponent(const rclcpp::NodeOptions & options)
     this->create_wall_timer(10ms, std::bind(&NaviSimComponent::updatePose, this));
   declare_parameter("with_covariance", false);
   get_parameter("with_covariance", with_covariance_);
-  declare_parameter("publish_position", false);
+  declare_parameter("publish_twist", true);
   get_parameter("publish_twist", publish_twist_);
-  declare_parameter("publish_pose", false);
+  declare_parameter("publish_pose", true);
   get_parameter("publish_pose", publish_pose_);
   declare_parameter("position_covariance", 0.0);
   get_parameter("position_covariance", position_covariance_);
+  declare_parameter("rpy_covariance", 0.0);
+  get_parameter("rpy_covariance", rpy_covariance_);
   declare_parameter("linear_covariance", 0.0);
   get_parameter("linear_covariance", linear_covariance_);
   declare_parameter("angular_covariance", 0.0);
@@ -175,16 +177,20 @@ geometry_msgs::msg::PoseWithCovarianceStamped NaviSimComponent::applyNoise(
   value.pose.covariance[0] = position_covariance_;
   value.pose.covariance[3] = position_covariance_;
   value.pose.covariance[8] = position_covariance_;
-  /*
   value.pose.covariance[15] = rpy_covariance_;
   value.pose.covariance[24] = rpy_covariance_;
   value.pose.covariance[35] = rpy_covariance_;
-  */
   std::normal_distribution<> dist_position(0.0, position_covariance_);
   value.pose.pose.position.x = pose.pose.position.x + dist_position(engine_);
   value.pose.pose.position.y = pose.pose.position.y + dist_position(engine_);
   value.pose.pose.position.z = pose.pose.position.z + dist_position(engine_);
-  value.pose.pose.orientation = pose.pose.orientation;
+  geometry_msgs::msg::Vector3 rpy_offset;
+  std::normal_distribution<> dist_rpy(0.0, rpy_covariance_);
+  rpy_offset.x = dist_rpy(engine_);
+  rpy_offset.y = dist_rpy(engine_);
+  rpy_offset.z = dist_rpy(engine_);
+  value.pose.pose.orientation =
+    pose.pose.orientation * quaternion_operation::convertEulerAngleToQuaternion(rpy_offset);
   return value;
 }
 
