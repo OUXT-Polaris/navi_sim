@@ -32,15 +32,6 @@ def generate_launch_description():
     scenario_filename = LaunchConfiguration('scenario_filename', default='go_straight.yaml')
     record = LaunchConfiguration('record', default=False)
     rosbag_directory = LaunchConfiguration('rosbag_directory', default='/tmp')
-    planner_launch_prefix = LaunchConfiguration(
-        'planner_launch_prefix',
-        default='taskset -c 0')
-    perception_launch_prefix = LaunchConfiguration(
-        'perception_launch_prefix',
-        default='taskset -c 1')
-    simulation_launch_prefix = LaunchConfiguration(
-        'simulation_launch_prefix',
-        default='taskset -c 0')
     return LaunchDescription([
         DeclareLaunchArgument(
             'scenario_filename',
@@ -50,38 +41,20 @@ def generate_launch_description():
             'record',
             default_value=record,
             description='If true, record rosbag data.'),
-        DeclareLaunchArgument(
-            'planner_launch_prefix',
-            default_value='taskset -c 0',
-            description='launch prefix of planner executor'
-        ),
-        DeclareLaunchArgument(
-            'perception_launch_prefix',
-            default_value='taskset -c 1',
-            description='launch prefix of perception executor'
-        ),
-        DeclareLaunchArgument(
-            'simulation_launch_prefix',
-            default_value='taskset -c 0',
-            description='launch prefix of simulation executor'
-        ),
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(
                 [navi_sim_launch_file_dir, '/navi_sim.launch.py']),
             launch_arguments={
                 'scenario_filename': scenario_filename,
                 'record': record,
-                'rosbag_directory': rosbag_directory,
-                'launch_prefix': simulation_launch_prefix}.items()
+                'rosbag_directory': rosbag_directory}.items()
         ),
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(
-                [hermite_path_planner_launch_dir, '/bringup.launch.py']),
-            launch_arguments={'launch_prefix': planner_launch_prefix}.items()
+                [hermite_path_planner_launch_dir, '/bringup.launch.py'])
         ),
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(
-                [perception_bringup_launch_dir, '/perception_bringup.launch.py']),
-            launch_arguments={'launch_prefix': perception_launch_prefix}.items()
+                [perception_bringup_launch_dir, '/perception_bringup.launch.py'])
         )
     ])
