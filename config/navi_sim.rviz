@@ -10,10 +10,7 @@ Panels:
     Property Tree Widget:
       Expanded:
         - /Status1
-        - /Perception1
         - /Perception1/ConcatenatedPoints1/Autocompute Value Bounds1
-        - /Perception1/GridMap1
-        - /Perception1/GridMap2
       Splitter Ratio: 0.5
     Tree Height: 567
   - Class: rviz_common/Tool Properties
