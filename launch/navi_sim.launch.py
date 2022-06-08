@@ -121,7 +121,7 @@ def generate_launch_description():
         name='navi_sim_bringup_container',
         namespace='sensing',
         package='rclcpp_components',
-        executable='component_container',
+        executable='component_container_mt',
         composable_node_descriptions=[
             getNaviSimComponent(),
             getScenarioTestComponent(scenario_filename),
