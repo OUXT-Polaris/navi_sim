@@ -21,6 +21,7 @@
 #include <boost/geometry/algorithms/disjoint.hpp>
 #include <boost/geometry/geometries/linestring.hpp>
 #include <boost/geometry/geometries/point_xy.hpp>
+#include <boost/filesystem.hpp>
 #include <fstream>
 #include <memory>
 #include <navi_sim/scenario_test_component.hpp>
