@@ -19,6 +19,7 @@
 #include <boost/geometry/geometries/box.hpp>
 #include <boost/geometry/geometries/point_xy.hpp>
 #include <boost/geometry/geometries/polygon.hpp>
+#include <boost/filesystem.hpp>
 #include <color_names/color_names.hpp>
 #include <memory>
 #include <navi_sim/camera_sim_component.hpp>
