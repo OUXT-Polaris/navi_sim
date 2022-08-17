@@ -42,7 +42,6 @@ void LidarSimComponent::setParameters()
 
   declare_parameter<std::string>("lidar_frame", "base_link");
   get_parameter("lidar_frame", lidar_frame_);
-  std::cout << "frame : " << lidar_frame_ << std::endl;
   declare_parameter<std::string>("map_frame", "map");
   get_parameter("map_frame", map_frame_);
   declare_parameter<std::string>("embree_config", "");
