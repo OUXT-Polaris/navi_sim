@@ -45,32 +45,26 @@ robotx_behavior_msgs::msg::TaskObject Primitive::getTaskObject() const
 {
   robotx_behavior_msgs::msg::TaskObject obj;
   obj.reliability = 1.0;
-  switch (object_type) {
-    case "RedBouy":
-      obj.x = pose.position.x;
-      obj.y = pose.position.y;
-      obj.object_kind = robotx_behavior_msgs::msg::TaskObject::BUOY_RED;
-      break;
-    case "GreenBouy":
-      obj.x = pose.position.x;
-      obj.y = pose.position.y;
-      obj.object_kind = robotx_behavior_msgs::msg::TaskObject::BUOY_GREEN;
-      break;
-    case "WhiteBouy":
-      obj.x = pose.position.x;
-      obj.y = pose.position.y;
-      obj.object_kind = robotx_behavior_msgs::msg::TaskObject::BUOY_WHITE;
-      break;
-    case "BlackBouy":
-      obj.x = pose.position.x;
-      obj.y = pose.position.y;
-      obj.object_kind = robotx_behavior_msgs::msg::TaskObject::BUOY_BLACK;
-      break;
-    default:
-      obj.x = pose.position.x;
-      obj.y = pose.position.y;
-      obj.object_kind = 0;
-      break;
+  if (object_type == "RedBouy") {
+    obj.x = pose.position.x;
+    obj.y = pose.position.y;
+    obj.object_kind = robotx_behavior_msgs::msg::TaskObject::BUOY_RED;
+  } else if (object_type == "GreenBouy") {
+    obj.x = pose.position.x;
+    obj.y = pose.position.y;
+    obj.object_kind = robotx_behavior_msgs::msg::TaskObject::BUOY_GREEN;
+  } else if (object_type == "WhiteBouy") {
+    obj.x = pose.position.x;
+    obj.y = pose.position.y;
+    obj.object_kind = robotx_behavior_msgs::msg::TaskObject::BUOY_WHITE;
+  } else if (object_type == "BlackBouy") {
+    obj.x = pose.position.x;
+    obj.y = pose.position.y;
+    obj.object_kind = robotx_behavior_msgs::msg::TaskObject::BUOY_BLACK;
+  } else {
+    obj.x = pose.position.x;
+    obj.y = pose.position.y;
+    obj.object_kind = 0;
   }
   return obj;
 }
