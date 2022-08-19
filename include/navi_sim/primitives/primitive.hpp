@@ -21,6 +21,7 @@
 #include <boost/geometry.hpp>
 #include <geometry_msgs/msg/pose.hpp>
 #include <nlohmann/json.hpp>
+#include <robotx_behavior_msgs/msg/task_object.hpp>
 #include <string>
 #include <vector>
 
@@ -58,6 +59,7 @@ public:
   nlohmann::json toBaseJson() const;
   std::vector<geometry_msgs::msg::Point> get2DPolygon() const;
   double getDistance(const geometry_msgs::msg::Point & origin) const;
+  robotx_behavior_msgs::msg::TaskObject getTaskObject() const;
 
 protected:
   boost::geometry::model::polygon<boost::geometry::model::d2::point_xy<double>> get2DBoostPolygon()

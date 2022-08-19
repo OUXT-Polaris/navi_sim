@@ -96,8 +96,8 @@ void SemanticMapSimComponent::updateMap()
     const auto detected_objects =
       raycaster_ptr_->queryByDistance(pose.position, detection_distance_);
     for (const auto & obj : detected_objects) {
-      if (id_list_.find(obj) == id_list_.end()) {
-        id_list_[obj] = id_list_.size();
+      if (tracked_objects_.find(obj) == tracked_objects_.end()) {
+        tracked_objects_[obj] = std::make_pair(tracked_objects_.size(), now);
       }
     }
   } catch (tf2::ExtrapolationException & ex) {

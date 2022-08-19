@@ -41,6 +41,29 @@ double Primitive::getDistance(const geometry_msgs::msg::Point & origin) const
   return bg::distance(point(origin.x, origin.y), get2DBoostPolygon());
 }
 
+robotx_behavior_msgs::msg::TaskObject Primitive::getTaskObject() const
+{
+  robotx_behavior_msgs::msg::TaskObject obj;
+  switch (object_type) {
+    case "RedBouy":
+      obj.object_kind = robotx_behavior_msgs::msg::TaskObject::BUOY_RED;
+      return;
+    case "GreenBouy":
+      obj.object_kind = robotx_behavior_msgs::msg::TaskObject::BUOY_GREEN;
+      return;
+    case "WhiteBouy":
+      obj.object_kind = robotx_behavior_msgs::msg::TaskObject::BUOY_WHITE;
+      return;
+    case "BlackBouy":
+      obj.object_kind = robotx_behavior_msgs::msg::TaskObject::BUOY_BLACK;
+      return;
+    default:
+      obj.object_kind = 0;
+      return;
+  }
+  return obj;
+}
+
 boost::geometry::model::polygon<boost::geometry::model::d2::point_xy<double>>
 Primitive::get2DBoostPolygon() const
 {
