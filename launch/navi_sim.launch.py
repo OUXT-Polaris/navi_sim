@@ -20,7 +20,7 @@ from launch.events import Shutdown
 from launch.actions import EmitEvent, ExecuteProcess, IncludeLaunchDescription, RegisterEventHandler
 from launch.actions.declare_launch_argument import DeclareLaunchArgument
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch_ros.actions import ComposableNodeContainer, Node
+from launch_ros.actions import ComposableNodeContainer, Node, LoadComposableNodes
 from launch_ros.descriptions import ComposableNode
 from launch.substitutions.launch_configuration import LaunchConfiguration
 
@@ -75,7 +75,7 @@ def getCameraSimComponent(camera_name):
     return component
 
 
-def getScenarioTestComponent(scenario_filename, scenario_mode):
+def getScenarioTestComponent(scenario_filename):
     config_directory = os.path.join(
         get_package_share_directory('navi_sim'),
         'config')
@@ -95,8 +95,7 @@ def getScenarioTestComponent(scenario_filename, scenario_mode):
         name='scenario_test_node',
         namespace='simulation',
         remappings=[],
-        parameters=[params],
-        condition=IfCondition(scenario_mode))
+        parameters=[params])
     return component
 
 
@@ -126,7 +125,6 @@ def generate_launch_description():
         executable='component_container_mt',
         composable_node_descriptions=[
             getNaviSimComponent(),
-            getScenarioTestComponent(scenario_filename, scenario_mode),
             getLidarSimComponent('front_lidar'),
             getLidarSimComponent('rear_lidar'),
             getLidarSimComponent('right_lidar'),
@@ -139,6 +137,10 @@ def generate_launch_description():
             getCameraSimComponent('right_camera')
         ],
         output='screen')
+    LoadComposableNodes(
+        composable_node_descriptions=[getScenarioTestComponent(scenario_filename)],
+        target_container=simulator,
+        condition=IfCondition(scenario_mode))
     description = LaunchDescription([
         DeclareLaunchArgument(
             'scenario_filename',
