@@ -44,20 +44,31 @@ double Primitive::getDistance(const geometry_msgs::msg::Point & origin) const
 robotx_behavior_msgs::msg::TaskObject Primitive::getTaskObject() const
 {
   robotx_behavior_msgs::msg::TaskObject obj;
+  obj.reliability = 1.0;
   switch (object_type) {
     case "RedBouy":
+      obj.x = pose.position.x;
+      obj.y = pose.position.y;
       obj.object_kind = robotx_behavior_msgs::msg::TaskObject::BUOY_RED;
       return;
     case "GreenBouy":
+      obj.x = pose.position.x;
+      obj.y = pose.position.y;
       obj.object_kind = robotx_behavior_msgs::msg::TaskObject::BUOY_GREEN;
       return;
     case "WhiteBouy":
+      obj.x = pose.position.x;
+      obj.y = pose.position.y;
       obj.object_kind = robotx_behavior_msgs::msg::TaskObject::BUOY_WHITE;
       return;
     case "BlackBouy":
+      obj.x = pose.position.x;
+      obj.y = pose.position.y;
       obj.object_kind = robotx_behavior_msgs::msg::TaskObject::BUOY_BLACK;
       return;
     default:
+      obj.x = pose.position.x;
+      obj.y = pose.position.y;
       obj.object_kind = 0;
       return;
   }
