@@ -30,6 +30,7 @@ def generate_launch_description():
     perception_bringup_package_path = get_package_share_directory('perception_bringup')
     perception_bringup_launch_dir = os.path.join(perception_bringup_package_path, 'launch')
     scenario_filename = LaunchConfiguration('scenario_filename', default='go_straight.yaml')
+    scenario_mode = LaunchConfiguration('scenario_mode', default=False)
     record = LaunchConfiguration('record', default=False)
     rosbag_directory = LaunchConfiguration('rosbag_directory', default='/tmp')
     return LaunchDescription([
@@ -37,6 +38,10 @@ def generate_launch_description():
             'scenario_filename',
             default_value=scenario_filename,
             description='filename of the scenario yaml file.'),
+        DeclareLaunchArgument(
+            'scenario_mode',
+            default_value=record,
+            description='If true, running with scenario_mode'),
         DeclareLaunchArgument(
             'record',
             default_value=record,
