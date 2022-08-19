@@ -57,7 +57,7 @@ public:
   std::vector<Triangle> getTriangles() const;
   virtual nlohmann::json toJson() const { return nlohmann::json{}; }
   nlohmann::json toBaseJson() const;
-  std::vector<geometry_msgs::msg::Point> get2DPolygon() const;
+  const std::vector<geometry_msgs::msg::Point> get2DPolygon() const;
   double getDistance(const geometry_msgs::msg::Point & origin) const;
   robotx_behavior_msgs::msg::TaskObject getTaskObject() const;
 

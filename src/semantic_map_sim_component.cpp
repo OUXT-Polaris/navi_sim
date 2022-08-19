@@ -100,6 +100,18 @@ void SemanticMapSimComponent::updateMap()
         tracked_objects_[obj] = std::make_pair(tracked_objects_.size(), now);
       }
     }
+    robotx_behavior_msgs::msg::TaskObjectsArray msg;
+    for (const auto & obj : tracked_objects_) {
+      auto task_object = raycaster_ptr_->getTaskObject(obj.first);
+      if (obj.second.second == now) {
+        task_object.detected = true;
+      } else {
+        task_object.detected = false;
+      }
+      task_object.last_detected = obj.second.second;
+      msg.task_objects.emplace_back(task_object);
+    }
+    task_objects_pub_->publish(msg);
   } catch (tf2::ExtrapolationException & ex) {
     RCLCPP_ERROR(get_logger(), ex.what());
   }

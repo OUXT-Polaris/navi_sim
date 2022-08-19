@@ -88,7 +88,7 @@ Primitive::get2DBoostPolygon() const
   return hull;
 }
 
-std::vector<geometry_msgs::msg::Point> Primitive::get2DPolygon() const
+const std::vector<geometry_msgs::msg::Point> Primitive::get2DPolygon() const
 {
   std::vector<geometry_msgs::msg::Point> ret;
   const auto hull = get2DBoostPolygon();

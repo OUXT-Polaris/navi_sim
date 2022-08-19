@@ -58,11 +58,12 @@ public:
     double max_distance = 100, double min_distance = 0, double noise_distribution = 0.15,
     double ghost_ratio = 0.001);
   nlohmann::json dumpPrimitives() const;
-  const std::vector<std::string> getPrimitiveNames();
-  const std::string getPrimitiveType(const std::string & name);
-  const std::string getObjectType(const std::string & name);
-  const std::vector<Vertex> getVertex(const std::string & name);
-  const std::vector<geometry_msgs::msg::Point> get2DPolygon(const std::string & name);
+  const std::vector<std::string> getPrimitiveNames() const;
+  const std::string getPrimitiveType(const std::string & name) const;
+  const std::string getObjectType(const std::string & name) const;
+  const std::vector<Vertex> getVertex(const std::string & name) const;
+  const std::vector<geometry_msgs::msg::Point> get2DPolygon(const std::string & name) const;
+  const robotx_behavior_msgs::msg::TaskObject getTaskObject(const std::string & name) const;
   const std::vector<std::string> queryByDistance(
     const geometry_msgs::msg::Point & origin, double distance) const;
 
