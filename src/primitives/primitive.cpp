@@ -50,27 +50,27 @@ robotx_behavior_msgs::msg::TaskObject Primitive::getTaskObject() const
       obj.x = pose.position.x;
       obj.y = pose.position.y;
       obj.object_kind = robotx_behavior_msgs::msg::TaskObject::BUOY_RED;
-      return;
+      break;
     case "GreenBouy":
       obj.x = pose.position.x;
       obj.y = pose.position.y;
       obj.object_kind = robotx_behavior_msgs::msg::TaskObject::BUOY_GREEN;
-      return;
+      break;
     case "WhiteBouy":
       obj.x = pose.position.x;
       obj.y = pose.position.y;
       obj.object_kind = robotx_behavior_msgs::msg::TaskObject::BUOY_WHITE;
-      return;
+      break;
     case "BlackBouy":
       obj.x = pose.position.x;
       obj.y = pose.position.y;
       obj.object_kind = robotx_behavior_msgs::msg::TaskObject::BUOY_BLACK;
-      return;
+      break;
     default:
       obj.x = pose.position.x;
       obj.y = pose.position.y;
       obj.object_kind = 0;
-      return;
+      break;
   }
   return obj;
 }
