@@ -5,3 +5,4 @@ front_left_camera_node:
     vertical_fov: 1.41372
     vertical_pixels: 540
     horizontal_pixels: 720
+    objects_filename: objects.json

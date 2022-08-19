@@ -18,8 +18,10 @@
 #include <embree3/rtcore.h>
 
 #include <algorithm>
+#include <boost/geometry.hpp>
 #include <geometry_msgs/msg/pose.hpp>
 #include <nlohmann/json.hpp>
+#include <robotx_behavior_msgs/msg/task_object.hpp>
 #include <string>
 #include <vector>
 
@@ -42,7 +44,9 @@ struct Triangle
 class Primitive
 {
 public:
-  Primitive(std::string primitive_type, std::string object_type, geometry_msgs::msg::Pose pose);
+  Primitive(
+    const std::string & primitive_type, const std::string & object_type,
+    const geometry_msgs::msg::Pose & pose);
   virtual ~Primitive() = default;
   const std::string primitive_type;
   const std::string object_type;
@@ -53,9 +57,13 @@ public:
   std::vector<Triangle> getTriangles() const;
   virtual nlohmann::json toJson() const { return nlohmann::json{}; }
   nlohmann::json toBaseJson() const;
-  std::vector<geometry_msgs::msg::Point> get2DPolygon() const;
+  const std::vector<geometry_msgs::msg::Point> get2DPolygon() const;
+  double getDistance(const geometry_msgs::msg::Point & origin) const;
+  robotx_behavior_msgs::msg::TaskObject getTaskObject() const;
 
 protected:
+  boost::geometry::model::polygon<boost::geometry::model::d2::point_xy<double>> get2DBoostPolygon()
+    const;
   std::vector<Vertex> transform(const geometry_msgs::msg::Pose & sensor_pose) const;
   std::vector<Vertex> transform() const;
   std::vector<Vertex> vertices_;

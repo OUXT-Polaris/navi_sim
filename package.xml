@@ -34,6 +34,7 @@
   <depend>yaml-cpp</depend>
   <depend>rosbag2</depend>
   <depend>util-linux</depend>
+  <depend>robotx_behavior_msgs</depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ouxt_lint_common</test_depend>

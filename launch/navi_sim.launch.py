@@ -20,7 +20,7 @@ from launch.events import Shutdown
 from launch.actions import EmitEvent, ExecuteProcess, IncludeLaunchDescription, RegisterEventHandler
 from launch.actions.declare_launch_argument import DeclareLaunchArgument
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch_ros.actions import ComposableNodeContainer, Node
+from launch_ros.actions import ComposableNodeContainer, Node, LoadComposableNodes
 from launch_ros.descriptions import ComposableNode
 from launch.substitutions.launch_configuration import LaunchConfiguration
 
@@ -75,6 +75,29 @@ def getCameraSimComponent(camera_name):
     return component
 
 
+def getSemanticMapSimComponent():
+    config_directory = os.path.join(
+        get_package_share_directory('navi_sim'),
+        'config')
+    param_config = os.path.join(config_directory, 'semantic_map.yaml')
+    params = {}
+    with open(param_config, 'r') as f:
+        params = yaml.safe_load(f)['semantic_map_node']['ros__parameters']
+    object_config_path = os.path.join(
+            get_package_share_directory('navi_sim'),
+            'config',
+            'objects.json')
+    params['objects_path'] = object_config_path
+    component = ComposableNode(
+        package='navi_sim',
+        plugin='navi_sim::SemanticMapSimComponent',
+        namespace='/perception',
+        name= 'semantic_map_node',
+        remappings=[],
+        parameters=[params])
+    return component
+
+
 def getScenarioTestComponent(scenario_filename):
     config_directory = os.path.join(
         get_package_share_directory('navi_sim'),
@@ -115,6 +138,7 @@ def generate_launch_description():
     description_dir = os.path.join(
             get_package_share_directory('wamv_description'), 'launch')
     scenario_filename = LaunchConfiguration('scenario_filename', default='go_straight.yaml')
+    scenario_mode = LaunchConfiguration('scenario_mode', default=False)
     record = LaunchConfiguration('record', default=False)
     rosbag_directory = LaunchConfiguration('rosbag_directory', default='/tmp')
     simulator = ComposableNodeContainer(
@@ -124,7 +148,6 @@ def generate_launch_description():
         executable='component_container_mt',
         composable_node_descriptions=[
             getNaviSimComponent(),
-            getScenarioTestComponent(scenario_filename),
             getLidarSimComponent('front_lidar'),
             getLidarSimComponent('rear_lidar'),
             getLidarSimComponent('right_lidar'),
@@ -134,14 +157,24 @@ def generate_launch_description():
             getCameraSimComponent('rear_left_camera'),
             getCameraSimComponent('rear_right_camera'),
             getCameraSimComponent('left_camera'),
-            getCameraSimComponent('right_camera')
+            getCameraSimComponent('right_camera'),
+            getSemanticMapSimComponent()
         ],
         output='screen')
+    LoadComposableNodes(
+        composable_node_descriptions=[getScenarioTestComponent(scenario_filename)],
+        target_container=simulator,
+        condition=IfCondition(scenario_mode))
     description = LaunchDescription([
         DeclareLaunchArgument(
             'scenario_filename',
             default_value=scenario_filename,
             description='filename of the scenario yaml file.'),
+        DeclareLaunchArgument(
+            'scenario_mode',
+            default_value=scenario_mode,
+            description='If true, running with scenario mode'
+        ),
         DeclareLaunchArgument(
             'record',
             default_value=record,

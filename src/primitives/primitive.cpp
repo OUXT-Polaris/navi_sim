@@ -28,12 +28,49 @@
 namespace navi_sim
 {
 Primitive::Primitive(
-  std::string primitive_type, std::string object_type, geometry_msgs::msg::Pose pose)
+  const std::string & primitive_type, const std::string & object_type,
+  const geometry_msgs::msg::Pose & pose)
 : primitive_type(primitive_type), object_type(object_type), pose(pose)
 {
 }
 
-std::vector<geometry_msgs::msg::Point> Primitive::get2DPolygon() const
+double Primitive::getDistance(const geometry_msgs::msg::Point & origin) const
+{
+  namespace bg = boost::geometry;
+  typedef bg::model::d2::point_xy<double> point;
+  return bg::distance(point(origin.x, origin.y), get2DBoostPolygon());
+}
+
+robotx_behavior_msgs::msg::TaskObject Primitive::getTaskObject() const
+{
+  robotx_behavior_msgs::msg::TaskObject obj;
+  obj.reliability = 1.0;
+  if (object_type == "RedBouy") {
+    obj.x = pose.position.x;
+    obj.y = pose.position.y;
+    obj.object_kind = robotx_behavior_msgs::msg::TaskObject::BUOY_RED;
+  } else if (object_type == "GreenBouy") {
+    obj.x = pose.position.x;
+    obj.y = pose.position.y;
+    obj.object_kind = robotx_behavior_msgs::msg::TaskObject::BUOY_GREEN;
+  } else if (object_type == "WhiteBouy") {
+    obj.x = pose.position.x;
+    obj.y = pose.position.y;
+    obj.object_kind = robotx_behavior_msgs::msg::TaskObject::BUOY_WHITE;
+  } else if (object_type == "BlackBouy") {
+    obj.x = pose.position.x;
+    obj.y = pose.position.y;
+    obj.object_kind = robotx_behavior_msgs::msg::TaskObject::BUOY_BLACK;
+  } else {
+    obj.x = pose.position.x;
+    obj.y = pose.position.y;
+    obj.object_kind = 0;
+  }
+  return obj;
+}
+
+boost::geometry::model::polygon<boost::geometry::model::d2::point_xy<double>>
+Primitive::get2DBoostPolygon() const
 {
   namespace bg = boost::geometry;
 
@@ -48,6 +85,13 @@ std::vector<geometry_msgs::msg::Point> Primitive::get2DPolygon() const
   }
   polygon hull;
   bg::convex_hull(poly, hull);
+  return hull;
+}
+
+const std::vector<geometry_msgs::msg::Point> Primitive::get2DPolygon() const
+{
+  std::vector<geometry_msgs::msg::Point> ret;
+  const auto hull = get2DBoostPolygon();
   for (const auto & p : hull.outer()) {
     geometry_msgs::msg::Point point;
     point.x = p.x();
