@@ -40,7 +40,7 @@ def generate_launch_description():
             description='filename of the scenario yaml file.'),
         DeclareLaunchArgument(
             'scenario_mode',
-            default_value=record,
+            default_value=scenario_mode,
             description='If true, running with scenario_mode'),
         DeclareLaunchArgument(
             'record',
