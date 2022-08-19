@@ -1,0 +1,6 @@
+semantic_map_node:
+  ros__parameters:
+    map_frame: map
+    robot_frame: base_link
+    objects_filename: objects.json
+    detection_distance: 10.0
