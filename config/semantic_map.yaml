@@ -3,4 +3,4 @@ semantic_map_node:
     map_frame: map
     robot_frame: base_link
     objects_filename: objects.json
-    detection_distance: 10.0
+    detection_distance: 15.0
