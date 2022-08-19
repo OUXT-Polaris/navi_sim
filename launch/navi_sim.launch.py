@@ -75,6 +75,29 @@ def getCameraSimComponent(camera_name):
     return component
 
 
+def getSemanticMapSimComponent():
+    config_directory = os.path.join(
+        get_package_share_directory('navi_sim'),
+        'config')
+    param_config = os.path.join(config_directory, 'semantic_map.yaml')
+    params = {}
+    with open(param_config, 'r') as f:
+        params = yaml.safe_load(f)['semantic_map_node']['ros__parameters']
+    object_config_path = os.path.join(
+            get_package_share_directory('navi_sim'),
+            'config',
+            'objects.json')
+    params['objects_path'] = object_config_path
+    component = ComposableNode(
+        package='navi_sim',
+        plugin='navi_sim::SemanticMapSimComponent',
+        namespace='/perception',
+        name= 'semantic_map_node',
+        remappings=[],
+        parameters=[params])
+    return component
+
+
 def getScenarioTestComponent(scenario_filename):
     config_directory = os.path.join(
         get_package_share_directory('navi_sim'),
@@ -134,7 +157,8 @@ def generate_launch_description():
             getCameraSimComponent('rear_left_camera'),
             getCameraSimComponent('rear_right_camera'),
             getCameraSimComponent('left_camera'),
-            getCameraSimComponent('right_camera')
+            getCameraSimComponent('right_camera'),
+            getSemanticMapSimComponent()
         ],
         output='screen')
     LoadComposableNodes(
