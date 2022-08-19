@@ -23,6 +23,9 @@
 #include <string>
 #include <vector>
 
+#include <boost/geometry.hpp>
+#include <boost_geometry_util/geometries/geometries.hpp>
+
 namespace navi_sim
 {
 struct Vertex
