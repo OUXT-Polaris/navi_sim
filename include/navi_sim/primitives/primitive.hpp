@@ -42,7 +42,9 @@ struct Triangle
 class Primitive
 {
 public:
-  Primitive(std::string primitive_type, std::string object_type, geometry_msgs::msg::Pose pose);
+  Primitive(
+    const std::string & primitive_type, const std::string & object_type,
+    const geometry_msgs::msg::Pose & pose);
   virtual ~Primitive() = default;
   const std::string primitive_type;
   const std::string object_type;
@@ -54,6 +56,7 @@ public:
   virtual nlohmann::json toJson() const { return nlohmann::json{}; }
   nlohmann::json toBaseJson() const;
   std::vector<geometry_msgs::msg::Point> get2DPolygon() const;
+  double getDistance(const geometry_msgs::msg::Point & origin) const;
 
 protected:
   std::vector<Vertex> transform(const geometry_msgs::msg::Pose & sensor_pose) const;

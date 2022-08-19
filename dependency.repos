@@ -47,3 +47,7 @@ repositories:
     type: git
     url: https://github.com/OUXT-Polaris/lua_vendor.git
     version: main
+  boost_geometry_util:
+    type: git
+    url: https://github.com/OUXT-Polaris/boost_geometry_util.git
+    version: master

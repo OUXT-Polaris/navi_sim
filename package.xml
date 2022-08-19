@@ -35,6 +35,7 @@
   <depend>rosbag2</depend>
   <depend>util-linux</depend>
   <depend>robotx_behavior_msgs</depend>
+  <depend>boost_geometry_util</depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ouxt_lint_common</test_depend>

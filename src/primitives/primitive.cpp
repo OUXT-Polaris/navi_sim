@@ -28,9 +28,14 @@
 namespace navi_sim
 {
 Primitive::Primitive(
-  std::string primitive_type, std::string object_type, geometry_msgs::msg::Pose pose)
+  const std::string & primitive_type, const std::string & object_type,
+  const geometry_msgs::msg::Pose & pose)
 : primitive_type(primitive_type), object_type(object_type), pose(pose)
 {
+}
+
+double Primitive::getDistance(const geometry_msgs::msg::Point & origin) const {
+  const auto polygon = get2DPolygon();
 }
 
 std::vector<geometry_msgs::msg::Point> Primitive::get2DPolygon() const
