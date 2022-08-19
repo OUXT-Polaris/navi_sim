@@ -88,6 +88,7 @@ private:
   double detection_distance_;
   std::string objects_path_;
   std::string task_objects_topic_;
+  std::unordered_map<std::string, size_t> id_list_;
 };
 }  // namespace navi_sim
 

@@ -64,7 +64,7 @@ public:
   const std::vector<Vertex> getVertex(const std::string & name);
   const std::vector<geometry_msgs::msg::Point> get2DPolygon(const std::string & name);
   const std::vector<std::string> queryByDistance(
-    const geometry_msgs::msg::Pose origin, double distance) const;
+    const geometry_msgs::msg::Point & origin, double distance) const;
 
 private:
   std::unordered_map<std::string, std::unique_ptr<Primitive>> primitive_ptrs_;

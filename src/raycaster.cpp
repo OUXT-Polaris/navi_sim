@@ -95,9 +95,15 @@ nlohmann::json Raycaster::dumpPrimitives() const
 }
 
 const std::vector<std::string> Raycaster::queryByDistance(
-  const geometry_msgs::msg::Pose origin, double distance) const
+  const geometry_msgs::msg::Point & origin, double distance) const
 {
-  return {};
+  std::vector<std::string> ret;
+  for (auto && pair : primitive_ptrs_) {
+    if (pair.second->getDistance(origin) <= distance) {
+      ret.emplace_back(pair.first);
+    }
+  }
+  return ret;
 }
 
 const sensor_msgs::msg::PointCloud2 Raycaster::raycast(

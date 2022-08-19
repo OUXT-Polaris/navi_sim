@@ -82,7 +82,28 @@ void SemanticMapSimComponent::setParameters()
     this->create_wall_timer(100ms, std::bind(&SemanticMapSimComponent::updateMap, this));
 }
 
-void SemanticMapSimComponent::updateMap() {}
+void SemanticMapSimComponent::updateMap()
+{
+  rclcpp::Time now = get_clock()->now();
+  try {
+    geometry_msgs::msg::TransformStamped transform_stamped =
+      buffer_.lookupTransform(map_frame_, robot_frame_, rclcpp::Time(0), tf2::durationFromSec(1.0));
+    geometry_msgs::msg::Pose pose;
+    pose.position.x = transform_stamped.transform.translation.x;
+    pose.position.y = transform_stamped.transform.translation.y;
+    pose.position.z = transform_stamped.transform.translation.z;
+    pose.orientation = transform_stamped.transform.rotation;
+    const auto detected_objects =
+      raycaster_ptr_->queryByDistance(pose.position, detection_distance_);
+    for (const auto & obj : detected_objects) {
+      if (id_list_.find(obj) == id_list_.end()) {
+        id_list_[obj] = id_list_.size();
+      }
+    }
+  } catch (tf2::ExtrapolationException & ex) {
+    RCLCPP_ERROR(get_logger(), ex.what());
+  }
+}
 }  // namespace navi_sim
 
 RCLCPP_COMPONENTS_REGISTER_NODE(navi_sim::SemanticMapSimComponent)
