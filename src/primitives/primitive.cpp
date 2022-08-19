@@ -34,11 +34,15 @@ Primitive::Primitive(
 {
 }
 
-double Primitive::getDistance(const geometry_msgs::msg::Point & origin) const {
-  const auto polygon = get2DPolygon();
+double Primitive::getDistance(const geometry_msgs::msg::Point & origin) const
+{
+  namespace bg = boost::geometry;
+  typedef bg::model::d2::point_xy<double> point;
+  return bg::distance(point(origin.x, origin.y), get2DBoostPolygon());
 }
 
-std::vector<geometry_msgs::msg::Point> Primitive::get2DPolygon() const
+boost::geometry::model::polygon<boost::geometry::model::d2::point_xy<double>>
+Primitive::get2DBoostPolygon() const
 {
   namespace bg = boost::geometry;
 
@@ -53,6 +57,13 @@ std::vector<geometry_msgs::msg::Point> Primitive::get2DPolygon() const
   }
   polygon hull;
   bg::convex_hull(poly, hull);
+  return hull;
+}
+
+std::vector<geometry_msgs::msg::Point> Primitive::get2DPolygon() const
+{
+  std::vector<geometry_msgs::msg::Point> ret;
+  const auto hull = get2DBoostPolygon();
   for (const auto & p : hull.outer()) {
     geometry_msgs::msg::Point point;
     point.x = p.x();

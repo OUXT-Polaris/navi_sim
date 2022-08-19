@@ -18,12 +18,11 @@
 #include <embree3/rtcore.h>
 
 #include <algorithm>
+#include <boost/geometry.hpp>
 #include <geometry_msgs/msg/pose.hpp>
 #include <nlohmann/json.hpp>
 #include <string>
 #include <vector>
-
-#include <boost/geometry.hpp>
 
 namespace navi_sim
 {
@@ -61,6 +60,8 @@ public:
   double getDistance(const geometry_msgs::msg::Point & origin) const;
 
 protected:
+  boost::geometry::model::polygon<boost::geometry::model::d2::point_xy<double>> get2DBoostPolygon()
+    const;
   std::vector<Vertex> transform(const geometry_msgs::msg::Pose & sensor_pose) const;
   std::vector<Vertex> transform() const;
   std::vector<Vertex> vertices_;
