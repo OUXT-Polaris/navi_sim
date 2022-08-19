@@ -75,7 +75,7 @@ def getCameraSimComponent(camera_name):
     return component
 
 
-def getScenarioTestComponent(scenario_filename):
+def getScenarioTestComponent(scenario_filename, scenario_mode):
     config_directory = os.path.join(
         get_package_share_directory('navi_sim'),
         'config')
@@ -95,7 +95,8 @@ def getScenarioTestComponent(scenario_filename):
         name='scenario_test_node',
         namespace='simulation',
         remappings=[],
-        parameters=[params])
+        parameters=[params],
+        condition=IfCondition(scenario_mode))
     return component
 
 
@@ -115,6 +116,7 @@ def generate_launch_description():
     description_dir = os.path.join(
             get_package_share_directory('wamv_description'), 'launch')
     scenario_filename = LaunchConfiguration('scenario_filename', default='go_straight.yaml')
+    scenario_mode = LaunchConfiguration('scenario_mode', default=False)
     record = LaunchConfiguration('record', default=False)
     rosbag_directory = LaunchConfiguration('rosbag_directory', default='/tmp')
     simulator = ComposableNodeContainer(
@@ -124,7 +126,7 @@ def generate_launch_description():
         executable='component_container_mt',
         composable_node_descriptions=[
             getNaviSimComponent(),
-            getScenarioTestComponent(scenario_filename),
+            getScenarioTestComponent(scenario_filename, scenario_mode),
             getLidarSimComponent('front_lidar'),
             getLidarSimComponent('rear_lidar'),
             getLidarSimComponent('right_lidar'),
@@ -142,6 +144,11 @@ def generate_launch_description():
             'scenario_filename',
             default_value=scenario_filename,
             description='filename of the scenario yaml file.'),
+        DeclareLaunchArgument(
+            'scenario_mode',
+            default_value=scenario_mode,
+            description='If true, running with scenario mode'
+        ),
         DeclareLaunchArgument(
             'record',
             default_value=record,
