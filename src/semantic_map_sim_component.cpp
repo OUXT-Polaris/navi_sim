@@ -44,6 +44,8 @@ void SemanticMapSimComponent::setParameters()
   get_parameter("map_frame", map_frame_);
   declare_parameter<std::string>("robot_frame", "base_link");
   get_parameter("robot_frame", robot_frame_);
+  declare_parameter<std::string>("task_objects_topic", "task_objects");
+  get_parameter("task_objects_topic", task_objects_topic_);
   declare_parameter<std::string>("embree_config", "");
   if (has_parameter("embree_config")) {
     std::string embree_config;
@@ -74,7 +76,8 @@ void SemanticMapSimComponent::setParameters()
     json_string = json_string + line;
   }
   raycaster_ptr_->addPrimitives(nlohmann::json::parse(json_string));
-  // pointcloud_pub_ = this->create_publisher<sensor_msgs::msg::PointCloud2>("lidar_points", 1);
+  task_objects_pub_ =
+    this->create_publisher<robotx_behavior_msgs::msg::TaskObjectsArray>(task_objects_topic_, 1);
   update_map_timer_ =
     this->create_wall_timer(100ms, std::bind(&SemanticMapSimComponent::updateMap, this));
 }

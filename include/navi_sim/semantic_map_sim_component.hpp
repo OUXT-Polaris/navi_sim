@@ -59,6 +59,7 @@ extern "C" {
 
 #include <navi_sim/raycaster.hpp>
 #include <rclcpp/rclcpp.hpp>
+#include <robotx_behavior_msgs/msg/task_objects_array.hpp>
 
 namespace navi_sim
 {
@@ -78,7 +79,7 @@ public:
 private:
   void setParameters();
   void updateMap();
-  //rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr pointcloud_pub_;
+  rclcpp::Publisher<robotx_behavior_msgs::msg::TaskObjectsArray>::SharedPtr task_objects_pub_;
   std::unique_ptr<navi_sim::Raycaster> raycaster_ptr_;
   tf2_ros::Buffer buffer_;
   tf2_ros::TransformListener listener_;
@@ -86,6 +87,7 @@ private:
   std::string map_frame_, robot_frame_;
   double detection_distance_;
   std::string objects_path_;
+  std::string task_objects_topic_;
 };
 }  // namespace navi_sim
 
