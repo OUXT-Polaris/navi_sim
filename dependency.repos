@@ -39,6 +39,10 @@ repositories:
     type: git
     url: https://github.com/OUXT-Polaris/robotx_behavior_tree.git
     version: master
+  robotx_planner_bringup:
+    type: git
+    url: https://github.com/OUXT-Polaris/robotx_planner_bringup.git
+    version: master
   sol_vendor:
     type: git
     url: https://github.com/OUXT-Polaris/sol_vendor.git
