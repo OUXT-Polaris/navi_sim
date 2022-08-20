@@ -76,8 +76,8 @@ void SemanticMapSimComponent::setParameters()
     json_string = json_string + line;
   }
   raycaster_ptr_->addPrimitives(nlohmann::json::parse(json_string));
-  task_objects_pub_ =
-    this->create_publisher<robotx_behavior_msgs::msg::TaskObjectsArray>(task_objects_topic_, 1);
+  task_objects_pub_ = this->create_publisher<robotx_behavior_msgs::msg::TaskObjectsArrayStamped>(
+    task_objects_topic_, 1);
   update_map_timer_ =
     this->create_wall_timer(100ms, std::bind(&SemanticMapSimComponent::updateMap, this));
 }
@@ -100,7 +100,9 @@ void SemanticMapSimComponent::updateMap()
         tracked_objects_[obj] = std::make_pair(tracked_objects_.size(), now);
       }
     }
-    robotx_behavior_msgs::msg::TaskObjectsArray msg;
+    robotx_behavior_msgs::msg::TaskObjectsArrayStamped msg;
+    msg.header.stamp = now;
+    msg.header.frame_id = map_frame_;
     for (const auto & obj : tracked_objects_) {
       auto task_object = raycaster_ptr_->getTaskObject(obj.first);
       if (obj.second.second == now) {
