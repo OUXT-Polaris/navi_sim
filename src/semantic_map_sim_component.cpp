@@ -103,6 +103,7 @@ void SemanticMapSimComponent::updateMap()
     robotx_behavior_msgs::msg::TaskObjectsArrayStamped msg;
     msg.header.stamp = now;
     msg.header.frame_id = map_frame_;
+    size_t unique_id = 0;
     for (const auto & obj : tracked_objects_) {
       auto task_object = raycaster_ptr_->getTaskObject(obj.first);
       if (obj.second.second == now) {
@@ -111,7 +112,9 @@ void SemanticMapSimComponent::updateMap()
         task_object.detected = false;
       }
       task_object.last_detected = obj.second.second;
+      task_object.unique_id = unique_id;
       msg.task_objects.emplace_back(task_object);
+      ++unique_id;
     }
     task_objects_pub_->publish(msg);
   } catch (tf2::ExtrapolationException & ex) {
