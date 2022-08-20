@@ -59,7 +59,7 @@ extern "C" {
 
 #include <navi_sim/raycaster.hpp>
 #include <rclcpp/rclcpp.hpp>
-#include <robotx_behavior_msgs/msg/task_objects_array.hpp>
+#include <robotx_behavior_msgs/msg/task_objects_array_stamped.hpp>
 
 namespace navi_sim
 {
@@ -79,7 +79,8 @@ public:
 private:
   void setParameters();
   void updateMap();
-  rclcpp::Publisher<robotx_behavior_msgs::msg::TaskObjectsArray>::SharedPtr task_objects_pub_;
+  rclcpp::Publisher<robotx_behavior_msgs::msg::TaskObjectsArrayStamped>::SharedPtr
+    task_objects_pub_;
   std::unique_ptr<navi_sim::Raycaster> raycaster_ptr_;
   tf2_ros::Buffer buffer_;
   tf2_ros::TransformListener listener_;
