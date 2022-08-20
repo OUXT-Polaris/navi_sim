@@ -25,8 +25,8 @@ import os
 
 def generate_launch_description():
     navi_sim_launch_file_dir = os.path.join(get_package_share_directory('navi_sim'), 'launch')
-    hermite_path_planner_package_path = get_package_share_directory('hermite_path_planner_bringup')
-    hermite_path_planner_launch_dir = os.path.join(hermite_path_planner_package_path, 'launch')
+    planner_package_path = get_package_share_directory('robotx_planner_bringup')
+    planner_launch_dir = os.path.join(planner_package_path, 'launch')
     perception_bringup_package_path = get_package_share_directory('perception_bringup')
     perception_bringup_launch_dir = os.path.join(perception_bringup_package_path, 'launch')
     scenario_filename = LaunchConfiguration('scenario_filename', default='go_straight.yaml')
@@ -56,7 +56,7 @@ def generate_launch_description():
         ),
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(
-                [hermite_path_planner_launch_dir, '/bringup.launch.py'])
+                [planner_launch_dir, '/planner_bringup.launch.py'])
         ),
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(
