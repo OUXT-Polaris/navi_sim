@@ -34,6 +34,7 @@
   <depend>rosbag2</depend>
   <depend>util-linux</depend>
   <depend>robotx_behavior_msgs</depend>
+  <depend>perception_msgs</depend>
   <exec_depend>robotx_planner_bringup</exec_depend>
 
   <test_depend>ament_lint_auto</test_depend>
