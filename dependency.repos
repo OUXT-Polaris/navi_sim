@@ -50,4 +50,7 @@ repositories:
   lua_vendor:
     type: git
     url: https://github.com/OUXT-Polaris/lua_vendor.git
-    version: main
+  perception_msgs:
+    type: git
+    url: https://github.com/OUXT-Polaris/perception_msgs.git
+    version: master
