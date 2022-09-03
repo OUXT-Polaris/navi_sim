@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include "navi_sim/camera_sim_component.hpp"
+
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 
 #include <ament_index_cpp/get_package_share_directory.hpp>
@@ -25,8 +27,6 @@
 #include <rclcpp_components/register_node_macro.hpp>
 #include <string>
 #include <vector>
-
-#include "navi_sim/camera_sim_component.hpp"
 
 namespace navi_sim
 {

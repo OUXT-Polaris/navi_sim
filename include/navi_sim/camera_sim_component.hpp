@@ -60,13 +60,13 @@ extern "C" {
 
 #include <memory>
 #include <navi_sim/raycaster.hpp>
+#include <perception_msgs/msg/detection2_d.hpp>
+#include <perception_msgs/msg/detection2_d_array.hpp>
 #include <rclcpp/rclcpp.hpp>
 #include <sensor_msgs/msg/camera_info.hpp>
 #include <string>
 #include <utility>
 #include <vector>
-#include <perception_msgs/msg/detection2_d.hpp>
-#include <perception_msgs/msg/detection2_d_array.hpp>
 #include <visualization_msgs/msg/marker_array.hpp>
 
 namespace navi_sim
