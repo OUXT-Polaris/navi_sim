@@ -43,7 +43,7 @@ CameraSimComponent::CameraSimComponent(std::string name, const rclcpp::NodeOptio
 void CameraSimComponent::update()
 {
   rclcpp::Time now = get_clock()->now();
-  vision_msgs::msg::Detection2DArray detection_array;
+  perception_msgs::msg::Detection2DArray detection_array;
   sensor_msgs::msg::CameraInfo camera_info;
   camera_info = camera_info_;
   camera_info.header.frame_id = camera_optical_frame_;
@@ -93,7 +93,7 @@ void CameraSimComponent::update()
     const box bx = boost::geometry::return_envelope<box>(poly);
     box out;
     if (boost::geometry::intersection(camera_bbox, bx, out)) {
-      vision_msgs::msg::Detection2D detection;
+      perception_msgs::msg::Detection2D detection;
       detection.header.frame_id = camera_optical_frame_;
       detection.header.stamp = now;
       // detection.is_tracking = false;
@@ -101,7 +101,7 @@ void CameraSimComponent::update()
       detection.bbox.center.y = (out.max_corner().y() + out.min_corner().y()) * 0.5;
       detection.bbox.size_x = out.max_corner().x() - out.min_corner().x();
       detection.bbox.size_y = out.max_corner().y() - out.min_corner().y();
-      vision_msgs::msg::ObjectHypothesisWithPose result;
+      perception_msgs::msg::ObjectHypothesisWithPose result;
       // result.id = raycaster_ptr_->getObjectType(name);
       // result.score = 1.0;
       detection.results.emplace_back(result);
@@ -184,7 +184,7 @@ void CameraSimComponent::initialize()
     json_string = json_string + line;
   }
   raycaster_ptr_->addPrimitives(nlohmann::json::parse(json_string));
-  detection_pub_ = create_publisher<vision_msgs::msg::Detection2DArray>("detection", 1);
+  detection_pub_ = create_publisher<perception_msgs::msg::Detection2DArray>("detection", 1);
   camera_info_pub_ = create_publisher<sensor_msgs::msg::CameraInfo>("camera_info", 1);
   marker_pub_ = create_publisher<visualization_msgs::msg::MarkerArray>("marker", 1);
   using namespace std::chrono_literals;
@@ -203,7 +203,7 @@ const geometry_msgs::msg::Point CameraSimComponent::internallyDivide(
 }
 
 const visualization_msgs::msg::MarkerArray CameraSimComponent::generateMarker(
-  const std::vector<vision_msgs::msg::Detection2D> & detections)
+  const std::vector<perception_msgs::msg::Detection2D> & detections)
 {
   const auto now = get_clock()->now();
   visualization_msgs::msg::MarkerArray marker;
