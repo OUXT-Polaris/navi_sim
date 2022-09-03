@@ -65,8 +65,8 @@ extern "C" {
 #include <string>
 #include <utility>
 #include <vector>
+#include <perception_msgs/msg/detection2_d.hpp>
 #include <perception_msgs/msg/detection2_d_array.hpp>
-#include <perception_msgs/msg/vision_info.hpp>
 #include <visualization_msgs/msg/marker_array.hpp>
 
 namespace navi_sim

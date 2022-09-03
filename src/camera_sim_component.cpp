@@ -21,10 +21,12 @@
 #include <boost/geometry/geometries/polygon.hpp>
 #include <color_names/color_names.hpp>
 #include <memory>
-#include <navi_sim/camera_sim_component.hpp>
+#include <perception_msgs/msg/object_hypothesis_with_pose.hpp>
 #include <rclcpp_components/register_node_macro.hpp>
 #include <string>
 #include <vector>
+
+#include "navi_sim/camera_sim_component.hpp"
 
 namespace navi_sim
 {
@@ -104,7 +106,6 @@ void CameraSimComponent::update()
       perception_msgs::msg::ObjectHypothesisWithPose result;
       // result.id = raycaster_ptr_->getObjectType(name);
       // result.score = 1.0;
-      detection.results.emplace_back(result);
       detection_array.detections.emplace_back(detection);
     }
   }
