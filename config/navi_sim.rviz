@@ -13,7 +13,7 @@ Panels:
         - /Perception1/ConcatenatedPoints1/Autocompute Value Bounds1
         - /Perception1/GridMap1
       Splitter Ratio: 0.5
-    Tree Height: 464
+    Tree Height: 371
   - Class: rviz_common/Tool Properties
     Expanded: ~
     Name: Tool Properties
@@ -76,114 +76,6 @@ Visualization Manager:
         Expand Link Details: false
         Expand Tree: false
         Link Tree Style: Links in Alphabetic Order
-        base_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        cpu_cases_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        dummy_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        front_left_camera_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        front_left_camera_optical_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        front_lidar_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        front_right_camera_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        front_right_camera_optical_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        left_battery_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        left_camera_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        left_camera_optical_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        left_engine_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        left_lidar_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        left_propeller_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        rear_left_camera_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        rear_left_camera_optical_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        rear_lidar_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        rear_right_camera_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        rear_right_camera_optical_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        right_battery_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        right_camera_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        right_camera_optical_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        right_engine_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        right_lidar_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        right_propeller_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
       Name: RobotModel
       TF Prefix: ""
       Update Interval: 0
@@ -331,8 +223,7 @@ Visualization Manager:
           Enabled: true
           Name: FrontRightCamera
           Namespaces:
-            detection: true
-            frustum: true
+            {}
           Topic:
             Depth: 5
             Durability Policy: Volatile
@@ -344,8 +235,7 @@ Visualization Manager:
           Enabled: true
           Name: FrontLeftCamera
           Namespaces:
-            detection: true
-            frustum: true
+            {}
           Topic:
             Depth: 5
             Durability Policy: Volatile
@@ -357,8 +247,7 @@ Visualization Manager:
           Enabled: true
           Name: RearLeftCamera
           Namespaces:
-            detection: true
-            frustum: true
+            {}
           Topic:
             Depth: 5
             Durability Policy: Volatile
@@ -370,8 +259,7 @@ Visualization Manager:
           Enabled: true
           Name: RearRightCamera
           Namespaces:
-            detection: true
-            frustum: true
+            {}
           Topic:
             Depth: 5
             Durability Policy: Volatile
@@ -383,8 +271,7 @@ Visualization Manager:
           Enabled: true
           Name: RightCamera
           Namespaces:
-            detection: true
-            frustum: true
+            {}
           Topic:
             Depth: 5
             Durability Policy: Volatile
@@ -396,8 +283,7 @@ Visualization Manager:
           Enabled: true
           Name: LeftCamera
           Namespaces:
-            detection: true
-            frustum: true
+            {}
           Topic:
             Depth: 5
             Durability Policy: Volatile
@@ -617,7 +503,7 @@ Visualization Manager:
           Enabled: true
           Name: Obstacle
           Namespaces:
-            polygon: true
+            {}
           Topic:
             Depth: 5
             Durability Policy: Volatile
@@ -655,8 +541,7 @@ Visualization Manager:
           Enabled: true
           Name: TaskObjects
           Namespaces:
-            0: true
-            1: true
+            {}
           Topic:
             Depth: 5
             Durability Policy: Volatile
@@ -740,10 +625,7 @@ Visualization Manager:
           Enabled: true
           Name: PurePursuit
           Namespaces:
-            circle: true
-            current: true
-            target: true
-            target_twist: true
+            {}
           Topic:
             Depth: 5
             Durability Policy: Volatile
@@ -806,23 +688,6 @@ Visualization Manager:
     Frame Rate: 30
   Name: root
   Tools:
-    - Class: rviz_default_plugins/SetGoal
-      Topic:
-        Depth: 5
-        Durability Policy: Volatile
-        History Policy: Keep Last
-        Reliability Policy: Reliable
-        Value: /move_base_simple/goal
-    - Class: rviz_default_plugins/SetInitialPose
-      Covariance x: 0.25
-      Covariance y: 0.25
-      Covariance yaw: 0.06853891909122467
-      Topic:
-        Depth: 5
-        Durability Policy: Volatile
-        History Policy: Keep Last
-        Reliability Policy: Reliable
-        Value: initialpose
     - Class: rviz_default_plugins/FocusCamera
     - Class: rviz_default_plugins/Interact
       Hide Inactive Objects: true
