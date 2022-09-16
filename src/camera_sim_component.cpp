@@ -101,6 +101,8 @@ void CameraSimComponent::update()
       detection.bbox.center.y = (out.max_corner().y() + out.min_corner().y()) * 0.5;
       detection.bbox.size_x = out.max_corner().x() - out.min_corner().x();
       detection.bbox.size_y = out.max_corner().y() - out.min_corner().y();
+      detection.label = raycaster_ptr_->getObjectType(name);
+      detection.score = 1;
       detection_array.detections.emplace_back(detection);
     }
   }
