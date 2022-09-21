@@ -57,6 +57,9 @@ NaviSimComponent::NaviSimComponent(const rclcpp::NodeOptions & options)
   initial_pose_sub_ = this->create_subscription<geometry_msgs::msg::PoseWithCovarianceStamped>(
     "initialpose", 1,
     std::bind(&NaviSimComponent::initialPoseCallback, this, std::placeholders::_1));
+  current_twist_sub_ = this->create_subscription<geometry_msgs::msg::Twist>(
+    "current_twist", 1,
+    std::bind(&NaviSimComponent::currentTwistCallback, this, std::placeholders::_1));
   target_twist_sub_ = this->create_subscription<geometry_msgs::msg::Twist>(
     "target_twist", 1,
     std::bind(&NaviSimComponent::targetTwistCallback, this, std::placeholders::_1));
@@ -113,6 +116,26 @@ void NaviSimComponent::updateJointState()
 
 void NaviSimComponent::updatePose()
 {
+  // Simulate Current Twist
+  // current_twistから加速度を出す
+  const double dt = 0.01;
+  geometry_msgs::msg::Accel current_accel;
+  current_accel.linear.x = (current_twist_.linear.x - prev_twist_.linear.x) / dt;
+  current_accel.linear.y = (current_twist_.linear.y - prev_twist_.linear.y) / dt;
+  current_accel.angular.z = (current_twist_.angular.z - prev_twist_.angular.z) / dt;
+  prev_twist_ = current_twist_;
+
+  // TCP/IPで回転数を受け取る src/description/wamv_description/urdf/wamv.urdf.xacro 
+  // ip:   192.168.10.100
+  // poer: 12345
+
+  // スラスタによる推力を計算する
+
+  // 速度を更新する
+  current_twist_.linear.x = target_twist_.linear.x;
+  current_twist_.linear.y = target_twist_.linear.y;
+  current_twist_.angular.z = target_twist_.angular.z;
+
   // Update Current Pose
   geometry_msgs::msg::Vector3 angular_trans_vec;
   angular_trans_vec.z = current_twist_.angular.z * 0.01;
@@ -217,9 +240,17 @@ geometry_msgs::msg::TwistWithCovarianceStamped NaviSimComponent::applyNoise(
   return value;
 }
 
+void NaviSimComponent::currentTwistCallback(const geometry_msgs::msg::Twist::SharedPtr data)
+{
+  // RCLCPP_INFO(get_logger(), "cur twist sub");
+  current_twist_ = *data;
+}
+
 void NaviSimComponent::targetTwistCallback(const geometry_msgs::msg::Twist::SharedPtr data)
 {
-  current_twist_ = *data;
+  // 将来的にTCP/IPでの指令値受け取りが実装されたら使われなくなる関数
+  // current_twist_ = *data;
+  target_twist_ = *data;
 }
 
 void NaviSimComponent::initialPoseCallback(

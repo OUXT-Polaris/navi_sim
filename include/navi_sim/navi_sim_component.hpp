@@ -67,6 +67,7 @@ extern "C" {
 #include <geometry_msgs/msg/twist.hpp>
 #include <geometry_msgs/msg/twist_stamped.hpp>
 #include <geometry_msgs/msg/twist_with_covariance_stamped.hpp>
+#include <geometry_msgs/msg/accel.hpp>
 #include <rclcpp/rclcpp.hpp>
 #include <sensor_msgs/msg/joint_state.hpp>
 #include <sensor_msgs/msg/laser_scan.hpp>
@@ -93,12 +94,16 @@ private:
   tf2_ros::TransformBroadcaster broadcaster_;
   rclcpp::TimerBase::SharedPtr update_position_timer_;
   geometry_msgs::msg::Twist current_twist_;
+  geometry_msgs::msg::Twist prev_twist_;
+  geometry_msgs::msg::Twist target_twist_;
   geometry_msgs::msg::Pose current_pose_;
   void updatePose();
   void initialPoseCallback(const geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr data);
   rclcpp::Subscription<geometry_msgs::msg::PoseWithCovarianceStamped>::SharedPtr initial_pose_sub_;
+  void currentTwistCallback(const geometry_msgs::msg::Twist::SharedPtr data);
   void targetTwistCallback(const geometry_msgs::msg::Twist::SharedPtr data);
   rclcpp::Subscription<geometry_msgs::msg::PointStamped>::SharedPtr clicked_point_sub_;
+  rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr current_twist_sub_;
   rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr target_twist_sub_;
   rclcpp::Publisher<geometry_msgs::msg::PoseStamped>::SharedPtr current_pose_pub_;
   rclcpp::Publisher<geometry_msgs::msg::PoseWithCovarianceStamped>::SharedPtr
