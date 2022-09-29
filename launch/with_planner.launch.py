@@ -38,6 +38,7 @@ def generate_launch_description():
     )
     scenario_mode = LaunchConfiguration("scenario_mode", default=False)
     record = LaunchConfiguration("record", default=False)
+    use_hardware = LaunchConfiguration("use_hardware",default=False)
     rosbag_directory = LaunchConfiguration("rosbag_directory", default="/tmp/rosbag")
     behavior_config_package = LaunchConfiguration(
         "behavior_config_package", default="robotx_bt_planner"
