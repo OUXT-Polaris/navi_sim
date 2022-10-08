@@ -119,22 +119,38 @@ void NaviSimComponent::updatePose()
   // Simulate Current Twist
   // current_twistから加速度を出す
   const double dt = 0.01;
-  geometry_msgs::msg::Accel current_accel;
-  current_accel.linear.x = (current_twist_.linear.x - prev_twist_.linear.x) / dt;
-  current_accel.linear.y = (current_twist_.linear.y - prev_twist_.linear.y) / dt;
-  current_accel.angular.z = (current_twist_.angular.z - prev_twist_.angular.z) / dt;
+  // geometry_msgs::msg::Accel current_accel;
+  // current_accel.linear.x = (current_twist_.linear.x - prev_twist_.linear.x) / dt;
+  // current_accel.linear.y = (current_twist_.linear.y - prev_twist_.linear.y) / dt;
+  // current_accel.angular.z = (current_twist_.angular.z - prev_twist_.angular.z) / dt;
   prev_twist_ = current_twist_;
 
   // TCP/IPで回転数を受け取る src/description/wamv_description/urdf/wamv.urdf.xacro 
   // ip:   192.168.10.100
   // poer: 12345
+  std::array<double, 2> force = {0.0, 0.0}; // left, right;
 
   // スラスタによる推力を計算する
+  // パラメータは後で受け取り方法の仕様決めと同定する
+  const double mass = 10.0;
+  const double inertia = 5.0;
+  const double c = 1;
+  const double d = 1;
+  Eigen::Vector3d vel_trans_vec;
+  Eigen::Vector3d anguler_vel_trans_vec;
+
+  // 船の座標系での速度遷移ベクトル
+  vel_trans_vec(0) = ((force[0]+force[1])/2.0 - c*current_twist_.linear.x) / mass * dt;
+  vel_trans_vec(1) = (-c*current_twist_.linear.y) / mass * dt;
+  anguler_vel_trans_vec(2) = ((-force[0]+force[1])/2.0 - d * current_twist_.angular.z) / inertia * dt;
 
   // 速度を更新する
-  current_twist_.linear.x = target_twist_.linear.x;
-  current_twist_.linear.y = target_twist_.linear.y;
-  current_twist_.angular.z = target_twist_.angular.z;
+  // current_twist_.linear.x = target_twist_.linear.x;
+  // current_twist_.linear.y = target_twist_.linear.y;
+  // current_twist_.angular.z = target_twist_.angular.z;
+  current_twist_.linear.x += vel_trans_vec(0) * dt;
+  current_twist_.linear.y += vel_trans_vec(1) * dt;
+  current_twist_.angular.z += anguler_vel_trans_vec(2) * dt;
 
   // Update Current Pose
   geometry_msgs::msg::Vector3 angular_trans_vec;
