@@ -143,7 +143,7 @@ void NaviSimComponent::updatePose()
   Eigen::Vector3d current_twist_vec;
   Eigen::Matrix3d mass_mat_inv;
   Eigen::Matrix3d drag_mat;
-  Eigen::Matrix3d fh = Eigen::Matrix3d::Zero(); // Todo
+  Eigen::Vector3d fh = Eigen::Vector3d::Zero(); // Todo
   input_vec <<
     0.5*(thruster_force_[1] + thruster_force_[0]),
     0,
@@ -160,7 +160,7 @@ void NaviSimComponent::updatePose()
     0, 0, -mass_*current_twist_vec(1),
     0, 0,  mass_*current_twist_vec(0),
     mass_*current_twist_vec(1), -mass_*current_twist_vec(0), 0;
-  Eigen::Vector3d accel_vec = mass_mat_inv*( current_twist_vec- drag_mat*current_twist_vec + fh*current_twist_vec + input_vec );
+  Eigen::Vector3d accel_vec = mass_mat_inv*( current_twist_vec- drag_mat*current_twist_vec + fh + input_vec );
   prev_twist_ = current_twist_;
   current_twist_.linear.x += accel_vec(0) * dt;
   current_twist_.linear.y += accel_vec(1) * dt;
