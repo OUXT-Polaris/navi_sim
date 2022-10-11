@@ -44,6 +44,18 @@ NaviSimComponent::NaviSimComponent(const rclcpp::NodeOptions & options)
   get_parameter("linear_covariance", linear_covariance_);
   declare_parameter("angular_covariance", 0.0);
   get_parameter("angular_covariance", angular_covariance_);
+  declare_parameter("hull.width", 1.0);
+  get_parameter("hull.width", width_);
+  declare_parameter("hull.mass", 10.0);
+  get_parameter("hull.mass", mass_);
+  declare_parameter("hull.additional_mass_x", 1.0);
+  get_parameter("hull.additional_mass_x", additional_mass_x_);
+  declare_parameter("hull.additional_mass_y", 1.0);
+  get_parameter("hull.additional_mass_y", additional_mass_y_);
+  declare_parameter("hull.inertia", 5.0);
+  get_parameter("hull.inertia", inertia_);
+  declare_parameter("hull.additional_inertia_z", 1.0);
+  get_parameter("hull.additional_inertia_z", additional_inertia_z_);
   if (with_covariance_) {
     current_pose_with_covariance_pub_ =
       this->create_publisher<geometry_msgs::msg::PoseWithCovarianceStamped>("current_pose", 1);
@@ -116,41 +128,43 @@ void NaviSimComponent::updateJointState()
 
 void NaviSimComponent::updatePose()
 {
-  // Simulate Current Twist
-  // current_twistから加速度を出す
   const double dt = 0.01;
-  // geometry_msgs::msg::Accel current_accel;
-  // current_accel.linear.x = (current_twist_.linear.x - prev_twist_.linear.x) / dt;
-  // current_accel.linear.y = (current_twist_.linear.y - prev_twist_.linear.y) / dt;
-  // current_accel.angular.z = (current_twist_.angular.z - prev_twist_.angular.z) / dt;
-  prev_twist_ = current_twist_;
+
+  // Simulate current thruster force
 
   // TCP/IPで回転数を受け取る src/description/wamv_description/urdf/wamv.urdf.xacro 
+  // 一旦TCP/IP経由じゃなくて船の出す力[2]を直接subする形式にする
   // ip:   192.168.10.100
   // poer: 12345
-  std::array<double, 2> force = {0.0, 0.0}; // left, right;
+  thruster_force_ = {0.0, 0.0}; // left, right;
 
-  // スラスタによる推力を計算する
-  // パラメータは後で受け取り方法の仕様決めと同定する
-  const double mass = 10.0;
-  const double inertia = 5.0;
-  const double c = 1;
-  const double d = 1;
-  Eigen::Vector3d vel_trans_vec;
-  Eigen::Vector3d anguler_vel_trans_vec;
-
-  // 船の座標系での速度遷移ベクトル
-  vel_trans_vec(0) = ((force[0]+force[1])/2.0 - c*current_twist_.linear.x) / mass * dt;
-  vel_trans_vec(1) = (-c*current_twist_.linear.y) / mass * dt;
-  anguler_vel_trans_vec(2) = ((-force[0]+force[1])/2.0 - d * current_twist_.angular.z) / inertia * dt;
-
-  // 速度を更新する
-  // current_twist_.linear.x = target_twist_.linear.x;
-  // current_twist_.linear.y = target_twist_.linear.y;
-  // current_twist_.angular.z = target_twist_.angular.z;
-  current_twist_.linear.x += vel_trans_vec(0) * dt;
-  current_twist_.linear.y += vel_trans_vec(1) * dt;
-  current_twist_.angular.z += anguler_vel_trans_vec(2) * dt;
+  // Simulate current twist
+  Eigen::Vector3d input_vec;
+  Eigen::Vector3d current_twist_vec;
+  Eigen::Matrix3d mass_mat_inv;
+  Eigen::Matrix3d drag_mat;
+  Eigen::Matrix3d fh = Eigen::Matrix3d::Zero(); // Todo
+  input_vec <<
+    0.5*(thruster_force_[1] + thruster_force_[0]),
+    0,
+    0.5*width_*(thruster_force_[1] - thruster_force_[0]);
+  current_twist_vec <<
+    current_twist_.linear.x,
+    current_twist_.linear.y,
+    current_twist_.angular.z;
+  mass_mat_inv <<
+    1/(mass_+additional_mass_x_), 0, 0,
+    0, 1/(mass_+additional_mass_y_), 0,
+    0, 0, 1/(inertia_+additional_mass_x_);
+  drag_mat <<
+    0, 0, -mass_*current_twist_vec(1),
+    0, 0,  mass_*current_twist_vec(0),
+    mass_*current_twist_vec(1), -mass_*current_twist_vec(0), 0;
+  Eigen::Vector3d accel_vec = mass_mat_inv*( current_twist_vec- drag_mat*current_twist_vec + fh*current_twist_vec + input_vec );
+  prev_twist_ = current_twist_;
+  current_twist_.linear.x += accel_vec(0) * dt;
+  current_twist_.linear.y += accel_vec(1) * dt;
+  current_twist_.angular.z += accel_vec(2) * dt;
 
   // Update Current Pose
   geometry_msgs::msg::Vector3 angular_trans_vec;

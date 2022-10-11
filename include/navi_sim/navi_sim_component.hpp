@@ -129,8 +129,15 @@ private:
   double rpy_covariance_;
   double linear_covariance_;
   double angular_covariance_;
+  double width_;
+  double mass_;
+  double additional_mass_x_;
+  double additional_mass_y_;
+  double inertia_;
+  double additional_inertia_z_;
   std::random_device seed_gen_;
   std::default_random_engine engine_;
+  std::array<double, 2> thruster_force_;
 };
 }  // namespace navi_sim
 
