@@ -220,6 +220,7 @@ def generate_launch_description():
                 ],
                 output="screen",
                 condition=IfCondition(record),
+                shell=True
             ),
         ]
     )
