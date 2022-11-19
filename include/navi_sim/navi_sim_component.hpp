@@ -72,6 +72,7 @@ extern "C" {
 #include <sensor_msgs/msg/joint_state.hpp>
 #include <sensor_msgs/msg/laser_scan.hpp>
 #include <visualization_msgs/msg/marker_array.hpp>
+#include <std_msgs/msg/float64_multi_array.hpp>
 
 // Headers in Boost
 #include <boost/optional.hpp>
@@ -130,14 +131,20 @@ private:
   double linear_covariance_;
   double angular_covariance_;
   double width_;
+  double length_;
   double mass_;
   double additional_mass_x_;
   double additional_mass_y_;
   double inertia_;
   double additional_inertia_z_;
+  double hull_draft_;
+  double fuild_force_coeff_;
   std::random_device seed_gen_;
   std::default_random_engine engine_;
   std::array<double, 2> thruster_force_;
+  rclcpp::Subscription<std_msgs::msg::Float64MultiArray>::SharedPtr debug_cmd_sub_;
+  std_msgs::msg::Float64MultiArray::SharedPtr debug_cmd_msg_;
+  Eigen::Vector3d calcuFuildForce(Eigen::Vector3d vel);
 };
 }  // namespace navi_sim
 
