@@ -136,6 +136,18 @@ def generate_launch_description():
     scenario_filename = LaunchConfiguration(
         "scenario_filename", default="go_straight.yaml"
     )
+    planner_package_path = get_package_share_directory("robotx_planner_bringup")
+    planner_launch_dir = os.path.join(planner_package_path, "launch")
+    behavior_config_package = LaunchConfiguration(
+        "behavior_config_package", default="robotx_bt_planner"
+    )
+    behavior_config_filepath = LaunchConfiguration(
+        "behavior_config_filepath", default="config/go.yaml"
+    )
+    perception_bringup_package_path = get_package_share_directory("perception_bringup")
+    perception_bringup_launch_dir = os.path.join(
+        perception_bringup_package_path, "launch"
+    )
     scenario_mode = LaunchConfiguration("scenario_mode", default=False)
     record = LaunchConfiguration("record", default=False)
     rosbag_directory = LaunchConfiguration("rosbag_directory", default="/tmp")
@@ -205,17 +217,29 @@ def generate_launch_description():
                     [description_dir, "/wamv_description.launch.py"]
                 )
             ),
-            # Node(
-            #     package="controller_manager",
-            #     executable="spawner",
-            #     arguments=["joint_state_broadcaster", "--controller-manager", "/controller_manager"],
-            # ),
-
-            # spawner使わずにloadしてあるコントローラーを構成・有効化する方法を調べる
             Node(
                 package="controller_manager",
                 executable="spawner",
                 arguments=["usv_velocity_controller", "--controller-manager", "/controller_manager"],
+            ),
+            Node(
+                package="controller_manager",
+                executable="spawner",
+                arguments=["robot_state_publisher", "--controller-manager", "/controller_manager"],
+            ),
+            IncludeLaunchDescription(
+                PythonLaunchDescriptionSource(
+                    [planner_launch_dir, "/planner_bringup.launch.py"]
+                ),
+                launch_arguments={
+                    "behavior_config_package": behavior_config_package,
+                    "behavior_config_filepath": behavior_config_filepath,
+                }.items(),
+            ),
+            IncludeLaunchDescription(
+                PythonLaunchDescriptionSource(
+                    [perception_bringup_launch_dir, "/perception_bringup.launch.py"]
+                )
             ),
             
             ExecuteProcess(
