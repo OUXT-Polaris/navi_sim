@@ -38,6 +38,7 @@ def generate_launch_description():
     )
     scenario_mode = LaunchConfiguration("scenario_mode", default=False)
     record = LaunchConfiguration("record", default=False)
+    use_hardware = LaunchConfiguration("use_hardware",default=False)
     rosbag_directory = LaunchConfiguration("rosbag_directory", default="/tmp/rosbag")
     behavior_config_package = LaunchConfiguration(
         "behavior_config_package", default="robotx_bt_planner"
@@ -82,6 +83,11 @@ def generate_launch_description():
                 default_value=behavior_config_filepath,
                 description="filepath of the behavior config",
             ),
+            DeclareLaunchArgument(
+                "use_hardware",
+                default_value=use_hardware,
+                description="If true, use real hardware."
+            ),
             IncludeLaunchDescription(
                 PythonLaunchDescriptionSource(
                     [planner_launch_dir, "/planner_bringup.launch.py"]
@@ -94,7 +100,10 @@ def generate_launch_description():
             IncludeLaunchDescription(
                 PythonLaunchDescriptionSource(
                     [perception_bringup_launch_dir, "/perception_bringup.launch.py"]
-                )
+                ),
+                launch_arguments={
+                    "use_hardware": use_hardware,
+                }.items(),
             ),
         ]
     )
