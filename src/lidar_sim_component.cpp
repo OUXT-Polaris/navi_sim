@@ -31,7 +31,7 @@ LidarSimComponent::LidarSimComponent(std::string name, const rclcpp::NodeOptions
 }
 
 LidarSimComponent::LidarSimComponent(const rclcpp::NodeOptions & options)
-: Node("lidar_sim", options), buffer_(get_clock()), listener_(buffer_)
+: Node("lidar_sim", options), buffer_(get_clock()), listener_(buffer_,true)
 {
   setParameters();
 }
@@ -45,7 +45,7 @@ void LidarSimComponent::setParameters()
   std::cout << "frame : " << lidar_frame_ << std::endl;
   declare_parameter<std::string>("map_frame", "map");
   get_parameter("map_frame", map_frame_);
-  declare_parameter<std::string>("embree_config", "");
+  declare_parameter<std::string>("embree_config", "threads=1,isa=avx");
   if (has_parameter("embree_config")) {
     std::string embree_config;
     get_parameter("embree_config", embree_config);

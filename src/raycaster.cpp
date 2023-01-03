@@ -43,7 +43,7 @@ Raycaster::~Raycaster()
 
 void Raycaster::addPrimitives(nlohmann::json json)
 {
-  for (const auto item : json.items()) {
+  for (const auto &item : json.items()) {
     if (item.value()["primitive_type"] == "Box") {
       std::string object_type = item.value()["object_type"];
       float d = item.value()["depth"];
@@ -153,16 +153,22 @@ const sensor_msgs::msg::PointCloud2 Raycaster::raycast(
       p.x = vector[0];
       p.y = vector[1];
       p.z = vector[2];
-      cloud->emplace_back(p);
+      // cloud->emplace_back(p);
     } else {
       if (rayhit.hit.geomID != RTC_INVALID_GEOMETRY_ID) {
         double distance = rayhit.ray.tfar + dist(engine_);
-        const auto vector = quaternion_operation::getRotationMatrix(direction) *
-                            Eigen::Vector3d(1.0f, 0.0f, 0.0f) * distance;
+        const auto vector_unit = quaternion_operation::getRotationMatrix(direction) * Eigen::Vector3d::UnitX();
+        const auto vector=vector_unit*distance;
+        std::cout <<"distance" <<distance <<std::endl;
         pcl::PointXYZI p;
+        Eigen::Matrix3d check=quaternion_operation::getRotationMatrix(direction);
+        std::cout <<"check" <<check<<std::endl;
+        std::cout <<"point_vector"<<vector<<std::endl;
         p.x = vector[0];
         p.y = vector[1];
         p.z = vector[2];
+        std::cout <<"x:" <<p.x <<std::endl;
+        std::cout <<"y:" <<p.y <<std::endl;
         cloud->emplace_back(p);
       }
     }
