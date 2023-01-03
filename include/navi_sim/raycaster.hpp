@@ -19,8 +19,8 @@
 #include <pcl_conversions/pcl_conversions.h>
 
 #include <geometry_msgs/msg/pose.hpp>
-#include <geometry_msgs/msg/vector3.hpp>
 #include <geometry_msgs/msg/quaternion.hpp>
+#include <geometry_msgs/msg/vector3.hpp>
 #include <memory>
 #include <navi_sim/primitives/box.hpp>
 #include <navi_sim/primitives/primitive.hpp>

@@ -17,11 +17,11 @@
 #include <ament_index_cpp/get_package_share_directory.hpp>
 #include <boost/assert.hpp>
 #include <boost/assign/list_of.hpp>
+#include <boost/filesystem.hpp>
 #include <boost/geometry.hpp>
 #include <boost/geometry/algorithms/disjoint.hpp>
 #include <boost/geometry/geometries/linestring.hpp>
 #include <boost/geometry/geometries/point_xy.hpp>
-#include <boost/filesystem.hpp>
 #include <fstream>
 #include <memory>
 #include <navi_sim/scenario_test_component.hpp>
