@@ -23,6 +23,14 @@ set(CMAKE_CXX_FLAGS "-Wall -Wextra")
 set(CMAKE_CXX_FLAGS_DEBUG "-g")
 set(CMAKE_CXX_FLAGS_RELEASE "-O0")
 
+if($ENV{ROS_DISTRO} STREQUAL "galactic")
+  add_definitions(-DGALACTIC)
+endif()
+
+if($ENV{ROS_DISTRO} STREQUAL "humble")
+  add_definitions(-DHUMBLE)
+endif()
+
 # find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(ament_cmake_auto REQUIRED)
