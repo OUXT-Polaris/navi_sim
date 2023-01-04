@@ -45,7 +45,7 @@ void LidarSimComponent::setParameters()
   std::cout << "frame : " << lidar_frame_ << std::endl;
   declare_parameter<std::string>("map_frame", "map");
   get_parameter("map_frame", map_frame_);
-  declare_parameter<std::string>("embree_config", "threads=1,isa=avx");
+  declare_parameter<std::string>("embree_config", "");
   if (has_parameter("embree_config")) {
     std::string embree_config;
     get_parameter("embree_config", embree_config);
