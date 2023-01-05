@@ -15,11 +15,11 @@
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 
 #include <ament_index_cpp/get_package_share_directory.hpp>
+#include <boost/filesystem.hpp>
 #include <boost/geometry.hpp>
 #include <boost/geometry/geometries/box.hpp>
 #include <boost/geometry/geometries/point_xy.hpp>
 #include <boost/geometry/geometries/polygon.hpp>
-#include <boost/filesystem.hpp>
 #include <color_names/color_names.hpp>
 #include <memory>
 #include <navi_sim/camera_sim_component.hpp>
@@ -97,11 +97,19 @@ void CameraSimComponent::update()
       vision_msgs::msg::Detection2D detection;
       detection.header.frame_id = camera_optical_frame_;
       detection.header.stamp = now;
-      // detection.is_tracking = false;
+// detection.is_tracking = false;
+#if defined(GALACTIC)
+      detection.bbox.center.x = (out.max_corner().x() + out.min_corner().x()) * 0.5;
+      detection.bbox.center.y = (out.max_corner().y() + out.min_corner().y()) * 0.5;
+      detection.bbox.size_x = out.max_corner().x() - out.min_corner().x();
+      detection.bbox.size_y = out.max_corner().y() - out.min_corner().y();
+#endif
+#if defined(HUMBLE)
       detection.bbox.center.position.x = (out.max_corner().x() + out.min_corner().x()) * 0.5;
       detection.bbox.center.position.y = (out.max_corner().y() + out.min_corner().y()) * 0.5;
       detection.bbox.size_x = out.max_corner().x() - out.min_corner().x();
       detection.bbox.size_y = out.max_corner().y() - out.min_corner().y();
+#endif
       vision_msgs::msg::ObjectHypothesisWithPose result;
       // result.id = raycaster_ptr_->getObjectType(name);
       // result.score = 1.0;
@@ -276,6 +284,49 @@ const visualization_msgs::msg::MarkerArray CameraSimComponent::generateMarker(
   detection_marker.color = color_names::makeColorMsg(detection_color_, 1.0);
   detection_marker.frame_locked = true;
   for (const auto & detection : detections) {
+#if defined(GALACTIC)
+    cv::Point2d point_lu_obj(
+      detection.bbox.center.x - detection.bbox.size_x * 0.5,
+      detection.bbox.center.y - detection.bbox.size_y * 0.5);
+    cv::Point3d lu_ray = cam_model_.projectPixelTo3dRay(point_lu_obj);
+    geometry_msgs::msg::Point point_lu_obj_msg;
+    point_lu_obj_msg.x = lu_ray.x;
+    point_lu_obj_msg.y = lu_ray.y;
+    point_lu_obj_msg.z = lu_ray.z;
+    cv::Point2d point_ru_point(
+      detection.bbox.center.x + detection.bbox.size_x * 0.5,
+      detection.bbox.center.y - detection.bbox.size_y * 0.5);
+    cv::Point3d ru_ray = cam_model_.projectPixelTo3dRay(point_ru_point);
+    geometry_msgs::msg::Point point_ru_obj_msg;
+    point_ru_obj_msg.x = ru_ray.x;
+    point_ru_obj_msg.y = ru_ray.y;
+    point_ru_obj_msg.z = ru_ray.z;
+    cv::Point2d point_rb_point(
+      detection.bbox.center.x + detection.bbox.size_x * 0.5,
+      detection.bbox.center.y + detection.bbox.size_y * 0.5);
+    cv::Point3d rb_ray = cam_model_.projectPixelTo3dRay(point_rb_point);
+    geometry_msgs::msg::Point point_rb_obj_msg;
+    point_rb_obj_msg.x = rb_ray.x;
+    point_rb_obj_msg.y = rb_ray.y;
+    point_rb_obj_msg.z = rb_ray.z;
+    cv::Point2d point_lb_point(
+      detection.bbox.center.x - detection.bbox.size_x * 0.5,
+      detection.bbox.center.y + detection.bbox.size_y * 0.5);
+    cv::Point3d lb_ray = cam_model_.projectPixelTo3dRay(point_lb_point);
+    geometry_msgs::msg::Point point_lb_obj_msg;
+    point_lb_obj_msg.x = lb_ray.x;
+    point_lb_obj_msg.y = lb_ray.y;
+    point_lb_obj_msg.z = lb_ray.z;
+    detection_marker.points.emplace_back(point_lu_obj_msg);
+    detection_marker.points.emplace_back(point_ru_obj_msg);
+    detection_marker.points.emplace_back(point_ru_obj_msg);
+    detection_marker.points.emplace_back(point_rb_obj_msg);
+    detection_marker.points.emplace_back(point_rb_obj_msg);
+    detection_marker.points.emplace_back(point_lb_obj_msg);
+    detection_marker.points.emplace_back(point_lb_obj_msg);
+    detection_marker.points.emplace_back(point_lu_obj_msg);
+#endif
+#if defined(HUMBLE)
     cv::Point2d point_lu_obj(
       detection.bbox.center.position.x - detection.bbox.size_x * 0.5,
       detection.bbox.center.position.y - detection.bbox.size_y * 0.5);
@@ -316,6 +367,7 @@ const visualization_msgs::msg::MarkerArray CameraSimComponent::generateMarker(
     detection_marker.points.emplace_back(point_lb_obj_msg);
     detection_marker.points.emplace_back(point_lb_obj_msg);
     detection_marker.points.emplace_back(point_lu_obj_msg);
+#endif
   }
   marker.markers.emplace_back(detection_marker);
   return marker;

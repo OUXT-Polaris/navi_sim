@@ -43,7 +43,7 @@ Raycaster::~Raycaster()
 
 void Raycaster::addPrimitives(nlohmann::json json)
 {
-  for (const auto item : json.items()) {
+  for (const auto & item : json.items()) {
     if (item.value()["primitive_type"] == "Box") {
       std::string object_type = item.value()["object_type"];
       float d = item.value()["depth"];
@@ -147,8 +147,8 @@ const sensor_msgs::msg::PointCloud2 Raycaster::raycast(
     rtcIntersect1(scene_, &context, &rayhit);
     if (ghost_dist(engine_) < ghost_ratio) {
       double distance = (max_distance - min_distance) * ghost_dist(engine_) + min_distance;
-      const auto vector = quaternion_operation::getRotationMatrix(direction) *
-                          Eigen::Vector3d(1.0f, 0.0f, 0.0f) * distance;
+      const auto cloud_direction = quaternion_operation::getRotationMatrix(direction);
+      const auto vector = cloud_direction * Eigen::Vector3d::UnitX() * distance;
       pcl::PointXYZI p;
       p.x = vector[0];
       p.y = vector[1];
@@ -157,8 +157,8 @@ const sensor_msgs::msg::PointCloud2 Raycaster::raycast(
     } else {
       if (rayhit.hit.geomID != RTC_INVALID_GEOMETRY_ID) {
         double distance = rayhit.ray.tfar + dist(engine_);
-        const auto vector = quaternion_operation::getRotationMatrix(direction) *
-                            Eigen::Vector3d(1.0f, 0.0f, 0.0f) * distance;
+        const auto cloud_direction = quaternion_operation::getRotationMatrix(direction);
+        const auto vector = cloud_direction * Eigen::Vector3d::UnitX() * distance;
         pcl::PointXYZI p;
         p.x = vector[0];
         p.y = vector[1];

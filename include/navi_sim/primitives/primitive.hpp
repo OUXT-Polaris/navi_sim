@@ -19,6 +19,7 @@
 
 #include <algorithm>
 #include <geometry_msgs/msg/pose.hpp>
+#include <geometry_msgs/msg/quaternion.hpp>
 #include <nlohmann/json.hpp>
 #include <string>
 #include <vector>
