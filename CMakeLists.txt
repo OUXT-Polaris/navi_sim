@@ -23,6 +23,8 @@ set(CMAKE_CXX_FLAGS "-Wall -Wextra")
 set(CMAKE_CXX_FLAGS_DEBUG "-g")
 set(CMAKE_CXX_FLAGS_RELEASE "-O0")
 
+add_definitions("-DBOOST_ALLOW_DEPRECATED_HEADERS")
+
 if($ENV{ROS_DISTRO} STREQUAL "galactic")
   add_definitions(-DGALACTIC)
 endif()
