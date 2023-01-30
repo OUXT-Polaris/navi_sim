@@ -31,16 +31,16 @@ if($ENV{ROS_DISTRO} STREQUAL "humble")
   add_definitions(-DHUMBLE)
 endif()
 
-if(${tf2_geometry_msgs_VERSION} VERSION_LESS 0.18.0)
-  add_compile_definitions(USE_TF2_GEOMETRY_MSGS_DEPRECATED_HEADER)
-endif()
-
 # find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(ament_cmake_auto REQUIRED)
 find_package(PCL REQUIRED)
 find_package(perception_msgs REQUIRED)
 ament_auto_find_build_dependencies()
+
+if(${tf2_geometry_msgs_VERSION} VERSION_LESS 0.18.0)
+  add_compile_definitions(USE_TF2_GEOMETRY_MSGS_DEPRECATED_HEADER)
+endif()
 
 find_package(Boost COMPONENTS filesystem REQUIRED)
 link_directories(${Boost_LIBRARY_DIR} ${PCL_LIBRARY_DIRS})
