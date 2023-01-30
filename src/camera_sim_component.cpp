@@ -14,7 +14,11 @@
 
 #include "navi_sim/camera_sim_component.hpp"
 
+#ifdef USE_TF2_GEOMETRY_MSGS_DEPRECATED_HEADER
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
+#else
+#include <tf2_geometry_msgs/tf2_geometry_msgs.hpp>
+#endif
 
 #include <ament_index_cpp/get_package_share_directory.hpp>
 #include <boost/filesystem.hpp>
@@ -22,11 +26,15 @@
 #include <boost/geometry/geometries/box.hpp>
 #include <boost/geometry/geometries/point_xy.hpp>
 #include <boost/geometry/geometries/polygon.hpp>
+#include <boost/uuid/uuid.hpp>
+#include <boost/uuid/uuid_generators.hpp>
+#include <boost/uuid/uuid_io.hpp>
 #include <color_names/color_names.hpp>
 #include <memory>
 #include <rclcpp_components/register_node_macro.hpp>
 #include <string>
 #include <vector>
+#include <vision_msgs/msg/object_hypothesis_with_pose.hpp>
 
 namespace navi_sim
 {
@@ -70,7 +78,7 @@ void CameraSimComponent::update()
   typedef boost::geometry::model::box<point> box;
   box camera_bbox(point(0, 0), point(camera_info_.width, camera_info_.height));
   const auto names = raycaster_ptr_->getPrimitiveNames();
-  for (const auto name : names) {
+  for (const auto & name : names) {
     const auto vertex = raycaster_ptr_->getVertex(name);
     polygon_type poly;
     typedef boost::geometry::ring_type<polygon_type>::type ring_type;
@@ -111,10 +119,7 @@ void CameraSimComponent::update()
       detection.bbox.size_x = out.max_corner().x() - out.min_corner().x();
       detection.bbox.size_y = out.max_corner().y() - out.min_corner().y();
 #endif
-      vision_msgs::msg::ObjectHypothesisWithPose result;
-      // result.id = raycaster_ptr_->getObjectType(name);
-      // result.score = 1.0;
-      detection.results.emplace_back(result);
+      detection.detection_id = generateUUID(raycaster_ptr_->getObjectType(name));
       detection.label = raycaster_ptr_->getObjectType(name);
       detection.score = 1;
       detection_array.detections.emplace_back(detection);
@@ -123,6 +128,16 @@ void CameraSimComponent::update()
   detection_pub_->publish(detection_array);
   camera_info_pub_->publish(camera_info);
   marker_pub_->publish(generateMarker(detection_array.detections));
+}
+
+unique_identifier_msgs::msg::UUID CameraSimComponent::generateUUID(const std::string & seed) const
+{
+  boost::uuids::uuid base = boost::uuids::string_generator()("0123456789abcdef0123456789abcdef");
+  boost::uuids::name_generator gen(base);
+  boost::uuids::uuid uuid = gen(seed);
+  unique_identifier_msgs::msg::UUID msg;
+  std::copy(uuid.begin(), uuid.end(), msg.uuid.begin());
+  return msg;
 }
 
 void CameraSimComponent::initialize()

@@ -53,7 +53,13 @@ extern "C" {
 #endif
 
 #include <image_geometry/pinhole_camera_model.h>
+
+#ifdef USE_TF2_GEOMETRY_MSGS_DEPRECATED_HEADER
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
+#else
+#include <tf2_geometry_msgs/tf2_geometry_msgs.hpp>
+#endif
+
 #include <tf2_ros/buffer.h>
 #include <tf2_ros/transform_broadcaster.h>
 #include <tf2_ros/transform_listener.h>
@@ -87,6 +93,7 @@ public:
 private:
   void update();
   void initialize();
+  unique_identifier_msgs::msg::UUID generateUUID(const std::string & seed) const;
   std::unique_ptr<navi_sim::Raycaster> raycaster_ptr_;
   sensor_msgs::msg::CameraInfo camera_info_;
   image_geometry::PinholeCameraModel cam_model_;
