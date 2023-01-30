@@ -31,7 +31,7 @@ LidarSimComponent::LidarSimComponent(std::string name, const rclcpp::NodeOptions
 }
 
 LidarSimComponent::LidarSimComponent(const rclcpp::NodeOptions & options)
-: Node("lidar_sim", options), buffer_(get_clock()), listener_(buffer_)
+: Node("lidar_sim", options), buffer_(get_clock()), listener_(buffer_, true)
 {
   setParameters();
 }

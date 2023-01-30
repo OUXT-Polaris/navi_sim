@@ -20,6 +20,7 @@
 #include <algorithm>
 #include <boost/geometry.hpp>
 #include <geometry_msgs/msg/pose.hpp>
+#include <geometry_msgs/msg/quaternion.hpp>
 #include <nlohmann/json.hpp>
 #include <robotx_behavior_msgs/msg/task_object.hpp>
 #include <string>

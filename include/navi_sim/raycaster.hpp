@@ -19,6 +19,7 @@
 #include <pcl_conversions/pcl_conversions.h>
 
 #include <geometry_msgs/msg/pose.hpp>
+#include <geometry_msgs/msg/quaternion.hpp>
 #include <geometry_msgs/msg/vector3.hpp>
 #include <memory>
 #include <navi_sim/primitives/box.hpp>
@@ -50,12 +51,12 @@ public:
   }
   const sensor_msgs::msg::PointCloud2 raycast(
     geometry_msgs::msg::Pose origin, double horizontal_resolution,
-    std::vector<double> vertical_angles, double horizontal_angle_start = 0,
-    double horizontal_angle_end = 2 * M_PI, double max_distance = 100, double min_distance = 0,
+    std::vector<double> vertical_angles, double horizontal_angle_start = 0.0,
+    double horizontal_angle_end = 2 * M_PI, double max_distance = 100.0, double min_distance = 0.0,
     double noise_distribution = 0.15, double ghost_ratio = 0.001);
   const sensor_msgs::msg::PointCloud2 raycast(
     geometry_msgs::msg::Pose origin, std::vector<geometry_msgs::msg::Quaternion> directions,
-    double max_distance = 100, double min_distance = 0, double noise_distribution = 0.15,
+    double max_distance = 100.0, double min_distance = 0.0, double noise_distribution = 0.15,
     double ghost_ratio = 0.001);
   nlohmann::json dumpPrimitives() const;
   const std::vector<std::string> getPrimitiveNames() const;
