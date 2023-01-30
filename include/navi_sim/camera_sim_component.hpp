@@ -60,13 +60,13 @@ extern "C" {
 
 #include <memory>
 #include <navi_sim/raycaster.hpp>
+#include <perception_msgs/msg/detection2_d.hpp>
+#include <perception_msgs/msg/detection2_d_array.hpp>
 #include <rclcpp/rclcpp.hpp>
 #include <sensor_msgs/msg/camera_info.hpp>
 #include <string>
 #include <utility>
 #include <vector>
-#include <vision_msgs/msg/detection2_d_array.hpp>
-#include <vision_msgs/msg/vision_info.hpp>
 #include <visualization_msgs/msg/marker_array.hpp>
 
 namespace navi_sim
@@ -91,7 +91,7 @@ private:
   sensor_msgs::msg::CameraInfo camera_info_;
   image_geometry::PinholeCameraModel cam_model_;
   rclcpp::TimerBase::SharedPtr update_camera_timer_;
-  rclcpp::Publisher<vision_msgs::msg::Detection2DArray>::SharedPtr detection_pub_;
+  rclcpp::Publisher<perception_msgs::msg::Detection2DArray>::SharedPtr detection_pub_;
   rclcpp::Publisher<sensor_msgs::msg::CameraInfo>::SharedPtr camera_info_pub_;
   rclcpp::Publisher<visualization_msgs::msg::MarkerArray>::SharedPtr marker_pub_;
   rclcpp::TimerBase::SharedPtr timer_;
@@ -105,7 +105,7 @@ private:
   int vertical_pixels_;
   int horizontal_pixels_;
   const visualization_msgs::msg::MarkerArray generateMarker(
-    const std::vector<vision_msgs::msg::Detection2D> & detections);
+    const std::vector<perception_msgs::msg::Detection2D> & detections);
   const geometry_msgs::msg::Point internallyDivide(
     const geometry_msgs::msg::Point & p0, const geometry_msgs::msg::Point & p1,
     double x_ratio_in_image, double y_ratio_in_image);

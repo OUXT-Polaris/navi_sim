@@ -35,3 +35,22 @@ repositories:
     type: git
     url: https://github.com/OUXT-Polaris/ouxt_common.git
     version: master
+  robotx_behavior_tree:
+    type: git
+    url: https://github.com/OUXT-Polaris/robotx_behavior_tree.git
+    version: master
+  robotx_planner_bringup:
+    type: git
+    url: https://github.com/OUXT-Polaris/robotx_planner_bringup.git
+    version: master
+  sol_vendor:
+    type: git
+    url: https://github.com/OUXT-Polaris/sol_vendor.git
+    version: main
+  lua_vendor:
+    type: git
+    url: https://github.com/OUXT-Polaris/lua_vendor.git
+  perception_msgs:
+    type: git
+    url: https://github.com/OUXT-Polaris/perception_msgs.git
+    version: master

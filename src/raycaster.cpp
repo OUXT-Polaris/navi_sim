@@ -56,12 +56,12 @@ void Raycaster::addPrimitives(nlohmann::json json)
   }
 }
 
-const std::vector<geometry_msgs::msg::Point> Raycaster::get2DPolygon(const std::string & name)
+const std::vector<geometry_msgs::msg::Point> Raycaster::get2DPolygon(const std::string & name) const
 {
-  return primitive_ptrs_[name]->get2DPolygon();
+  return primitive_ptrs_.at(name)->get2DPolygon();
 }
 
-const std::vector<std::string> Raycaster::getPrimitiveNames()
+const std::vector<std::string> Raycaster::getPrimitiveNames() const
 {
   std::vector<std::string> ret;
   for (auto && pair : primitive_ptrs_) {
@@ -70,19 +70,24 @@ const std::vector<std::string> Raycaster::getPrimitiveNames()
   return ret;
 }
 
-const std::string Raycaster::getPrimitiveType(const std::string & name)
+const std::string Raycaster::getPrimitiveType(const std::string & name) const
 {
-  return primitive_ptrs_[name]->primitive_type;
+  return primitive_ptrs_.at(name)->primitive_type;
 }
 
-const std::string Raycaster::getObjectType(const std::string & name)
+const std::string Raycaster::getObjectType(const std::string & name) const
 {
-  return primitive_ptrs_[name]->object_type;
+  return primitive_ptrs_.at(name)->object_type;
 }
 
-const std::vector<Vertex> Raycaster::getVertex(const std::string & name)
+const std::vector<Vertex> Raycaster::getVertex(const std::string & name) const
 {
-  return primitive_ptrs_[name]->getVertex();
+  return primitive_ptrs_.at(name)->getVertex();
+}
+
+const robotx_behavior_msgs::msg::TaskObject Raycaster::getTaskObject(const std::string & name) const
+{
+  return primitive_ptrs_.at(name)->getTaskObject();
 }
 
 nlohmann::json Raycaster::dumpPrimitives() const
@@ -92,6 +97,18 @@ nlohmann::json Raycaster::dumpPrimitives() const
     j[pair.first] = pair.second->toJson();
   }
   return j;
+}
+
+const std::vector<std::string> Raycaster::queryByDistance(
+  const geometry_msgs::msg::Point & origin, double distance) const
+{
+  std::vector<std::string> ret;
+  for (auto && pair : primitive_ptrs_) {
+    if (pair.second->getDistance(origin) <= distance) {
+      ret.emplace_back(pair.first);
+    }
+  }
+  return ret;
 }
 
 const sensor_msgs::msg::PointCloud2 Raycaster::raycast(

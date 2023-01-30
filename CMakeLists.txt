@@ -35,6 +35,7 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(ament_cmake_auto REQUIRED)
 find_package(PCL REQUIRED)
+find_package(perception_msgs REQUIRED)
 ament_auto_find_build_dependencies()
 
 find_package(Boost COMPONENTS filesystem REQUIRED)
@@ -87,16 +88,31 @@ target_compile_definitions(camera_sim_component PRIVATE "NAVI_SIM_CAMEAR_SIM_COM
 target_link_libraries(camera_sim_component embree3)
 rclcpp_components_register_nodes(camera_sim_component
   "navi_sim::CameraSimComponent")
-ament_target_dependencies(camera_sim_component
-  vision_msgs
-)
 ament_auto_add_executable(camera_sim_node
   src/camera_sim_node.cpp
 )
-ament_target_dependencies(camera_sim_node
+target_link_libraries(camera_sim_node camera_sim_component)
+
+ament_auto_add_library(semantic_map_sim_component SHARED
+  src/semantic_map_sim_component.cpp
+  src/primitives/box.cpp
+  src/primitives/primitive.cpp
+  src/raycaster.cpp
+)
+target_compile_definitions(semantic_map_sim_component PRIVATE "NAVI_SIM_SEMANTIC_MAP_SIM_COMPONENT_BUILDING_DLL")
+target_link_libraries(semantic_map_sim_component embree3)
+rclcpp_components_register_nodes(semantic_map_sim_component
+  "navi_sim::SemanticMapSimComponent")
+ament_target_dependencies(semantic_map_sim_component
   vision_msgs
 )
-target_link_libraries(camera_sim_node camera_sim_component)
+ament_auto_add_executable(semantic_map_sim_node
+  src/semantic_map_sim_node.cpp
+)
+ament_target_dependencies(semantic_map_sim_node
+  vision_msgs
+)
+target_link_libraries(semantic_map_sim_node semantic_map_sim_component)
 
 ament_auto_add_library(scenario_test_component SHARED
   src/interpreter/action_base.cpp
@@ -152,6 +168,7 @@ install(TARGETS
   navi_sim_node
   lidar_sim_node
   camera_sim_node
+  semantic_map_sim_node
   scenario_test_node
   example
   check_result
@@ -161,6 +178,7 @@ install(TARGETS
   navi_sim_component
   lidar_sim_component
   camera_sim_component
+  semantic_map_sim_component
   scenario_test_component
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
@@ -168,6 +186,7 @@ install(TARGETS
 ament_export_libraries(navi_sim_component)
 ament_export_libraries(lidar_sim_component)
 ament_export_libraries(camera_sim_component)
+ament_export_libraries(semantic_map_sim_component)
 ament_export_libraries(scenario_test_component)
 
 
