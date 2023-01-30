@@ -255,7 +255,7 @@ std::vector<geometry_msgs::msg::Point> ScenarioTestComponent::transformPoints(
   const geometry_msgs::msg::TransformStamped & pose,
   const std::vector<geometry_msgs::msg::Point> & points)
 {
-  auto mat = quaternion_operation::getRotationMatrix(pose.transform.rotation);
+  Eigen::MatrixXd mat = quaternion_operation::getRotationMatrix(pose.transform.rotation);
   std::vector<geometry_msgs::msg::Point> ret;
   for (const auto & point : points) {
     Eigen::VectorXd v(3);

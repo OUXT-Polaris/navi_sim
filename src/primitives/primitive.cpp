@@ -60,7 +60,7 @@ std::vector<geometry_msgs::msg::Point> Primitive::get2DPolygon() const
 
 Vertex Primitive::transform(Vertex v) const
 {
-  auto mat = quaternion_operation::getRotationMatrix(pose.orientation);
+  Eigen::MatrixXd mat = quaternion_operation::getRotationMatrix(pose.orientation);
   Eigen::VectorXd point(3);
   point(0) = v.x;
   point(1) = v.y;
@@ -80,7 +80,7 @@ Vertex Primitive::transform(Vertex v, const geometry_msgs::msg::Pose & sensor_po
 {
   v = transform(v);
   const auto inv_quat = quaternion_operation::conjugate(sensor_pose.orientation);
-  const auto mat = quaternion_operation::getRotationMatrix(inv_quat);
+  const Eigen::MatrixXd mat = quaternion_operation::getRotationMatrix(inv_quat);
   Eigen::VectorXd point(3);
   point(0) = v.x;
   point(1) = v.y;

@@ -138,8 +138,8 @@ const sensor_msgs::msg::PointCloud2 Raycaster::raycast(
     rayhit.ray.tnear = min_distance;
     rayhit.ray.flags = false;
     const auto ray_direction = origin.orientation * direction;
-    const auto rotation_mat = quaternion_operation::getRotationMatrix(ray_direction);
-    const auto rotated_direction = rotation_mat * Eigen::Vector3d(1.0f, 0.0f, 0.0f);
+    const Eigen::MatrixXd rotation_mat = quaternion_operation::getRotationMatrix(ray_direction);
+    const Eigen::MatrixXd rotated_direction = rotation_mat * Eigen::Vector3d(1.0f, 0.0f, 0.0f);
     rayhit.ray.dir_x = rotated_direction[0];
     rayhit.ray.dir_y = rotated_direction[1];
     rayhit.ray.dir_z = rotated_direction[2];
@@ -147,8 +147,8 @@ const sensor_msgs::msg::PointCloud2 Raycaster::raycast(
     rtcIntersect1(scene_, &context, &rayhit);
     if (ghost_dist(engine_) < ghost_ratio) {
       double distance = (max_distance - min_distance) * ghost_dist(engine_) + min_distance;
-      const auto cloud_direction = quaternion_operation::getRotationMatrix(direction);
-      const auto vector = cloud_direction * Eigen::Vector3d::UnitX() * distance;
+      const Eigen::MatrixXd cloud_direction = quaternion_operation::getRotationMatrix(direction);
+      const Eigen::Vector3d vector = cloud_direction * Eigen::Vector3d::UnitX() * distance;
       pcl::PointXYZI p;
       p.x = vector[0];
       p.y = vector[1];
@@ -157,8 +157,8 @@ const sensor_msgs::msg::PointCloud2 Raycaster::raycast(
     } else {
       if (rayhit.hit.geomID != RTC_INVALID_GEOMETRY_ID) {
         double distance = rayhit.ray.tfar + dist(engine_);
-        const auto cloud_direction = quaternion_operation::getRotationMatrix(direction);
-        const auto vector = cloud_direction * Eigen::Vector3d::UnitX() * distance;
+        const Eigen::MatrixXd cloud_direction = quaternion_operation::getRotationMatrix(direction);
+        const Eigen::Vector3d vector = cloud_direction * Eigen::Vector3d::UnitX() * distance;
         pcl::PointXYZI p;
         p.x = vector[0];
         p.y = vector[1];
