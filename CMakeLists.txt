@@ -209,8 +209,11 @@ if(BUILD_TESTING)
   find_package(ament_cmake_gtest REQUIRED)
   ament_add_gtest(test_model test/src/test_model.cpp)
   target_link_libraries(test_model lidar_sim_component)
-  ament_add_gtest(test_interpreter test/src/test_interpreter.cpp)
-  target_link_libraries(test_interpreter scenario_test_component)
+  # This testcase includes ament_index_cpp::get_package_share_directory, and it cannot be used in building debian package.
+  if($ENV{DEVELOP})
+    ament_add_gtest(test_interpreter test/src/test_interpreter.cpp)
+    target_link_libraries(test_interpreter scenario_test_component)
+  endif()
 endif()
 
 ament_auto_package()
