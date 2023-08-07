@@ -195,6 +195,7 @@ ament_export_libraries(camera_sim_component)
 ament_export_libraries(semantic_map_sim_component)
 ament_export_libraries(scenario_test_component)
 
+option(DEVELOP "help string describing option" OFF)
 
 #############
 ## Install ##
@@ -210,7 +211,7 @@ if(BUILD_TESTING)
   ament_add_gtest(test_model test/src/test_model.cpp)
   target_link_libraries(test_model lidar_sim_component)
   # This testcase includes ament_index_cpp::get_package_share_directory, and it cannot be used in building debian package.
-  if($ENV{DEVELOP})
+  if(DEVELOP)
     ament_add_gtest(test_interpreter test/src/test_interpreter.cpp)
     target_link_libraries(test_interpreter scenario_test_component)
   endif()
