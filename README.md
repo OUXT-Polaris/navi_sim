@@ -1,4 +1,4 @@
-# navi_sim ![ROS2-Foxy](https://github.com/OUXT-Polaris/navi_sim/workflows/ROS2-Foxy/badge.svg)
+# navi_sim 
 
 2D Simple Simulator for Maritime RobotX Challenge
 
