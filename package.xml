@@ -32,11 +32,11 @@
   <depend>embree</depend>
   <depend>color_names</depend>
   <depend>yaml-cpp</depend>
-  <depend>rosbag2</depend>
   <depend>util-linux</depend>
   <depend>robotx_behavior_msgs</depend>
   <depend>perception_msgs</depend>
 
+  <exec_depend>rosbag2</exec_depend>
   <exec_depend>perception_bringup</exec_depend>
   <exec_depend>robotx_planner_bringup</exec_depend>
 
