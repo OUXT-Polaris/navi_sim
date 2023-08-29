@@ -19,7 +19,6 @@
   <depend>tf2_geometry_msgs</depend>
   <depend>quaternion_operation</depend>
   <depend>eigen</depend>
-  <depend>perception_bringup</depend>
   <depend>sensor_msgs</depend>
   <depend>wamv_description</depend>
   <depend>visualization_msgs</depend>
@@ -37,6 +36,8 @@
   <depend>util-linux</depend>
   <depend>robotx_behavior_msgs</depend>
   <depend>perception_msgs</depend>
+
+  <exec_depend>perception_bringup</exec_depend>
   <exec_depend>robotx_planner_bringup</exec_depend>
 
   <test_depend>ament_lint_auto</test_depend>
