@@ -17,6 +17,7 @@
 #include <ament_index_cpp/get_package_share_directory.hpp>
 #include <boost/assert.hpp>
 #include <boost/assign/list_of.hpp>
+#include <boost/filesystem.hpp>
 #include <boost/geometry.hpp>
 #include <boost/geometry/algorithms/disjoint.hpp>
 #include <boost/geometry/geometries/linestring.hpp>
@@ -254,7 +255,7 @@ std::vector<geometry_msgs::msg::Point> ScenarioTestComponent::transformPoints(
   const geometry_msgs::msg::TransformStamped & pose,
   const std::vector<geometry_msgs::msg::Point> & points)
 {
-  auto mat = quaternion_operation::getRotationMatrix(pose.transform.rotation);
+  Eigen::MatrixXd mat = quaternion_operation::getRotationMatrix(pose.transform.rotation);
   std::vector<geometry_msgs::msg::Point> ret;
   for (const auto & point : points) {
     Eigen::VectorXd v(3);
