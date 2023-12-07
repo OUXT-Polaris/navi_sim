@@ -73,10 +73,12 @@ extern "C" {
 #include <geometry_msgs/msg/twist.hpp>
 #include <geometry_msgs/msg/twist_stamped.hpp>
 #include <geometry_msgs/msg/twist_with_covariance_stamped.hpp>
+#include <geometry_msgs/msg/accel.hpp>
 #include <rclcpp/rclcpp.hpp>
 #include <sensor_msgs/msg/joint_state.hpp>
 #include <sensor_msgs/msg/laser_scan.hpp>
 #include <visualization_msgs/msg/marker_array.hpp>
+#include <std_msgs/msg/float64_multi_array.hpp>
 
 // Headers in Boost
 #include <boost/optional.hpp>
@@ -99,12 +101,16 @@ private:
   tf2_ros::TransformBroadcaster broadcaster_;
   rclcpp::TimerBase::SharedPtr update_position_timer_;
   geometry_msgs::msg::Twist current_twist_;
+  geometry_msgs::msg::Twist prev_twist_;
+  geometry_msgs::msg::Twist target_twist_;
   geometry_msgs::msg::Pose current_pose_;
   void updatePose();
   void initialPoseCallback(const geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr data);
   rclcpp::Subscription<geometry_msgs::msg::PoseWithCovarianceStamped>::SharedPtr initial_pose_sub_;
+  void currentTwistCallback(const geometry_msgs::msg::Twist::SharedPtr data);
   void targetTwistCallback(const geometry_msgs::msg::Twist::SharedPtr data);
   rclcpp::Subscription<geometry_msgs::msg::PointStamped>::SharedPtr clicked_point_sub_;
+  rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr current_twist_sub_;
   rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr target_twist_sub_;
   rclcpp::Publisher<geometry_msgs::msg::PoseStamped>::SharedPtr current_pose_pub_;
   rclcpp::Publisher<geometry_msgs::msg::PoseWithCovarianceStamped>::SharedPtr
@@ -130,8 +136,21 @@ private:
   double rpy_covariance_;
   double linear_covariance_;
   double angular_covariance_;
+  double width_;
+  double length_;
+  double mass_;
+  double additional_mass_x_;
+  double additional_mass_y_;
+  double inertia_;
+  double additional_inertia_z_;
+  double hull_draft_;
+  double fuild_force_coeff_;
   std::random_device seed_gen_;
   std::default_random_engine engine_;
+  std::array<double, 2> thruster_force_;
+  rclcpp::Subscription<std_msgs::msg::Float64MultiArray>::SharedPtr debug_cmd_sub_;
+  std_msgs::msg::Float64MultiArray::SharedPtr debug_cmd_msg_;
+  Eigen::Vector3d calcuFuildForce(Eigen::Vector3d vel);
 };
 }  // namespace navi_sim
 
