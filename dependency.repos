@@ -54,3 +54,11 @@ repositories:
     type: git
     url: https://github.com/OUXT-Polaris/perception_msgs.git
     version: master
+  pcl_type_adapter:
+    type: git
+    url: https://github.com/OUXT-Polaris/pcl_type_adapter.git
+    version: master
+  ndt_omp:
+    type: git
+    url: https://github.com/tier4/ndt_omp.git
+    version: tier4/main
