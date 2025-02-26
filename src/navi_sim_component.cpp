@@ -44,6 +44,25 @@ NaviSimComponent::NaviSimComponent(const rclcpp::NodeOptions & options)
   get_parameter("linear_covariance", linear_covariance_);
   declare_parameter("angular_covariance", 0.0);
   get_parameter("angular_covariance", angular_covariance_);
+  declare_parameter("hull.width", 1.0);
+  get_parameter("hull.width", width_);
+  declare_parameter("hull.length", 1.5);
+  get_parameter("hull.length", length_);
+  declare_parameter("hull.mass", 10.0);
+  get_parameter("hull.mass", mass_);
+  declare_parameter("hull.additional_mass_x", 1.0);
+  get_parameter("hull.additional_mass_x", additional_mass_x_);
+  declare_parameter("hull.additional_mass_y", 1.0);
+  get_parameter("hull.additional_mass_y", additional_mass_y_);
+  declare_parameter("hull.inertia", 5.0);
+  get_parameter("hull.inertia", inertia_);
+  declare_parameter("hull.additional_inertia_z", 1.0);
+  get_parameter("hull.additional_inertia_z", additional_inertia_z_);
+  declare_parameter("hull.draft", 0.05);
+  get_parameter("hull.draft", hull_draft_);
+  declare_parameter("hull.fuild_force_coeff", 0.1);
+  get_parameter("hull.fuild_force_coeff", fuild_force_coeff_);
+  
   if (with_covariance_) {
     current_pose_with_covariance_pub_ =
       this->create_publisher<geometry_msgs::msg::PoseWithCovarianceStamped>("current_pose", 1);
@@ -57,9 +76,19 @@ NaviSimComponent::NaviSimComponent(const rclcpp::NodeOptions & options)
   initial_pose_sub_ = this->create_subscription<geometry_msgs::msg::PoseWithCovarianceStamped>(
     "initialpose", 1,
     std::bind(&NaviSimComponent::initialPoseCallback, this, std::placeholders::_1));
+  current_twist_sub_ = this->create_subscription<geometry_msgs::msg::Twist>(
+    "current_twist", 1,
+    std::bind(&NaviSimComponent::currentTwistCallback, this, std::placeholders::_1));
   target_twist_sub_ = this->create_subscription<geometry_msgs::msg::Twist>(
     "target_twist", 1,
     std::bind(&NaviSimComponent::targetTwistCallback, this, std::placeholders::_1));
+
+  debug_cmd_sub_ = this->create_subscription<std_msgs::msg::Float64MultiArray>(
+    "usv_force_cmd", 1,
+    [&](std_msgs::msg::Float64MultiArray::SharedPtr msg)
+    {
+      debug_cmd_msg_ = msg;
+    });
 }
 
 geometry_msgs::msg::PointStamped NaviSimComponent::TransformToMapFrame(
@@ -111,8 +140,72 @@ void NaviSimComponent::updateJointState()
   joint_state_pub_->publish(joint_state);
 }
 
+Eigen::Vector3d NaviSimComponent::calcuFuildForce(Eigen::Vector3d vel)
+{
+  Eigen::Vector3d FH;
+
+  const double rho = 0.997;
+  double fi_coeff = 0.5 * rho * length_ * hull_draft_;
+
+  // 理想流体力
+  FH <<
+    fi_coeff * additional_mass_y_ * vel(2)*vel(1),
+    -fi_coeff * additional_mass_x_ * vel(2)*vel(0),
+    -fi_coeff * (additional_mass_y_ - additional_mass_x_) * vel(1)*vel(0);
+  
+  // 前後摩擦力
+  FH(2) += 0.5*rho*length_*hull_draft_*fuild_force_coeff_*std::abs(vel(0))*vel(0);
+
+  // 
+  Eigen::Vector3d drag_vec;
+  drag_vec <<
+    -additional_mass_y_*vel(1)*vel(2),
+    additional_mass_x_*vel(0)*vel(2),
+    0;
+
+  return drag_vec + FH;
+}
+
 void NaviSimComponent::updatePose()
 {
+  const double dt = 0.01;
+
+  // Simulate current thruster force
+
+  // TCP/IPで回転数を受け取る src/description/wamv_description/urdf/wamv.urdf.xacro 
+  // 一旦TCP/IP経由じゃなくて船の出す力[2]を直接subする形式にする
+  // ip:   192.168.10.100
+  // poer: 12345
+  thruster_force_ = {0.0, 0.0}; // left, right;
+
+  if(debug_cmd_msg_)
+  {
+    thruster_force_[0] = debug_cmd_msg_->data[2];
+    thruster_force_[1] = debug_cmd_msg_->data[3];
+  }
+
+  // Simulate current twist
+  Eigen::Vector3d input_vec;
+  Eigen::Vector3d current_twist_vec;
+  Eigen::Matrix3d mass_mat_inv;
+  input_vec <<
+    0.5*(thruster_force_[1] + thruster_force_[0]),
+    0,
+    0.5*width_*(thruster_force_[1] - thruster_force_[0]);
+  current_twist_vec <<
+    current_twist_.linear.x,
+    current_twist_.linear.y,
+    current_twist_.angular.z;
+  mass_mat_inv <<
+    1/(mass_+additional_mass_x_), 0, 0,
+    0, 1/(mass_+additional_mass_y_), 0,
+    0, 0, 1/(inertia_+additional_mass_x_);
+  Eigen::Vector3d accel_vec = mass_mat_inv*(input_vec+calcuFuildForce(current_twist_vec));
+  prev_twist_ = current_twist_;
+  current_twist_.linear.x += accel_vec(0) * dt;
+  current_twist_.linear.y += accel_vec(1) * dt;
+  current_twist_.angular.z += accel_vec(2) * dt;
+
   // Update Current Pose
   geometry_msgs::msg::Vector3 angular_trans_vec;
   angular_trans_vec.z = current_twist_.angular.z * 0.01;
@@ -217,9 +310,17 @@ geometry_msgs::msg::TwistWithCovarianceStamped NaviSimComponent::applyNoise(
   return value;
 }
 
+void NaviSimComponent::currentTwistCallback(const geometry_msgs::msg::Twist::SharedPtr data)
+{
+  // RCLCPP_INFO(get_logger(), "cur twist sub");
+  current_twist_ = *data;
+}
+
 void NaviSimComponent::targetTwistCallback(const geometry_msgs::msg::Twist::SharedPtr data)
 {
-  current_twist_ = *data;
+  // 将来的にTCP/IPでの指令値受け取りが実装されたら使われなくなる関数
+  // current_twist_ = *data;
+  target_twist_ = *data;
 }
 
 void NaviSimComponent::initialPoseCallback(
